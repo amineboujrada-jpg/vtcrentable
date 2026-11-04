@@ -348,7 +348,9 @@ CSS_CALC = '\n<link rel="stylesheet" href="/assets/calc.css">'
 CALCS = [dict(slug="revenu-net-vtc", short="Revenu net VTC", h1="Calculateur de revenu net VTC",
               card="Ce qu'il te reste vraiment après commissions, charges de ton statut et frais, avec ton € / heure et ton € / km."),
          dict(slug="prix-minimum-course-vtc", short="Prix minimum d'une course", h1="Prix minimum d'une course VTC",
-              card="Le montant en dessous duquel une course ne vaut pas le coup, trajet à vide compris, et le test d'une offre.")]
+              card="Le montant en dessous duquel une course ne vaut pas le coup, trajet à vide compris, et le test d'une offre."),
+         dict(slug="cout-voiture-km-vtc", short="Coût de la voiture au km", h1="Coût de la voiture VTC au kilomètre",
+              card="Ce que te coûte vraiment ta voiture par km et par mois : perte de valeur ou location, assurance, carburant, entretien.")]
 
 def calc_cards():
     return "\n".join(f'<a class="card" href="/calculateurs/{c["slug"]}/"><b>{e(c["h1"])}</b><span>{e(c["card"])}</span></a>' for c in CALCS)
@@ -584,6 +586,84 @@ method = """<h2>Comment le calcul est fait</h2>
 <div class="box warn"><p>Les montants proposés par les plateformes changent selon l'heure et la demande. Le calculateur donne un repère pour décider ; c'est à toi de juger si une course mal payée te place bien pour la suivante.</p></div>"""
 write_calc(c, title, desc, "Une course qui paie peu, avec du trajet à vide, peut te coûter de l'argent. Calcule le montant en dessous duquel elle ne vaut pas le coup, et teste une offre avant d'accepter.", faq, form, method, "calc-prix-minimum.js")
 
+# --- coût de la voiture au km ---
+c = CALCS[2]
+title = "Coût de la voiture VTC au km : calculateur gratuit 2026"
+desc = "Calcule le coût réel de ta voiture VTC au kilomètre et par mois : perte de valeur ou location, crédit, assurance, carburant, entretien et pneus."
+faq = [("Comment calculer le coût au kilomètre d'une voiture VTC ?",
+        "Additionne tout ce que la voiture te coûte sur un an (perte de valeur ou location, intérêts du crédit, assurance, carburant, entretien, pneus, contrôle technique) et divise par le nombre de kilomètres parcourus dans l'année."),
+       ("Comment compter le prix d'achat de la voiture ?",
+        "Ce n'est pas le prix d'achat qui compte, mais ce que tu perds : prix d'achat moins prix de revente prévu, divisé par la durée pendant laquelle tu la gardes. Une voiture achetée 15 000 € et revendue 4 000 € après 3 ans coûte environ 3 667 € par an."),
+       ("Pourquoi mon coût au km baisse-t-il quand je roule plus ?",
+        "Une partie du coût est fixe : l'assurance, la location ou la perte de valeur se paient même quand la voiture ne roule pas. Plus tu fais de kilomètres, plus ces coûts sont répartis, et plus le coût de chaque kilomètre baisse."),
+       ("Les kilomètres à vide comptent-ils ?",
+        "Oui. Indique tous les kilomètres de l'année, y compris ceux faits sans client : ils usent la voiture et consomment du carburant comme les autres.")]
+form = f"""
+<form id="calc" class="calc" novalidate aria-describedby="calc-intro">
+  <p id="calc-intro" class="note" style="margin:0 0 14px">Prérempli avec un exemple : remplace par tes chiffres, le résultat se met à jour tout seul.</p>
+  <fieldset>
+    <legend>Ta voiture</legend>
+    <div class="row">
+      <label for="mode">Tu es
+        <select id="mode"><option value="achat">propriétaire (achat, avec ou sans crédit)</option><option value="location">en location (LLD, LOA, loueur VTC)</option></select></label>
+      {num_field("kman", "Kilomètres par an", "50000", "Tous les km, à vide compris")}
+    </div>
+    <div id="opt-achat" class="row" style="margin-top:14px">
+      {num_field("achat", "Prix d'achat (€)", "15000")}
+      {num_field("revente", "Prix de revente prévu (€)", "4000")}
+      {num_field("mois", "Durée d'utilisation (mois)", "36")}
+      {num_field("interets", "Intérêts du crédit, au total (€)", "0", "0 si achat comptant")}
+    </div>
+    <div id="opt-loc" class="row hide" style="margin-top:14px">
+      {num_field("loyer", "Loyer mensuel (€)", "650")}
+      <label class="check" for="assinc"><input id="assinc" type="checkbox"> Assurance incluse dans le loyer</label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Assurance et carburant</legend>
+    <div class="row">
+      <div id="f-ass">{num_field("assurance", "Assurance VTC (€ / mois)", "160")}</div>
+      {num_field("conso", "Consommation (L ou kWh / 100 km)", "5", step="0.1")}
+      {num_field("prixcarb", "Prix du carburant ou de l'électricité (€ / L ou kWh)", "1.75", step="0.01")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Entretien, par an</legend>
+    <div class="row">
+      {num_field("entretien", "Révisions et réparations (€ / an)", "1500")}
+      {num_field("pneus", "Pneus (€ / an)", "600")}
+      {num_field("divers", "Contrôle technique, lavage, divers (€ / an)", "200")}
+    </div>
+  </fieldset>
+
+  <div class="res" aria-live="polite">
+    <p class="k">Coût réel de ta voiture</p>
+    <p id="r-net" class="big">—</p>
+    <p class="sub">par kilomètre, tout compris</p>
+    <div id="r-kpis" class="kpis"></div>
+    <div id="r-bar" class="bar" role="img" aria-label="Répartition du coût de la voiture"></div>
+    <ul class="legend"><li style="--c:#e8743b">Coûts fixes</li><li style="--c:#f7b267">Coûts liés aux km</li></ul>
+    <table><thead><tr><th>Poste</th><th class="n">Par mois</th><th class="n">Par km</th></tr></thead><tbody id="r-tab"></tbody></table>
+    <p id="r-msg" class="msg"></p>
+    <div class="go">
+      <p>VTC Rentable compte le coût de ta voiture chaque semaine, avec la perte de valeur, pour que ton revenu net soit le vrai.</p>
+      <a class="btn" href="{APP}">Suivre ma rentabilité gratuitement</a>
+    </div>
+  </div>
+  <p class="note" style="margin-top:12px">Résultat indicatif. Tes chiffres restent sur ton appareil. <button type="button" id="raz" style="font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline">Revenir à l'exemple</button></p>
+</form>
+"""
+method = """<h2>Comment le calcul est fait</h2>
+<ol>
+  <li><strong>La voiture elle-même :</strong> si tu l'as achetée, ce que tu perds (prix d'achat moins prix de revente) réparti sur ta durée d'utilisation, plus les intérêts du crédit. Si tu la loues, le loyer.</li>
+  <li><strong>L'assurance</strong>, sauf si elle est comprise dans la location.</li>
+  <li><strong>Le carburant :</strong> tes kilomètres de l'année × ta consommation × le prix du litre ou du kWh.</li>
+  <li><strong>L'entretien :</strong> révisions, réparations, pneus, contrôle technique et lavage.</li>
+</ol>
+<p>Le total de l'année, divisé par tes kilomètres, donne le coût au kilomètre. Les coûts fixes sont ceux que tu paies même sans rouler : c'est pour ça qu'une voiture peu utilisée revient cher au kilomètre.</p>
+<p>Ce coût au km sert à savoir si une course vaut le coup : reprends-le dans le <a href="/calculateurs/prix-minimum-course-vtc/">calculateur du prix minimum d'une course</a>, ou suis ton net complet avec le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net</a>.</p>"""
+write_calc(c, title, desc, "Carburant, assurance, perte de valeur ou location, entretien : calcule ce que ta voiture te coûte vraiment par kilomètre et par mois.", faq, form, method, "calc-cout-voiture.js")
+
 # index des calculateurs
 url = SITE + "/calculateurs/"
 ld = {"@context": "https://schema.org", "@graph": [
@@ -605,7 +685,7 @@ page = head("Calculateurs gratuits pour chauffeurs VTC | VTC Rentable", "Calcula
   <div class="cards">
 {calc_cards()}
   </div>
-  <p style="color:var(--muted);margin-top:22px">D'autres calculateurs arrivent : coût de la voiture au kilomètre, achat ou location, comparaison des statuts.</p>
+  <p style="color:var(--muted);margin-top:22px">D'autres calculateurs arrivent : achat ou location, comparaison des statuts.</p>
 </section>
 <section class="more read" aria-labelledby="art-t">
   <h2 id="art-t">Nos guides</h2>
