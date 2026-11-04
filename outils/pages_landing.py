@@ -103,7 +103,7 @@ form = f'''<form id="rent" class="calc" novalidate>
       {num_field("carb", "Carburant ou recharge (€)", "105", "Souvent 8 à 10 % du CA")}
       {num_field("frais", "Autres frais : repas, péage, parking, lavage (€)", "81")}
       {num_field("fixes", "Charges fixes de la période : assurance, rattachement, location (€)", "37")}
-      {num_field("statut", "Cotisations ou provision (% du CA)", "21.3", "21,2 % URSSAF + formation pour un auto-entrepreneur ; 0 si rattaché", "0.1")}
+      {num_field("statut", "Cotisations ou provision (% du CA)", "21.3", "Auto-entrepreneur : 21,2 % URSSAF + 0,1 % formation = 21,3 % ; 0 si rattaché", "0.1")}
     </div>
   </fieldset>
   <div class="res" aria-live="polite">
@@ -128,7 +128,7 @@ write_landing("calculateur-rentabilite-vtc",
 <h2>Comment lire le résultat</h2>
 <p><strong>Le € / heure brut</strong> divise ce que tu as encaissé par tes heures. C'est le chiffre que tu compares d'une semaine à l'autre et entre plateformes. <strong>Le € / heure net</strong> fait la même division sur ce qu'il te reste après tes frais et tes charges : c'est ce que ton heure te rapporte vraiment.</p>
 <p><strong>Le € / km</strong> montre si tu roules pour rien. Une course bien payée qui te fait revenir à vide de loin fait chuter ce chiffre. Avant d'accepter une course, vérifie-la avec le <a href="/calculateurs/prix-minimum-course-vtc/">calculateur de prix minimum</a>.</p>
-<div class="box"><p><strong>Exemple :</strong> 1 150 € encaissés en 48 h et 1 340 km, 105 € de carburant (9 % du CA), 81 € d'autres frais, 37 € d'assurance et 21,3 % de cotisations. Il reste 682 € : 24 € de l'heure en brut, 14 € en net, et 0,51 € net par km.</p></div>
+<div class="box"><p><strong>Exemple :</strong> 1 150 € encaissés en 48 h et 1 340 km, 105 € de carburant (9 % du CA), 81 € d'autres frais, 37 € d'assurance et 245 € de cotisations (21,2 % URSSAF + 0,1 % formation). Il reste 682 € : 24 € de l'heure en brut, 14 € en net, et 0,51 € net par km.</p></div>
 <p>Pour le calcul complet selon ton statut (ACRE, versement libératoire, société, rattachement), utilise le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net VTC</a>.</p>''' + "\n" + CTA,
   [("Comment calculer son € / heure de chauffeur VTC ?", "Divise ce que tu as encaissé par tes heures travaillées pour le brut. Pour le net, retire d'abord ton carburant, tes frais, tes charges fixes et tes cotisations, puis divise par les mêmes heures."),
    ("Quelle part du chiffre d'affaires part dans le carburant ?", "Le plus souvent entre 8 et 10 % du chiffre d'affaires pour une hybride. Note tes pleins pendant quelques semaines pour connaître ta vraie part."),
@@ -187,7 +187,7 @@ write_landing("rentabilite-uber-bolt",
   <li><strong>Tes frais :</strong> carburant (souvent 8 à 10 % de ce que tu encaisses), repas, péage, parking, entretien, et les charges de la voiture (assurance, loyer ou perte de valeur).</li>
   <li><strong>Ton statut :</strong> commission de rattachement par semaine, cotisations URSSAF en pourcentage si tu es auto-entrepreneur, ou provision en société.</li>
 </ol>
-<div class="box"><p><strong>Exemple sur une semaine :</strong> 1 150 € encaissés sur Uber, Bolt et des courses privées. Moins 105 € de carburant, 81 € de repas, péage et parking, 37 € d'assurance et 245 € de cotisations : il reste 682 €, soit 59 % de ce qui était affiché.</p></div>
+<div class="box"><p><strong>Exemple sur une semaine :</strong> 1 150 € encaissés sur Uber, Bolt et des courses privées. Moins 105 € de carburant, 81 € de repas, péage et parking, 37 € d'assurance et 245 € de cotisations (21,2 % URSSAF + 0,1 % formation) : il reste 682 €, soit 59 % de ce qui était affiché.</p></div>
 <h2>Uber ou Bolt : laquelle te rapporte le plus ?</h2>
 <p>La bonne comparaison n'est pas la course la mieux payée, mais <strong>ce qui te reste par heure et par kilomètre</strong> sur chaque plateforme. Une plateforme qui prend moins de commission mais t'envoie loin à vide peut te rapporter moins. Compare la même course sur chaque plateforme avec le <a href="/calculateurs/comparateur-plateformes-vtc/">comparateur des plateformes</a>, et ton € / heure avec le <a href="/calculateur-rentabilite-vtc/">calculateur de rentabilité VTC</a>.</p>
 <h2>Le suivre chaque semaine</h2>

@@ -404,7 +404,7 @@ faq = [("Comment savoir si une course VTC est rentable ?",
        ("Pourquoi compter les kilomètres à vide ?",
         "Pour aller chercher le client, et parfois pour revenir d'une zone sans demande, tu roules sans être payé. Ces kilomètres coûtent autant que ceux de la course : les oublier fait paraître rentables des courses qui ne le sont pas."),
        ("Quel taux de charges indiquer ?",
-        "En auto-entrepreneur, environ 21,3 % du CA en 2026 (cotisations et formation), 23 % avec le versement libératoire. En société, le pourcentage que tu mets de côté, souvent autour de 25 %. En rattachement, mets 0 et ajoute le prix du rattachement à tes charges fixes mensuelles."),
+        "En auto-entrepreneur, environ 21,3 % du CA en 2026 (21,2 % de cotisations URSSAF et 0,1 % de formation), 23 % avec le versement libératoire. En société, le pourcentage que tu mets de côté, souvent autour de 25 %. En rattachement, mets 0 et ajoute le prix du rattachement à tes charges fixes mensuelles."),
        ("Le montant affiché est-il avant ou après la commission ?",
         "Le résultat principal est le montant versé par la plateforme, après commission : c'est celui que tu vois sur l'offre. Le prix client minimum, avant commission, est affiché à côté.")]
 form = f"""
@@ -433,7 +433,7 @@ form = f"""
       {num_field("fixes", "Charges fixes par mois (€)", "600", "Voiture, assurance, téléphone, rattachement…")}
       {num_field("heuresmois", "Heures travaillées par mois", "200")}
       {num_field("com", "Commission de la plateforme (%)", "25", "0 pour une course privée")}
-      {num_field("stat", "Charges de ton statut (% du CA)", "21.3", "Auto-entrepreneur : 21,3 % ; avec versement libératoire : 23 %", step="0.1")}
+      {num_field("stat", "Charges de ton statut (% du CA)", "21.3", "Auto-entrepreneur : 21,2 % URSSAF + 0,1 % formation = 21,3 % ; avec versement libératoire : 23 %", step="0.1")}
       {num_field("objh", "Revenu net visé (€ / heure)", "15")}
     </div>
   </fieldset>
@@ -853,7 +853,7 @@ form = f"""
     <div class="row">
       {num_field("prix", "Prix payé par le client (€)", "30", step="0.5")}
       {num_field("cout", "Coût de la course pour toi (€)", "4", "Carburant, entretien, temps à vide : voir le calculateur du prix minimum", step="0.1")}
-      {num_field("stat", "Charges de ton statut (% du CA)", "21.3", "Auto-entrepreneur : 21,3 %", step="0.1")}
+      {num_field("stat", "Charges de ton statut (% du CA)", "21.3", "Auto-entrepreneur : 21,2 % URSSAF + 0,1 % formation = 21,3 %", step="0.1")}
       {num_field("courses", "Courses par semaine", "60", "Pour estimer l'écart sur un mois")}
     </div>
   </fieldset>
