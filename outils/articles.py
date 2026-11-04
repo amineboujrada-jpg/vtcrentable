@@ -1199,8 +1199,9 @@ page = head("Modèles gratuits VTC : tableau de suivi et checklist des frais", "
 </form>
 <div id="m-done" class="calc done" hidden tabindex="-1">
   <b style="font:800 21px/1.25 var(--f-display)">Merci ! Tes modèles sont prêts.</b>
-  <a id="dl-tableau-suivi" class="btn" href="/assets/modeles/tableau-suivi-vtc.xlsx" download hidden>Télécharger le tableau de suivi (.xlsx)</a>
-  <a id="dl-checklist-frais" class="btn" href="/assets/modeles/checklist-frais-vtc.pdf" download hidden>Télécharger la checklist des frais (.pdf)</a>
+  <a id="dl-tableau-suivi" class="btn" href="/assets/modeles/tableau-suivi-vtc.xlsx" target="_blank" rel="noopener" type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>Télécharger le tableau de suivi (.xlsx)</a>
+  <a id="dl-checklist-frais" class="btn" href="/assets/modeles/checklist-frais-vtc.pdf" target="_blank" rel="noopener" type="application/pdf" hidden>Télécharger la checklist des frais (.pdf)</a>
+  <p style="color:var(--muted);margin:0;font-size:14.5px">Sur iPhone, le fichier s'ouvre en aperçu : touche le bouton Partager, puis « Enregistrer dans Fichiers ». Si rien ne se passe, ouvre cette page dans Safari.</p>
   <p style="color:var(--muted);margin:0">Pour aller plus vite que le tableur, essaie l'appli <a href="{APP}">VTC Rentable</a> : elle fait ces calculs pour toi chaque semaine.</p>
 </div>
 <p style="color:var(--muted);font-size:14px;margin-top:16px">Ton adresse est enregistrée de façon sécurisée et n'est jamais revendue.</p>
