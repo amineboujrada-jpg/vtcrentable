@@ -352,7 +352,9 @@ CALCS = [dict(slug="revenu-net-vtc", short="Revenu net VTC", h1="Calculateur de 
          dict(slug="cout-voiture-km-vtc", short="Coût de la voiture au km", h1="Coût de la voiture VTC au kilomètre",
               card="Ce que te coûte vraiment ta voiture par km et par mois : perte de valeur ou location, assurance, carburant, entretien."),
          dict(slug="achat-ou-location-voiture-vtc", short="Achat ou location", h1="Voiture VTC : acheter ou louer ?",
-              card="Compare le coût total d'une voiture achetée et d'une voiture louée sur la même durée, km supplémentaires compris.")]
+              card="Compare le coût total d'une voiture achetée et d'une voiture louée sur la même durée, km supplémentaires compris."),
+         dict(slug="comparateur-statut-vtc", short="Comparateur de statuts", h1="Quel statut pour un chauffeur VTC ?",
+              card="Auto-entrepreneur, société ou rattachement : compare ce qu'il te reste chaque mois avec les mêmes chiffres.")]
 
 def calc_cards():
     return "\n".join(f'<a class="card" href="/calculateurs/{c["slug"]}/"><b>{e(c["h1"])}</b><span>{e(c["card"])}</span></a>' for c in CALCS)
@@ -737,6 +739,79 @@ method = """<h2>Comment le calcul est fait</h2>
 <div class="box warn"><p>Le coût n'est pas le seul critère. L'achat demande d'avancer de l'argent et te fait porter le risque d'une panne ou d'une revente difficile. La location est prévisible, mais le contrat peut limiter les kilomètres ou imposer une durée. Lis bien ce qui est inclus avant de signer.</p></div>"""
 write_calc(c, title, desc, "Perte de valeur, crédit et entretien d'un côté, loyers et kilomètres en plus de l'autre : compare le vrai coût des deux options sur la même durée.", faq, form, method, "calc-achat-location.js")
 
+# --- comparateur de statuts ---
+c = CALCS[4]
+title = "Statut VTC : auto-entrepreneur, société ou rattachement ? Comparateur 2026"
+desc = "Compare ton revenu net de chauffeur VTC en auto-entrepreneur, en société ou en rattachement, avec les mêmes chiffres. Plafond micro et TVA inclus."
+faq = [("Quel est le meilleur statut pour un chauffeur VTC ?",
+        "Il n'y a pas de réponse unique : tout dépend de ton chiffre d'affaires, de tes frais et de tes projets. L'auto-entreprise est simple et adaptée au démarrage, dans la limite de 83 600 € de CA par an. La société permet de déduire les frais et de grossir. Le rattachement évite les démarches, contre un prix chaque semaine."),
+       ("Pourquoi l'auto-entrepreneur paie-t-il des charges sur tout le chiffre d'affaires ?",
+        "En micro-entreprise, les cotisations se calculent sur le CA encaissé, pas sur le bénéfice : 21,2 % en 2026 plus la formation professionnelle. Si tes frais sont élevés, une société, qui calcule ses charges après les frais, peut devenir plus intéressante."),
+       ("Le pourcentage indiqué pour la société est-il exact ?",
+        "Non, c'est une estimation. En société, ce que tu paies dépend de la rémunération que tu te verses, des dividendes et de ta situation fiscale. Le comparateur utilise un pourcentage du CA mis de côté, souvent autour de 25 % : fais-le fixer par ton comptable."),
+       ("Que compter pour le rattachement ?",
+        "Le prix payé chaque semaine à la société de rattachement. Si elle retient aussi des cotisations ou un pourcentage sur ce qu'elle te verse, indique-le dans le champ des retenues.")]
+form = f"""
+<form id="calc" class="calc" novalidate aria-describedby="calc-intro">
+  <p id="calc-intro" class="note" style="margin:0 0 14px">Prérempli avec un exemple : remplace par tes chiffres, la comparaison se met à jour toute seule.</p>
+  <fieldset>
+    <legend>Ton activité</legend>
+    <div class="row">
+      {num_field("ca", "Chiffre d'affaires par semaine (€)", "1150", "Ce que les plateformes te versent, plus tes courses privées")}
+      {num_field("frais", "Frais par semaine (€)", "291", "Carburant, repas, péages, parking, lavage")}
+      {num_field("charges", "Charges mensuelles de la voiture (€)", "460", "Assurance, location ou crédit, téléphone")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Auto-entrepreneur</legend>
+    <div class="row">
+      <label for="acre">ACRE
+        <select id="acre"><option value="0">Pas d'ACRE</option><option value="0.5">Activité créée avant le 1er juillet 2026 (− 50 %)</option><option value="0.25">Activité créée depuis le 1er juillet 2026 (− 25 %)</option></select></label>
+      <label class="check" for="vl"><input id="vl" type="checkbox"> Versement libératoire de l'impôt (1,7 %)</label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Société (SASU, EURL…)</legend>
+    <div class="row">
+      {num_field("soc", "Part du CA pour charges et impôt (%)", "25", "Estimation : à fixer avec ton comptable")}
+      {num_field("compta", "Comptable et banque pro (€ / mois)", "100")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Rattachement</legend>
+    <div class="row">
+      {num_field("ratt", "Prix du rattachement (€ / semaine)", "50")}
+      {num_field("rattpct", "Retenues supplémentaires (% du CA)", "0", "Si ta société retient des cotisations ou un pourcentage", step="0.1")}
+    </div>
+  </fieldset>
+
+  <div class="res" aria-live="polite">
+    <p class="k">Le statut qui te laisse le plus</p>
+    <p id="r-net" class="big">—</p>
+    <p id="r-sub" class="sub"></p>
+    <div id="r-kpis" class="kpis"></div>
+    <p id="r-base" class="sub" style="margin:0 0 6px"></p>
+    <table class="small"><thead><tr><th>Statut</th><th class="n">Charges</th><th class="n">Net</th></tr></thead><tbody id="r-tab"></tbody></table>
+    <p id="r-msg" class="msg"></p>
+    <div class="go">
+      <p>Quel que soit ton statut, VTC Rentable calcule chaque semaine tes charges et ton vrai revenu net.</p>
+      <a class="btn" href="{APP}">Suivre ma rentabilité gratuitement</a>
+    </div>
+  </div>
+  <p class="note" style="margin-top:12px">Comparaison indicative avec les taux connus en novembre 2026 ; l'impôt sur le revenu n'est compris que si tu coches le versement libératoire ou s'il est inclus dans ton pourcentage en société. Elle ne remplace pas l'avis d'un comptable. Tes chiffres restent sur ton appareil. <button type="button" id="raz" style="font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline">Revenir à l'exemple</button></p>
+</form>
+"""
+method = """<h2>Comment la comparaison est faite</h2>
+<p>Les trois statuts partent du même chiffre d'affaires, des mêmes frais et des mêmes charges de voiture, ramenés au mois (× 52 ÷ 12). Seules les charges du statut changent :</p>
+<ul>
+  <li><strong>Auto-entrepreneur :</strong> 21,2 % du CA et la formation professionnelle, réduits par l'ACRE, plus 1,7 % avec le versement libératoire. Détails dans <a href="/articles/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>.</li>
+  <li><strong>Société :</strong> la part du CA mise de côté pour les charges et l'impôt, plus le comptable et la banque.</li>
+  <li><strong>Rattachement :</strong> le prix payé chaque semaine, et les retenues éventuelles.</li>
+</ul>
+<p>Le comparateur signale aussi quand ton CA annuel dépasse la franchise de TVA (37 500 €) ou le plafond de la micro-entreprise (83 600 €).</p>
+<div class="box warn"><p>Le choix d'un statut ne se résume pas au net du mois : protection sociale, retraite, démarches, possibilité d'embaucher ou d'acheter une voiture au nom de la société comptent aussi. Prends conseil auprès d'un comptable avant de changer.</p></div>"""
+write_calc(c, title, desc, "Avec le même chiffre d'affaires et les mêmes frais, compare ce qu'il te reste chaque mois en auto-entrepreneur, en société et en rattachement.", faq, form, method, "calc-statuts.js")
+
 # index des calculateurs
 url = SITE + "/calculateurs/"
 ld = {"@context": "https://schema.org", "@graph": [
@@ -758,7 +833,7 @@ page = head("Calculateurs gratuits pour chauffeurs VTC | VTC Rentable", "Calcula
   <div class="cards">
 {calc_cards()}
   </div>
-  <p style="color:var(--muted);margin-top:22px">D'autres calculateurs arrivent : comparaison des statuts, objectif de chiffre d'affaires, seuils de TVA.</p>
+  <p style="color:var(--muted);margin-top:22px">D'autres calculateurs arrivent : objectif de chiffre d'affaires, seuils de TVA.</p>
 </section>
 <section class="more read" aria-labelledby="art-t">
   <h2 id="art-t">Nos guides</h2>
