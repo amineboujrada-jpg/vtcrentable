@@ -346,7 +346,9 @@ open(f"{ROOT}/articles/index.html", "w", encoding="utf-8").write(page)
 # ---------- calculateurs ----------
 CSS_CALC = '\n<link rel="stylesheet" href="/assets/calc.css">'
 CALCS = [dict(slug="revenu-net-vtc", short="Revenu net VTC", h1="Calculateur de revenu net VTC",
-              card="Ce qu'il te reste vraiment après commissions, charges de ton statut et frais, avec ton € / heure et ton € / km.")]
+              card="Ce qu'il te reste vraiment après commissions, charges de ton statut et frais, avec ton € / heure et ton € / km."),
+         dict(slug="prix-minimum-course-vtc", short="Prix minimum d'une course", h1="Prix minimum d'une course VTC",
+              card="Le montant en dessous duquel une course ne vaut pas le coup, trajet à vide compris, et le test d'une offre.")]
 
 def calc_cards():
     return "\n".join(f'<a class="card" href="/calculateurs/{c["slug"]}/"><b>{e(c["h1"])}</b><span>{e(c["card"])}</span></a>' for c in CALCS)
@@ -355,6 +357,55 @@ def num_field(id_, label, value="", hint="", step="1"):
     h = f"<small>{hint}</small>" if hint else ""
     return f'<label for="{id_}"><span>{label}</span>{h}<input id="{id_}" type="number" inputmode="decimal" min="0" step="{step}" value="{value}"></label>'
 
+def write_calc(c, title, desc, lede, faq, form, method, js):
+    url = f"{SITE}/calculateurs/{c['slug']}/"
+    ld = {"@context": "https://schema.org", "@graph": [
+        {"@type": "WebApplication", "name": c["h1"], "url": url, "description": desc, "applicationCategory": "FinanceApplication",
+         "operatingSystem": "Navigateur web", "inLanguage": "fr-FR", "isAccessibleForFree": True,
+         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": ORG},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Calculateurs", "item": SITE + "/calculateurs/"},
+            {"@type": "ListItem", "position": 3, "name": c["short"], "item": url}]},
+        {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": r}} for q, r in faq]}]}
+    faqhtml = "\n".join(f"<h3>{e(q)}</h3>\n<p>{e(r)}</p>" for q, r in faq)
+    others = "\n".join(f'<a class="card" href="/calculateurs/{o["slug"]}/"><b>{e(o["h1"])}</b><span>{e(o["card"])}</span></a>' for o in CALCS if o["slug"] != c["slug"])
+    others_html = f'''<section class="more read" aria-labelledby="calc-t">
+  <h2 id="calc-t">Autres calculateurs</h2>
+  <div class="cards">
+{others}
+  </div>
+</section>
+''' if others else ""
+    page = head(title, desc, url, ld, cur="calc", og="website", css=CSS_CALC) + f'''
+<header class="head">
+  <div class="read">
+    <ol class="crumbs"><li><a href="/">Accueil</a></li><li><a href="/calculateurs/">Calculateurs</a></li><li>{e(c["short"])}</li></ol>
+    <h1>{e(c["h1"])}</h1>
+    <p class="lede">{lede}</p>
+    <p class="meta">Taux 2026 · Mis à jour le {DATE_FR}</p>
+  </div>
+</header>
+<main>
+<article class="read" style="padding-top:8px">
+{form}
+{method}
+<h2>Questions fréquentes</h2>
+{faqhtml}
+</article>
+{others_html}<section class="more read" aria-labelledby="more-t">
+  <h2 id="more-t">À lire aussi</h2>
+  <div class="cards">
+{cards()}
+  </div>
+</section>
+</main>
+<script src="/assets/{js}" defer></script>
+''' + FOOT
+    os.makedirs(f"{ROOT}/calculateurs/{c['slug']}", exist_ok=True)
+    open(f"{ROOT}/calculateurs/{c['slug']}/index.html", "w", encoding="utf-8").write(page)
+
+# --- revenu net ---
 c = CALCS[0]
 url = f"{SITE}/calculateurs/{c['slug']}/"
 title = "Calculateur revenu net VTC 2026 : gratuit et sans inscription"
@@ -367,16 +418,6 @@ faq = [("Comment calculer son revenu net de chauffeur VTC ?",
         "Le plus simple est de saisir ce que la plateforme te verse, donc après commission. Si tu connais le prix payé par les clients, choisis « avant commission » et indique le taux : le calculateur retire la commission pour toi."),
        ("Le résultat comprend-il l'impôt sur le revenu ?",
         "Seulement si tu as coché le versement libératoire en auto-entrepreneur, ou si ton pourcentage en société inclut l'impôt. Sinon, l'impôt sur le revenu reste à prévoir en plus.")]
-ld = {"@context": "https://schema.org", "@graph": [
-    {"@type": "WebApplication", "name": c["h1"], "url": url, "description": desc, "applicationCategory": "FinanceApplication",
-     "operatingSystem": "Navigateur web", "inLanguage": "fr-FR", "isAccessibleForFree": True,
-     "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": ORG},
-    {"@type": "BreadcrumbList", "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
-        {"@type": "ListItem", "position": 2, "name": "Calculateurs", "item": SITE + "/calculateurs/"},
-        {"@type": "ListItem", "position": 3, "name": c["short"], "item": url}]},
-    {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": r}} for q, r in faq]}]}
-faqhtml = "\n".join(f"<h3>{e(q)}</h3>\n<p>{e(r)}</p>" for q, r in faq)
 form = f'''
 <form id="calc" class="calc" novalidate aria-describedby="calc-intro">
   <p id="calc-intro" class="note" style="margin:0 0 14px">Prérempli avec l'exemple de notre article : remplace par tes chiffres, le résultat se met à jour tout seul.</p>
@@ -452,18 +493,7 @@ form = f'''
   <p class="note" style="margin-top:12px">Résultat indicatif, calculé avec les taux connus en novembre 2026 ; il ne remplace pas l'avis d'un comptable. Tes chiffres restent sur ton appareil. <button type="button" id="raz" style="font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline">Revenir à l'exemple</button></p>
 </form>
 '''
-page = head(title, desc, url, ld, cur="calc", og="website", css=CSS_CALC) + f'''
-<header class="head">
-  <div class="read">
-    <ol class="crumbs"><li><a href="/">Accueil</a></li><li><a href="/calculateurs/">Calculateurs</a></li><li>{e(c["short"])}</li></ol>
-    <h1>{e(c["h1"])}</h1>
-    <p class="lede">Combien te reste-t-il vraiment ? Entre ce que tu encaisses, tes frais et ton statut, le calculateur te donne ton net, ton € / heure et ton € / km.</p>
-    <p class="meta">Taux 2026 · Mis à jour le {DATE_FR}</p>
-  </div>
-</header>
-<main>
-<article class="read" style="padding-top:8px">
-{form}
+method = '''
 <h2>Comment le calcul est fait</h2>
 <p>Le calculateur suit la méthode détaillée dans notre article <a href="/articles/calcul-revenu-net-vtc/">Comment calculer son revenu net de chauffeur VTC</a> :</p>
 <ol>
@@ -474,20 +504,85 @@ page = head(title, desc, url, ld, cur="calc", og="website", css=CSS_CALC) + f'''
 </ol>
 <p>Le revenu net est ce qu'il reste. Le € / heure et le € / km se calculent sur ce net, pour voir si tes heures et tes kilomètres valent le coup.</p>
 <div class="box warn"><p>L'impôt sur le revenu n'est compris que si tu as coché le versement libératoire, ou s'il est inclus dans ton pourcentage en société. Les taux changent chaque année : vérifie-les sur ton espace URSSAF.</p></div>
-<h2>Questions fréquentes</h2>
-{faqhtml}
-</article>
-<section class="more read" aria-labelledby="more-t">
-  <h2 id="more-t">À lire aussi</h2>
-  <div class="cards">
-{cards()}
+'''
+write_calc(c, title, desc, 'Combien te reste-t-il vraiment ? Entre ce que tu encaisses, tes frais et ton statut, le calculateur te donne ton net, ton € / heure et ton € / km.', faq, form, method, "calc-revenu-net.js")
+
+# --- prix minimum d'une course ---
+c = CALCS[1]
+title = "Prix minimum d'une course VTC : le calculateur gratuit 2026"
+desc = "Calcule le prix minimum d'une course VTC : carburant, trajet à vide, commission, charges et objectif horaire. Teste une offre Uber ou Bolt avant d'accepter."
+faq = [("Comment savoir si une course VTC est rentable ?",
+        "Additionne ce que la course te coûte (carburant et entretien sur tous les kilomètres, à vide compris, et une part de tes charges fixes pour le temps passé), ajoute le revenu net que tu veux gagner, puis divise par la part qui te reste après les charges de ton statut. Si l'offre est en dessous, la course ne vaut pas le coup."),
+       ("Pourquoi compter les kilomètres à vide ?",
+        "Pour aller chercher le client, et parfois pour revenir d'une zone sans demande, tu roules sans être payé. Ces kilomètres coûtent autant que ceux de la course : les oublier fait paraître rentables des courses qui ne le sont pas."),
+       ("Quel taux de charges indiquer ?",
+        "En auto-entrepreneur, environ 21,3 % du CA en 2026 (cotisations et formation), 23 % avec le versement libératoire. En société, le pourcentage que tu mets de côté, souvent autour de 25 %. En rattachement, mets 0 et ajoute le prix du rattachement à tes charges fixes mensuelles."),
+       ("Le montant affiché est-il avant ou après la commission ?",
+        "Le résultat principal est le montant versé par la plateforme, après commission : c'est celui que tu vois sur l'offre. Le prix client minimum, avant commission, est affiché à côté.")]
+form = f"""
+<form id="calc" class="calc" novalidate aria-describedby="calc-intro">
+  <p id="calc-intro" class="note" style="margin:0 0 14px">Prérempli avec un exemple : remplace par tes chiffres, le résultat se met à jour tout seul.</p>
+  <fieldset>
+    <legend>La course</legend>
+    <div class="row">
+      {num_field("kmc", "Distance de la course (km)", "12", step="0.1")}
+      {num_field("minc", "Durée de la course (min)", "25")}
+      {num_field("kmv", "Km à vide : approche et retour (km)", "4", "Pour aller chercher le client ou revenir en zone", step="0.1")}
+      {num_field("minv", "Temps d'approche (min)", "8")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Ta voiture</legend>
+    <div class="row">
+      {num_field("conso", "Consommation (L ou kWh / 100 km)", "5", step="0.1")}
+      {num_field("prixcarb", "Prix du carburant ou de l'électricité (€ / L ou kWh)", "1.75", step="0.01")}
+      {num_field("entretien", "Entretien et pneus (€ / km)", "0.05", "Souvent entre 0,03 et 0,08 €", step="0.01")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Tes charges et ton objectif</legend>
+    <div class="row">
+      {num_field("fixes", "Charges fixes par mois (€)", "600", "Voiture, assurance, téléphone, rattachement…")}
+      {num_field("heuresmois", "Heures travaillées par mois", "200")}
+      {num_field("com", "Commission de la plateforme (%)", "25", "0 pour une course privée")}
+      {num_field("stat", "Charges de ton statut (% du CA)", "21.3", "Auto-entrepreneur : 21,3 % ; avec versement libératoire : 23 %", step="0.1")}
+      {num_field("objh", "Revenu net visé (€ / heure)", "15")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Tester une offre <small style="font:400 14px var(--f-body);color:var(--muted)">(facultatif)</small></legend>
+    <div class="row">
+      {num_field("offre", "Montant proposé par la plateforme (€)", "14", "Le montant versé, affiché sur l'offre", step="0.01")}
+    </div>
+  </fieldset>
+
+  <div class="res" aria-live="polite">
+    <p class="k">Minimum à accepter</p>
+    <p id="r-net" class="big">—</p>
+    <p class="sub">versés par la plateforme, pour atteindre ton objectif horaire</p>
+    <div id="r-verdict" class="verdict"></div>
+    <div id="r-kpis" class="kpis"></div>
+    <table><tbody id="r-tab"></tbody></table>
+    <p id="r-msg" class="msg"></p>
+    <div class="go">
+      <p>Avec VTC Rentable, tu vois chaque semaine ton vrai € / heure et ton € / km, pour savoir quelles courses te rapportent vraiment.</p>
+      <a class="btn" href="{APP}">Suivre ma rentabilité gratuitement</a>
+    </div>
   </div>
-</section>
-</main>
-<script src="/assets/calc-revenu-net.js" defer></script>
-''' + FOOT
-os.makedirs(f"{ROOT}/calculateurs/{c['slug']}", exist_ok=True)
-open(f"{ROOT}/calculateurs/{c['slug']}/index.html", "w", encoding="utf-8").write(page)
+  <p class="note" style="margin-top:12px">Résultat indicatif ; il ne remplace pas l'avis d'un comptable. Tes chiffres restent sur ton appareil. <button type="button" id="raz" style="font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline">Revenir à l'exemple</button></p>
+</form>
+"""
+method = """<h2>Comment le calcul est fait</h2>
+<ol>
+  <li><strong>Le coût de la route :</strong> carburant et entretien sur tous les kilomètres, ceux de la course et ceux faits à vide.</li>
+  <li><strong>La part de tes charges fixes :</strong> tes charges du mois divisées par tes heures travaillées, multipliées par le temps de la course et de l'approche.</li>
+  <li><strong>Ton objectif :</strong> le revenu net que tu veux gagner par heure, sur ce même temps.</li>
+  <li><strong>Les charges de ton statut :</strong> le total est divisé par la part qui te reste après les charges (par exemple 78,7 % en auto-entrepreneur), pour que l'objectif soit atteint une fois l'URSSAF payée.</li>
+</ol>
+<p>On obtient le montant minimum que la plateforme doit te verser. Divisé par la part qui te reste après sa commission, il donne le prix minimum payé par le client.</p>
+<p>Pour suivre ces chiffres sur toute ta semaine, et pas seulement course par course, utilise le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net VTC</a> ou lis <a href="/articles/calcul-revenu-net-vtc/">comment calculer son revenu net</a>.</p>
+<div class="box warn"><p>Les montants proposés par les plateformes changent selon l'heure et la demande. Le calculateur donne un repère pour décider ; c'est à toi de juger si une course mal payée te place bien pour la suivante.</p></div>"""
+write_calc(c, title, desc, "Une course qui paie peu, avec du trajet à vide, peut te coûter de l'argent. Calcule le montant en dessous duquel elle ne vaut pas le coup, et teste une offre avant d'accepter.", faq, form, method, "calc-prix-minimum.js")
 
 # index des calculateurs
 url = SITE + "/calculateurs/"
@@ -510,7 +605,7 @@ page = head("Calculateurs gratuits pour chauffeurs VTC | VTC Rentable", "Calcula
   <div class="cards">
 {calc_cards()}
   </div>
-  <p style="color:var(--muted);margin-top:22px">D'autres calculateurs arrivent : prix minimum d'une course, coût de la voiture au kilomètre, achat ou location, comparaison des statuts.</p>
+  <p style="color:var(--muted);margin-top:22px">D'autres calculateurs arrivent : coût de la voiture au kilomètre, achat ou location, comparaison des statuts.</p>
 </section>
 <section class="more read" aria-labelledby="art-t">
   <h2 id="art-t">Nos guides</h2>
