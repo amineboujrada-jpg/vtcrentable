@@ -4,16 +4,160 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1116">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Application de gestion VTC gratuite | VTC Rentable</title>
+<meta name="description" content="Appli de gestion VTC gratuite : note ta journée Uber, Bolt, Heetch et vois ton revenu net, ton € / heure et ton € / km. Bon de commande PDF inclus.">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://vtcrentable.com/">
-<title>VTC Rentable · le revenu net des chauffeurs VTC</title>
-<meta name="description" content="Appli gratuite pour chauffeurs VTC : saisis ta journée Uber, Bolt, Heetch en une minute et vois ton revenu net, ton € / heure et ton € / km. Bon de commande PDF, virements, entretien.">
-<meta property="og:title" content="VTC Rentable">
-<meta property="og:description" content="Ce qu'il te reste vraiment après le carburant, le rattachement, l'assurance et l'URSSAF.">
-<meta property="og:url" content="https://vtcrentable.com/">
-<meta property="og:image" content="https://app.vtcrentable.com/og-image.png">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VTC Rentable">
 <meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://vtcrentable.com/">
+<meta property="og:title" content="VTC Rentable · l'appli de gestion VTC gratuite">
+<meta property="og:description" content="Ce qu'il te reste vraiment après le carburant, l'assurance, l'URSSAF ou le rattachement : ton revenu net, ton € / heure et ton € / km.">
+<meta property="og:image" content="https://app.vtcrentable.com/og-image.png">
+<meta property="og:image:alt" content="VTC Rentable, l'appli qui calcule le revenu net des chauffeurs VTC">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="VTC Rentable · l'appli de gestion VTC gratuite">
+<meta name="twitter:description" content="Ce qu'il te reste vraiment après le carburant, l'assurance, l'URSSAF ou le rattachement : ton revenu net, ton € / heure et ton € / km.">
+<meta name="twitter:image" content="https://app.vtcrentable.com/og-image.png">
+<meta name="twitter:image:alt" content="VTC Rentable, l'appli qui calcule le revenu net des chauffeurs VTC">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebSite",
+   "@id": "https://vtcrentable.com/#website",
+   "url": "https://vtcrentable.com/",
+   "name": "VTC Rentable",
+   "inLanguage": "fr-FR",
+   "publisher": {
+    "@id": "https://vtcrentable.com/#organization"
+   }
+  },
+  {
+   "@type": "Organization",
+   "@id": "https://vtcrentable.com/#organization",
+   "name": "VTC Rentable",
+   "url": "https://vtcrentable.com/",
+   "logo": {
+    "@type": "ImageObject",
+    "url": "https://vtcrentable.com/icon-192.png",
+    "width": 192,
+    "height": 192
+   },
+   "email": "contact@vtcrentable.com",
+   "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "email": "contact@vtcrentable.com",
+    "availableLanguage": "French"
+   }
+  },
+  {
+   "@type": "SoftwareApplication",
+   "@id": "https://vtcrentable.com/#app",
+   "name": "VTC Rentable",
+   "url": "https://app.vtcrentable.com/",
+   "applicationCategory": "BusinessApplication",
+   "applicationSubCategory": "FinanceApplication",
+   "operatingSystem": "iOS, Android, Windows, macOS (navigateur web)",
+   "inLanguage": "fr-FR",
+   "description": "Application de gestion gratuite pour chauffeurs VTC en France : revenu net, € / heure et € / km, plateformes Uber, Bolt, Heetch, FreeNow, LeCab et Allocab, bon de commande PDF, virements, entretien et visite technique.",
+   "image": "https://app.vtcrentable.com/og-image.png",
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR"
+   },
+   "publisher": {
+    "@id": "https://vtcrentable.com/#organization"
+   }
+  },
+  {
+   "@type": "FAQPage",
+   "@id": "https://vtcrentable.com/#faq",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "Il faut la télécharger sur l'App Store ?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Tu ouvres app.vtcrentable.com dans Safari ou Chrome, puis « Partager » et « Sur l'écran d'accueil ». L'icône apparaît avec tes autres applis et s'ouvre en plein écran, sur iPhone comme sur Android."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Et quand je n'ai pas de réseau ?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Tu saisis comme d'habitude, et même le bon de commande PDF se fait hors ligne. Tout part sur ton compte dès que le réseau revient."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "L'appli lit mes comptes Uber ou Bolt ?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non, elle ne se connecte à aucune plateforme. Tu tapes toi-même les montants de la journée. Tu n'as donc aucun identifiant à donner."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Le bon de commande suffit en cas de contrôle ?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Il reprend les informations demandées pour une réservation préalable : client, date et heure de la commande, lieu de prise en charge, exploitant et chauffeur. L'heure de commande est enregistrée automatiquement et ne peut pas être modifiée. L'appli ne crée jamais de réservation sans vraie commande."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Qui voit mes chiffres ?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Toi seul. Chaque compte est protégé par email et mot de passe, les données sont hébergées en Europe (Irlande), et la base n'autorise chaque chauffeur qu'à lire les siennes."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Comment calculer son revenu net de chauffeur VTC ?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pars de ton chiffre d'affaires sur toutes les plateformes, courses privées comprises. Retire tes frais (carburant, repas, péage, parking, lavage, assurance), puis les charges de ton statut : la part mise de côté en société, les cotisations URSSAF en auto-entrepreneur, la commission du rattachement en salarié. Divise ce qu'il reste par tes heures et tes km pour avoir ton € / heure et ton € / km. L'appli fait ce calcul chaque semaine avec tes saisies."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Combien gagne vraiment un chauffeur VTC ?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ça dépend de tes heures, de ta voiture et de ton statut, et le montant affiché par les plateformes n'est pas ce qu'il te reste. Dans l'exemple plus haut, 1 150 € encaissés donnent 772 € une fois les frais retirés, pour 48 h de travail. Le plus fiable reste de noter tes propres chiffres pour connaître ton net réel."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Quelles charges pour un chauffeur VTC auto-entrepreneur ?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Les cotisations URSSAF sur ton chiffre d'affaires (21,2 % en 2026), réduites de 50 % ou 25 % si tu as l'ACRE, plus 1,7 % si tu as choisi le versement libératoire. S'y ajoutent tes frais de tous les jours : carburant, assurance, entretien, péage, parking. L'appli retire tout ça chaque semaine."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Les montants remplacent mon comptable ?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Non. Ce sont des estimations à partir de tes saisies, pour piloter ton activité au jour le jour. Pour tes déclarations, ton comptable ou ton espace URSSAF font foi."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -68,6 +212,7 @@ nav.top .btn { padding: 10px 14px; font-size: 14px; }
 .hero-text { padding-bottom: 64px; min-width: 0; }
 .hero h1 { font-size: clamp(38px, 6vw, 70px); line-height: 1; font-weight: 850; font-stretch: 112%; }
 .hero h1 em { font-style: normal; color: var(--amber); }
+.hero h1 .h1-kicker { display: block; color: var(--amber); font-stretch: normal; margin-bottom: 16px; line-height: 1.4; }
 .hero .lead { margin-top: 20px; font-size: 18px; color: var(--night-muted); max-width: 33em; }
 .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 .hero .small { margin-top: 14px; font-size: 13.5px; color: var(--night-muted); }
@@ -223,9 +368,8 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
   <div class="hero" id="top">
     <div class="wrap">
       <div class="hero-text">
-        <p class="eyebrow" style="color:var(--amber)">Pour les chauffeurs VTC en France</p>
-        <h1 style="margin-top:16px">Uber t'affiche ton chiffre d'affaires. <em>Ici, tu vois ce qu'il te reste.</em></h1>
-        <p class="lead">Le soir, tu notes ce que t'ont rapporté Uber, Bolt, Heetch et tes courses privées. L'appli retire le carburant, le rattachement, l'assurance ou l'URSSAF et te donne ton net de la semaine, ton € / heure et ton € / km.</p>
+        <h1><span class="eyebrow h1-kicker">Appli de gestion VTC pour les chauffeurs en France</span> Uber t'affiche ton chiffre d'affaires. <em>Ici, tu vois ce qu'il te reste.</em></h1>
+        <p class="lead">Le soir, tu notes ce que t'ont rapporté Uber, Bolt, Heetch et tes courses privées. L'appli retire le carburant, l'assurance, l'URSSAF ou le rattachement et calcule ton revenu net de la semaine, ton € / heure et ton € / km.</p>
         <div class="ctas">
           <a class="btn btn-amber" href="https://app.vtcrentable.com/">Créer mon compte gratuit</a>
           <a class="btn btn-ghost" href="#fonctions">Voir ce qu'elle fait</a>
@@ -266,8 +410,8 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
   <section class="block" id="exemple">
     <div class="wrap ex">
       <div class="ex-text">
-        <p class="eyebrow">Une semaine type</p>
-        <h2 style="font-size:clamp(28px,4vw,44px);line-height:1.06;font-weight:800">1 150 € encaissés, 772 € gagnés.</h2>
+        <p class="eyebrow">Calcul du revenu net VTC</p>
+        <h2 style="font-size:clamp(28px,4vw,44px);line-height:1.06;font-weight:800">Une semaine type : 1 150 € encaissés, 772 € gagnés.</h2>
         <p>Les plateformes montrent ce qu'elles te versent. Elles ne parlent jamais du plein, de la commission du rattachement ou de l'assurance qui tombe chaque mois. C'est pour ça que beaucoup de chauffeurs pensent gagner plus que la réalité.</p>
         <p>VTC Rentable fait le calcul à ta place, semaine après semaine, avec tes vrais chiffres.</p>
       </div>
@@ -290,7 +434,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
       <div class="sec-head">
         <p class="eyebrow">Ce que fait l'appli</p>
         <h2>Tout ce que tu notais sur un tableur, en plus simple.</h2>
-        <p>Trois onglets pour le quotidien, un menu pour le reste. Pensée pour être remplie d'une main, sur le parking, en fin de service.</p>
+        <p>Suivi du chiffre d'affaires par plateforme, dépenses, bon de commande, virements et entretien : trois onglets pour le quotidien, un menu pour le reste. Pensée pour être remplie d'une main, sur le parking, en fin de service.</p>
       </div>
       <div class="feats">
         <div class="feat big">
@@ -307,7 +451,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
         </div>
         <div class="feat">
           <span class="ic c3" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20z"/><path d="M14 3.5V8h4M9.5 12h5M9.5 15.5h5"/></svg></span>
-          <h3>Le bon de commande en cas de contrôle</h3>
+          <h3>Le bon de commande VTC en PDF pour les contrôles</h3>
           <p>Un client t'appelle en direct ? Tu notes la réservation et l'appli fait le bon de commande en PDF, daté à la prise de commande, avec tes mentions d'exploitant. Même sans réseau.</p>
           <p class="where">Onglet Réservations</p>
         </div>
@@ -351,7 +495,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Ton statut</p>
-        <h2>Les bonnes charges selon ton statut.</h2>
+        <h2>Les charges du chauffeur VTC selon ton statut.</h2>
         <p>Tu choisis ton statut une fois. L'appli ajoute chaque semaine les charges qui vont avec, et tu peux en changer plus tard sans perdre ton historique.</p>
       </div>
       <div class="profiles">
@@ -383,7 +527,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
 
       <div class="calc" aria-labelledby="calcTitle">
         <div>
-          <h3 id="calcTitle">Essaie avec ta semaine</h3>
+          <h3 id="calcTitle">Calcule ton revenu net de la semaine</h3>
           <p class="note">Calcul simplifié : remplace les montants par les tiens.</p>
           <div class="seg" role="group" aria-label="Statut">
             <button type="button" id="sSoc" aria-pressed="true">Société</button>
@@ -420,7 +564,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Prix</p>
-        <h2>Gratuit.</h2>
+        <h2>Une appli VTC gratuite.</h2>
         <p>La première version de VTC Rentable est gratuite. Il suffit d'un email pour créer ton compte, sans carte bancaire.</p>
       </div>
       <div class="price">
@@ -433,7 +577,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
           <li>Téléphone et ordinateur synchronisés</li>
           <li>Export vers Google Sheets</li>
         </ul>
-        <p class="foot">Une idée, un bug, une fonction qui te manque ? Écris à contact@vtcrentable.com : l'appli évolue avec les retours des chauffeurs.</p>
+        <p class="foot">Une idée, un bug, une fonction qui te manque ? Écris à <a href="mailto:contact@vtcrentable.com">contact@vtcrentable.com</a> : l'appli évolue avec les retours des chauffeurs.</p>
       </div>
     </div>
   </section>
@@ -442,7 +586,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Questions</p>
-        <h2>Ce que les chauffeurs demandent</h2>
+        <h2>Questions fréquentes des chauffeurs VTC</h2>
       </div>
       <div class="faq">
         <details><summary>Il faut la télécharger sur l'App Store ?</summary><p>Non. Tu ouvres app.vtcrentable.com dans Safari ou Chrome, puis « Partager » et « Sur l'écran d'accueil ». L'icône apparaît avec tes autres applis et s'ouvre en plein écran, sur iPhone comme sur Android.</p></details>
@@ -450,6 +594,9 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
         <details><summary>L'appli lit mes comptes Uber ou Bolt ?</summary><p>Non, elle ne se connecte à aucune plateforme. Tu tapes toi-même les montants de la journée. Tu n'as donc aucun identifiant à donner.</p></details>
         <details><summary>Le bon de commande suffit en cas de contrôle ?</summary><p>Il reprend les informations demandées pour une réservation préalable : client, date et heure de la commande, lieu de prise en charge, exploitant et chauffeur. L'heure de commande est enregistrée automatiquement et ne peut pas être modifiée. L'appli ne crée jamais de réservation sans vraie commande.</p></details>
         <details><summary>Qui voit mes chiffres ?</summary><p>Toi seul. Chaque compte est protégé par email et mot de passe, les données sont hébergées en Europe (Irlande), et la base n'autorise chaque chauffeur qu'à lire les siennes.</p></details>
+        <details><summary>Comment calculer son revenu net de chauffeur VTC ?</summary><p>Pars de ton chiffre d'affaires sur toutes les plateformes, courses privées comprises. Retire tes frais (carburant, repas, péage, parking, lavage, assurance), puis les charges de ton statut : la part mise de côté en société, les cotisations URSSAF en auto-entrepreneur, la commission du rattachement en salarié. Divise ce qu'il reste par tes heures et tes km pour avoir ton € / heure et ton € / km. L'appli fait ce calcul chaque semaine avec tes saisies.</p></details>
+        <details><summary>Combien gagne vraiment un chauffeur VTC ?</summary><p>Ça dépend de tes heures, de ta voiture et de ton statut, et le montant affiché par les plateformes n'est pas ce qu'il te reste. Dans l'exemple plus haut, 1 150 € encaissés donnent 772 € une fois les frais retirés, pour 48 h de travail. Le plus fiable reste de noter tes propres chiffres pour connaître ton net réel.</p></details>
+        <details><summary>Quelles charges pour un chauffeur VTC auto-entrepreneur ?</summary><p>Les cotisations URSSAF sur ton chiffre d'affaires (21,2 % en 2026), réduites de 50 % ou 25 % si tu as l'ACRE, plus 1,7 % si tu as choisi le versement libératoire. S'y ajoutent tes frais de tous les jours : carburant, assurance, entretien, péage, parking. L'appli retire tout ça chaque semaine.</p></details>
         <details><summary>Les montants remplacent mon comptable ?</summary><p>Non. Ce sont des estimations à partir de tes saisies, pour piloter ton activité au jour le jour. Pour tes déclarations, ton comptable ou ton espace URSSAF font foi.</p></details>
       </div>
     </div>
@@ -468,10 +615,10 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
   <div class="wrap">
     <span>© 2026 VTC Rentable · créée par un chauffeur VTC</span>
     <nav aria-label="Liens utiles">
-      <a href="https://app.vtcrentable.com/">L'appli</a>
+      <a href="https://app.vtcrentable.com/">Ouvrir l'appli VTC Rentable</a>
       <a href="https://app.vtcrentable.com/mentions-legales.html">Mentions légales</a>
-      <a href="https://app.vtcrentable.com/confidentialite.html">Confidentialité</a>
-      <span>contact@vtcrentable.com</span>
+      <a href="https://app.vtcrentable.com/confidentialite.html">Politique de confidentialité</a>
+      <a href="mailto:contact@vtcrentable.com">contact@vtcrentable.com</a>
     </nav>
   </div>
 </footer>
