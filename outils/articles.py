@@ -5,301 +5,40 @@ DATE_FR = "4 novembre 2026"
 APP = "https://app.vtcrentable.com/"
 SITE = "https://vtcrentable.com"
 
-ARTS = [
- dict(slug="bon-de-commande-vtc", short="Bon de commande VTC",
-  title="Bon de commande VTC : les 7 mentions obligatoires en 2026",
-  desc="Justificatif de réservation VTC : les 7 mentions obligatoires depuis l'arrêté du 6 août 2025, sur papier ou téléphone, et ce qu'il faut en contrôle.",
-  h1="Bon de commande VTC : les 7 mentions obligatoires",
-  lede="Depuis le 30 octobre 2025, le justificatif de réservation préalable suit de nouvelles règles. Voici ce qu'il doit contenir, et comment l'avoir sur toi à chaque course.",
-  card="Les 7 informations à faire figurer sur le justificatif de réservation, selon l'arrêté du 6 août 2025.",
-  body="""
-<p>Un VTC ne peut pas prendre un client qui le hèle dans la rue : chaque course doit avoir été réservée avant. En cas de contrôle, tu dois pouvoir le prouver avec un <strong>justificatif de réservation préalable</strong>, que beaucoup de chauffeurs appellent bon de commande ou bon de réservation.</p>
-<p>Pour une course Uber, Bolt ou Heetch, la plateforme s'en charge dans son application. Le sujet concerne surtout <strong>tes clients en direct</strong> : un habitué qui t'appelle, un hôtel, une réservation par SMS ou WhatsApp. Ces courses ne te coûtent aucune commission : le <a href="/calculateurs/comparateur-plateformes-vtc/">comparateur des plateformes</a> montre ce qu'elles te rapportent de plus.</p>
+# Les articles du blog sont dans content/blog/<slug>.html : un en-tête « clé: valeur », une ligne ---, puis le corps en HTML.
+# Clés : slug, date (AAAA-MM-JJ), categorie, title, desc, h1, short, lede, card ; « faq: question || réponse » et « source: titre || url » répétables.
+def lire_article(chemin):
+    brut = open(chemin, encoding="utf-8").read()
+    entete, corps = brut.split("\n---\n", 1)
+    a = {"faq": [], "sources": [], "body": corps}
+    for ligne in entete.splitlines():
+        if not ligne.strip():
+            continue
+        cle, val = ligne.split(":", 1)
+        cle, val = cle.strip(), val.strip()
+        if cle == "faq":
+            a["faq"].append(tuple(x.strip() for x in val.split("||", 1)))
+        elif cle == "source":
+            a["sources"].append(tuple(x.strip() for x in val.split("||", 1)))
+        else:
+            a[cle] = val
+    for cle in ("slug", "date", "categorie", "title", "desc", "h1", "short", "lede", "card"):
+        assert cle in a, f"{chemin} : clé « {cle} » manquante"
+    assert a["slug"] == os.path.basename(chemin)[:-5], f"{chemin} : le slug doit être le nom du fichier"
+    return a
 
-<h2>Ce qui a changé en 2025</h2>
-<p>Un arrêté du 6 août 2025, publié au Journal officiel le 29 août 2025, a remplacé celui de 2013. Il s'applique depuis le 30 octobre 2025. Il ajoute deux informations sur l'exploitant (son numéro au registre VTC et son numéro SIREN) et assouplit la règle sur les coordonnées du client.</p>
-
-<h2>Les 7 mentions obligatoires</h2>
-<ol>
-  <li><strong>Le nom ou la dénomination sociale de l'exploitant</strong>, et ses coordonnées. L'exploitant, c'est l'entreprise qui fait la course : ta société, ton auto-entreprise ou ta société de rattachement.</li>
-  <li><strong>Le numéro d'inscription de l'exploitant au registre des VTC.</strong></li>
-  <li><strong>Le numéro unique d'identification de l'exploitant</strong>, c'est-à-dire son numéro SIREN.</li>
-  <li><strong>Le nom et le numéro de téléphone du client</strong> qui a réservé.</li>
-  <li><strong>La date et l'heure de la réservation</strong>, autrement dit le moment où le client a commandé.</li>
-  <li><strong>La date et l'heure de prise en charge</strong> souhaitées par le client.</li>
-  <li><strong>Le lieu de prise en charge</strong> indiqué par le client.</li>
-</ol>
-<div class="box">
-  <p><strong>Si le nom ou le téléphone du client manque</strong> sur le justificatif, le texte te laisse une solution : donner sans attendre aux agents de contrôle un moyen de joindre le client.</p>
-</div>
-<p>La destination, le prix ou le nombre de passagers ne font pas partie des mentions obligatoires. Les noter reste utile pour toi et pour le client.</p>
-
-<h2>Papier ou téléphone ?</h2>
-<p>Les deux sont acceptés. Ce qui compte, c'est de pouvoir le montrer tout de suite, même sans réseau dans un parking souterrain. Garde donc une version enregistrée sur le téléphone, pas seulement un lien à ouvrir.</p>
-<p>L'heure de réservation est le point sensible : elle doit être antérieure à la prise en charge. Un justificatif rempli à la main après coup, ou dont l'heure de commande se modifie facilement, ne te protège pas vraiment.</p>
-
-<h2>Ce que tu risques sans justificatif</h2>
-<p>Prendre un client sans réservation préalable est sanctionné par le Code des transports. Les cas les plus graves relèvent de l'article L. 3124-12, qui prévoit jusqu'à un an d'emprisonnement et 15 000 € d'amende, avec des peines complémentaires comme la suspension du permis ou l'immobilisation du véhicule. D'autres manquements relèvent d'une contravention de 5e classe.</p>
-<p>Si tu démarres dans le métier, notre guide pour <a href="/articles/devenir-chauffeur-vtc/">devenir chauffeur VTC</a> reprend toutes les obligations, dans l'ordre.</p>
-<div class="box warn">
-  <p>Cet article résume la réglementation pour t'aider au quotidien. Il ne remplace pas le texte officiel : en cas de doute, consulte l'arrêté sur Légifrance ou la préfecture de ton département.</p>
-</div>
-
-<h2>Le faire en 30 secondes avec VTC Rentable</h2>
-<p>Dans l'onglet <strong>Réservations</strong> de l'appli, tu notes le client, son téléphone, l'heure et le lieu de prise en charge. L'appli enregistre toute seule l'heure de la commande, qui ne peut plus être modifiée ensuite, et reprend les informations de l'exploitant que tu as remplies une fois dans tes réglages.</p>
-<p>Elle produit un bon de commande en PDF, directement sur le téléphone et même sans réseau, que tu peux montrer ou envoyer au client. Elle refuse de le créer tant qu'une mention de l'exploitant manque.</p>
-<p>Le bon de commande n'est qu'une des <a href="/#fonctions">fonctions de l'appli</a> : elle suit aussi tes recettes, tes frais et ton revenu net, et elle est <a href="/#prix">gratuite</a>.</p>
-""",
-  faq=[("Quelles sont les mentions obligatoires du bon de commande VTC ?","Depuis l'arrêté du 6 août 2025 : le nom et les coordonnées de l'exploitant, son numéro au registre des VTC, son numéro SIREN, le nom et le téléphone du client, la date et l'heure de la réservation, la date et l'heure de prise en charge, et le lieu de prise en charge."),
-       ("Le bon de commande VTC peut-il être sur le téléphone ?","Oui, le justificatif peut être papier ou électronique. Il doit pouvoir être présenté immédiatement lors d'un contrôle, y compris sans réseau.")],
-  sources=[("Arrêté du 6 août 2025 relatif au justificatif de la réservation préalable (Légifrance)","https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000052153206"),
-           ("VTC : un nouvel arrêté modifie les règles de justification des réservations (L'Officiel des métiers)","https://www.lofficieldesmetiers.fr/vtc-un-nouvel-arrete-modifie-les-regles-relatives-a-la-justification-des-reservations/"),
-           ("Bon de réservation VTC : les mentions obligatoires (Dhraagi Conseil)","https://dhraagiconseil.fr/bon-de-reservation-vtc-les-mentions-obligatoires-et-les-autres/"),
-           ("Justificatif de réservation VTC (Examen Quiz VTC)","https://www.examen-quiz-vtc.fr/blog/justificatif-reservation-vtc")]),
-
- dict(slug="charges-chauffeur-vtc-auto-entrepreneur", short="Charges auto-entrepreneur VTC",
-  title="Charges d'un chauffeur VTC auto-entrepreneur en 2026",
-  desc="URSSAF 21,2 %, ACRE, versement libératoire, plafond de 83 600 € : les charges d'un chauffeur VTC auto-entrepreneur en 2026, avec un exemple chiffré.",
-  h1="Les charges d'un chauffeur VTC auto-entrepreneur en 2026",
-  lede="Cotisations URSSAF, formation, ACRE, impôt et frais de la voiture : ce que tu paies vraiment sur ton chiffre d'affaires, avec les taux de 2026.",
-  card="URSSAF, ACRE, versement libératoire, plafond : les taux 2026 et un exemple sur une semaine.",
-  body="""
-<p>En micro-entreprise, tes charges sociales se calculent sur ton <strong>chiffre d'affaires</strong>, pas sur ton bénéfice. Que ta semaine ait coûté cher en carburant ou non, l'URSSAF prend le même pourcentage. C'est pour ça qu'il faut garder un œil sur les deux à la fois.</p>
-
-<h2>Les cotisations URSSAF : 21,2 % du CA</h2>
-<p>Le transport de personnes en VTC relève des prestations de services commerciales (BIC). En 2026, le taux de cotisations sociales est de <strong>21,2 % du chiffre d'affaires</strong> encaissé. Tu le déclares chaque mois ou chaque trimestre sur ton espace URSSAF.</p>
-<p>Le CA à déclarer, c'est ce que tu encaisses : les montants versés par les plateformes, tes courses privées, le cash et les pourboires.</p>
-
-<h3>La contribution à la formation professionnelle</h3>
-<p>Elle s'ajoute aux cotisations et se paie en même temps. Son taux dépend de ton activité : il est faible, de l'ordre de 0,1 % du CA pour une activité commerciale. Le taux exact figure sur ton espace URSSAF.</p>
-
-<h2>L'ACRE : moins de cotisations au démarrage</h2>
-<p>L'ACRE réduit tes cotisations sociales pendant environ un an : le trimestre où tu te lances, plus les trois trimestres suivants.</p>
-<ul>
-  <li><strong>Activité créée avant le 1er juillet 2026 :</strong> réduction de 50 %, que tu gardes jusqu'à la fin de ta période d'ACRE.</li>
-  <li><strong>Activité créée depuis le 1er juillet 2026 :</strong> réduction de 25 %. Tu paies donc 75 % du taux normal.</li>
-</ul>
-<p>L'ACRE ne baisse que les cotisations sociales, pas l'impôt ni la formation professionnelle. La demande se fait dans les 60 jours qui suivent la création.</p>
-<p>Tu hésites encore sur ton statut ? Le <a href="/calculateurs/comparateur-statut-vtc/">comparateur de statuts</a> met côte à côte auto-entrepreneur, société et rattachement, avec tes chiffres.</p>
-
-<h2>L'impôt sur le revenu</h2>
-<p>Tu as deux possibilités :</p>
-<ul>
-  <li><strong>Le versement libératoire :</strong> tu paies 1,7 % de ton CA en même temps que tes cotisations, et l'impôt sur ces revenus est réglé. Il faut le demander, et ton revenu fiscal de référence ne doit pas dépasser un plafond.</li>
-  <li><strong>Sans versement libératoire :</strong> ton CA est déclaré une fois par an avec tes autres revenus, après un abattement de 50 %. Le montant dépend alors de toute ta situation fiscale.</li>
-</ul>
-
-<h2>Le plafond et la TVA</h2>
-<p>Pour rester en micro-entreprise, ton chiffre d'affaires annuel ne doit pas dépasser <strong>83 600 € hors taxes</strong> pour les prestations de services. Ce plafond vaut pour 2026, 2027 et 2028.</p>
-<p>La franchise de TVA est un seuil différent : <strong>37 500 €</strong> pour les services en 2026. Au-dessus, tu dois facturer et reverser la TVA, même en restant micro-entrepreneur. Vérifie où tu en es avec le <a href="/calculateurs/seuil-tva-vtc/">calculateur des seuils de TVA</a>, et vois quel chiffre viser avec l'<a href="/calculateurs/objectif-chiffre-affaires-vtc/">objectif de chiffre d'affaires</a>.</p>
-
-<h2>Les frais de l'activité</h2>
-<p>En micro-entreprise, tu ne déduis pas tes frais de ton chiffre d'affaires pour calculer tes cotisations. Ils pèsent pourtant lourd sur ce qu'il te reste :</p>
-<ul>
-  <li>le carburant ou la recharge, souvent le premier poste ;</li>
-  <li>l'assurance VTC, en général payée au mois ;</li>
-  <li>la voiture elle-même : crédit, location, ou perte de valeur si tu l'as achetée ;</li>
-  <li>l'entretien, les pneus, la visite technique, le lavage ;</li>
-  <li>le téléphone, les péages, le parking, les amendes ;</li>
-  <li>la cotisation foncière des entreprises (CFE), due à partir de ta deuxième année.</li>
-</ul>
-<p>Pour ne rien oublier, télécharge la <a href="/modeles/">checklist des frais du chauffeur VTC</a>, et calcule ce que te coûte vraiment ta voiture avec le <a href="/calculateurs/cout-voiture-km-vtc/">calculateur du coût au kilomètre</a>.</p>
-
-<h2>Exemple sur une semaine</h2>
-<p>Un chauffeur auto-entrepreneur, sans ACRE ni versement libératoire, encaisse 1 150 € dans la semaine.</p>
-<div class="tbl"><table>
-  <thead><tr><th>Poste</th><th class="n">Montant</th></tr></thead>
-  <tbody>
-    <tr><td>Chiffre d'affaires (plateformes, privées, pourboires)</td><td class="n">1 150 €</td></tr>
-    <tr><td>Cotisations URSSAF et formation (21,3 %)</td><td class="n minus">− 245 €</td></tr>
-    <tr><td>Carburant</td><td class="n minus">− 210 €</td></tr>
-    <tr><td>Repas et cafés</td><td class="n minus">− 45 €</td></tr>
-    <tr><td>Assurance (160 € par mois, ramenés à la semaine)</td><td class="n minus">− 37 €</td></tr>
-    <tr><td>Péage, parking, lavage</td><td class="n minus">− 36 €</td></tr>
-    <tr class="tot"><td>Il reste avant impôt</td><td class="n">577 €</td></tr>
-  </tbody>
-</table></div>
-<p>Sur 1 150 € encaissés, il reste donc environ la moitié, et ce n'est pas encore le net final : l'impôt sur le revenu et la perte de valeur de la voiture viennent ensuite.</p>
-<p>Pour faire le calcul avec tes propres chiffres, ACRE et versement libératoire compris, utilise le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net VTC</a>.</p>
-<div class="box warn">
-  <p>Les taux de cet article sont ceux connus en novembre 2026. Ils changent régulièrement : vérifie toujours sur ton espace URSSAF ou avec ton comptable avant de prendre une décision.</p>
-</div>
-
-<h2>Suivre tout ça sans tableur</h2>
-<p>Dans VTC Rentable, qui gère <a href="/#statut">tous les statuts</a>, tu choisis le statut <strong>Auto-entrepreneur</strong>, puis ton taux, ton ACRE et le versement libératoire si tu l'as. Chaque semaine, l'appli calcule les cotisations sur ton CA réel et les retire de ton revenu net, avec l'assurance et tes autres charges.</p>
-""",
-  faq=[("Quel est le taux de cotisations d'un chauffeur VTC auto-entrepreneur en 2026 ?","21,2 % du chiffre d'affaires pour les prestations de services commerciales (BIC), auxquels s'ajoute la contribution à la formation professionnelle. Avec le versement libératoire, il faut ajouter 1,7 % pour l'impôt sur le revenu."),
-       ("Quel est le plafond de chiffre d'affaires d'un VTC en micro-entreprise ?","83 600 € hors taxes par an pour les prestations de services, en 2026, 2027 et 2028. La franchise de TVA est un seuil distinct de 37 500 € en 2026.")],
-  sources=[("Taux de cotisations micro-entrepreneur 2026 (Accounts OS)","https://accounts-os.com/fr/questions/what-are-the-micro-entrepreneur-contribution-rates-in-2026"),
-           ("ACRE 2026 : une exonération de cotisations fortement réduite (Portail Auto-Entrepreneur)","https://www.portail-autoentrepreneur.fr/actualites/acre-2026"),
-           ("Nouveaux seuils de la micro-entreprise 2026 (L-Expert-Comptable)","https://www.l-expert-comptable.com/a/nouveaux-seuils-micro-entreprise-2026.html"),
-           ("Taux du versement libératoire 2026 (Wisestart)","https://wisestart.fr/guides/fiscalite/taux-versement-liberatoire-2026/")]),
-
- dict(slug="calcul-revenu-net-vtc", short="Calcul du revenu net VTC",
-  title="Comment calculer son revenu net de chauffeur VTC",
-  desc="Calculer son revenu net de chauffeur VTC : chiffre d'affaires, charges de la semaine, € / heure et € / km. La méthode pas à pas, avec un exemple chiffré.",
-  h1="Comment calculer son revenu net de chauffeur VTC",
-  lede="Le montant que t'affiche Uber ou Bolt n'est pas ce que tu gagnes. Voici la méthode pour connaître ton vrai net, ton € / heure et ton € / km.",
-  card="La méthode pas à pas pour passer du chiffre d'affaires au vrai revenu net, avec € / heure et € / km.",
-  body="""
-<p>Les applications des plateformes affichent ce qu'elles te versent. C'est ton chiffre d'affaires, pas ton revenu. Entre les deux, il y a le carburant, l'assurance, la voiture, les charges de ton statut, et toutes les petites dépenses de la journée.</p>
-<div class="box">
-  <p><strong>Pressé ?</strong> Le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net VTC</a> fait ces étapes pour toi, gratuitement et sans inscription.</p>
-</div>
-
-<h2>Étape 1 : additionne tout ce que tu encaisses</h2>
-<p>Ton chiffre d'affaires de la semaine, c'est la somme de :</p>
-<ul>
-  <li>ce que chaque plateforme te verse (Uber, Bolt, Heetch, FreeNow…) ;</li>
-  <li>tes courses privées, payées en direct ;</li>
-  <li>le cash encaissé et les pourboires.</li>
-</ul>
-<p>Prends les montants réellement versés, après la commission de la plateforme. C'est ce qui arrive sur ton compte qui compte.</p>
-
-<h2>Étape 2 : retire les frais de la semaine</h2>
-<p>Ce sont les dépenses liées à ton activité, au moment où tu les paies : carburant, repas sur la route, péage, parking, lavage, amendes.</p>
-
-<h2>Étape 3 : ramène les charges mensuelles à la semaine</h2>
-<p>C'est l'étape que beaucoup de chauffeurs oublient. L'assurance, la location de la voiture, le téléphone ou le comptable se paient une fois par mois, mais ils coûtent aussi les semaines où tu ne les paies pas.</p>
-<p>Pour les répartir, multiplie le montant mensuel par 12 et divise par 52. Une assurance à 160 € par mois coûte ainsi <strong>36,92 € par semaine</strong>.</p>
-
-<h2>Étape 4 : retire les charges de ton statut</h2>
-<ul>
-  <li><strong>Société (SASU, EURL…) :</strong> mets de côté une part de ton CA pour l'impôt et les charges, souvent autour de 25 %. Fixe ce pourcentage avec ton comptable.</li>
-  <li><strong>Auto-entrepreneur :</strong> les cotisations URSSAF, 21,2 % du CA en 2026, plus la formation professionnelle et le versement libératoire si tu l'as choisi.</li>
-  <li><strong>Salarié en rattachement :</strong> la commission de ta société de rattachement, souvent un montant fixe par semaine.</li>
-</ul>
-<p>Pour voir lequel te laisse le plus, utilise le <a href="/calculateurs/comparateur-statut-vtc/">comparateur de statuts</a>.</p>
-
-<h2>Étape 5 : n'oublie pas la voiture</h2>
-<p>Si tu as acheté ta voiture, elle perd de la valeur chaque mois. Une façon simple de le compter : (prix d'achat − prix de revente prévu) ÷ nombre de mois d'utilisation. Une voiture achetée 15 000 €, revendue 4 000 € au bout de 3 ans, coûte environ 305 € par mois, soit 70 € par semaine. Ajoute l'entretien et les pneus. Le <a href="/calculateurs/cout-voiture-km-vtc/">calculateur du coût de la voiture</a> fait ce calcul pour toi, location comprise.</p>
-
-<h2>Exemple complet</h2>
-<p>Un auto-entrepreneur a travaillé 48 heures et roulé 1 340 km dans la semaine.</p>
-<div class="tbl"><table>
-  <thead><tr><th>Poste</th><th class="n">Montant</th></tr></thead>
-  <tbody>
-    <tr><td>Chiffre d'affaires</td><td class="n">1 150 €</td></tr>
-    <tr><td>Carburant</td><td class="n minus">− 210 €</td></tr>
-    <tr><td>Repas et cafés</td><td class="n minus">− 45 €</td></tr>
-    <tr><td>Péage, parking, lavage</td><td class="n minus">− 36 €</td></tr>
-    <tr><td>Assurance ramenée à la semaine</td><td class="n minus">− 37 €</td></tr>
-    <tr><td>Cotisations URSSAF et formation</td><td class="n minus">− 245 €</td></tr>
-    <tr class="tot"><td>Revenu net de la semaine</td><td class="n">577 €</td></tr>
-  </tbody>
-</table></div>
-
-<h2>€ / heure et € / km : les deux chiffres à suivre</h2>
-<p><strong>Le € / heure</strong> te dit si tes journées valent le coup. Dans l'exemple, 577 € pour 48 heures donnent 12 € de l'heure net. Sur le brut, 1 150 € pour 48 heures, c'est 24 € de l'heure : l'écart montre tout ce que coûte l'activité.</p>
-<p><strong>Le € / km</strong> te dit si tu roules pour rien. 1 150 € pour 1 340 km, c'est 0,86 € par km en brut. Compare-le d'une semaine à l'autre, et entre plateformes : une course qui paie bien mais fait revenir à vide de loin fait chuter ce chiffre. Avant d'accepter, vérifie-la avec le <a href="/calculateurs/prix-minimum-course-vtc/">calculateur du prix minimum d'une course</a>.</p>
-<div class="box">
-  <p><strong>Astuce :</strong> regarde ces chiffres par jour de la semaine et par créneau. Beaucoup de chauffeurs découvrent qu'une partie de leurs heures rapporte moins que le reste et réorganisent leur planning en conséquence.</p>
-</div>
-
-<h2>Le faire automatiquement</h2>
-<p>Tu préfères un tableur ? Télécharge notre <a href="/modeles/">tableau de suivi de la semaine</a>, gratuit.</p>
-<p>VTC Rentable fait ces cinq étapes pour toi. Tu notes ta journée le soir (recettes par plateforme, carburant, heures, km), et l'appli ajoute chaque semaine l'assurance répartie, les charges de ton statut et tes charges fixes. Tu vois ton net de la semaine et du mois, ton € / heure, ton € / km et le coût de ta voiture. Découvre <a href="/#fonctions">tout ce que fait l'appli</a>.</p>
-""",
-  faq=[("Comment calculer son revenu net de chauffeur VTC ?","Additionne tout ce que tu encaisses (plateformes, courses privées, cash, pourboires), puis retire tes frais de la semaine, tes charges mensuelles ramenées à la semaine (× 12 ÷ 52), les charges de ton statut et le coût de la voiture."),
-       ("Comment calculer son € / heure en VTC ?","Divise ce que tu as encaissé par le nombre d'heures travaillées pour le brut, ou ton revenu net par ces mêmes heures pour le net. Exemple : 577 € nets pour 48 heures donnent 12 € de l'heure.")],
-  sources=[("Chiffrage de la rentabilité VTC (Keobiz)","https://www.keobiz.fr/fiches-pratiques/creer-activite-vtc/chiffrage-rentabilite-vtc/"),
-           ("Coût kilométrique d'un VTC (Keobiz)","https://www.keobiz.fr/fiches-pratiques/creer-activite-vtc/cout-kilometre-vtc/"),
-           ("Taux de cotisations micro-entrepreneur 2026 (Accounts OS)","https://accounts-os.com/fr/questions/what-are-the-micro-entrepreneur-contribution-rates-in-2026")]),
- dict(slug="devenir-chauffeur-vtc", short="Devenir chauffeur VTC",
-  title="Devenir chauffeur VTC en 2026 : étapes, examen et budget",
-  desc="Devenir chauffeur VTC en 2026 : conditions, examen à la CMA, carte professionnelle, registre VTC, voiture, assurance et budget de départ, étape par étape.",
-  h1="Devenir chauffeur VTC en 2026 : le guide étape par étape",
-  lede="Conditions, examen, carte professionnelle, entreprise, voiture et budget : tout ce qu'il faut faire, dans l'ordre, pour transporter tes premiers clients.",
-  card="Les étapes, l'examen, les papiers et le budget pour démarrer, dans le bon ordre.",
-  body="""
-<p>Devenir chauffeur VTC prend en général deux à quatre mois. Il faut réussir un examen, obtenir une carte professionnelle, créer une entreprise (ou se rattacher à une société), puis trouver une voiture qui respecte les règles. Voici les étapes dans l'ordre.</p>
-
-<h2>Étape 1 : vérifier que tu remplis les conditions</h2>
-<ul>
-  <li><strong>Le permis B depuis plus de 3 ans</strong>, en cours de validité.</li>
-  <li><strong>Un casier compatible :</strong> certaines condamnations, notamment à au moins 6 mois de prison pour des délits comme le vol ou certaines infractions routières, interdisent le métier.</li>
-  <li><strong>L'aptitude médicale :</strong> une visite chez un médecin agréé par la préfecture, à refaire régulièrement (en général tous les 5 ans).</li>
-</ul>
-
-<h2>Étape 2 : passer l'examen VTC</h2>
-<p>L'examen est organisé par la <strong>chambre de métiers et de l'artisanat (CMA)</strong> de ta région, avec une inscription en ligne. Compte environ <strong>200 €</strong> de frais d'inscription, selon la région.</p>
-<ul>
-  <li><strong>Une épreuve de connaissances :</strong> réglementation du transport de personnes, gestion, sécurité routière, développement commercial, français et anglais.</li>
-  <li><strong>Une épreuve pratique :</strong> une conduite d'une vingtaine de minutes, avec un parcours à préparer et des questions sur la relation client.</li>
-</ul>
-<p>Tu peux le préparer seul (quelques centaines d'euros de manuels et d'entraînements) ou en centre de formation, entre 1 500 et 3 000 € environ, souvent finançable par le CPF. Il est aussi possible d'être dispensé d'examen si tu justifies d'au moins un an d'expérience de chauffeur professionnel de personnes sur les dix dernières années.</p>
-
-<h2>Étape 3 : demander ta carte professionnelle</h2>
-<p>Une fois l'examen réussi, tu demandes ta <strong>carte professionnelle VTC à la préfecture</strong> de ton département (préfecture de police à Paris), avec ton attestation de réussite, ton permis et ton certificat médical. La carte est <strong>gratuite</strong> ; compte quelques semaines de délai. Pendant les courses, elle doit être visible de l'extérieur.</p>
-
-<h2>Étape 4 : choisir ton statut et créer ton entreprise</h2>
-<p>Trois possibilités :</p>
-<ul>
-  <li><strong>Auto-entrepreneur :</strong> la création est gratuite et les démarches sont simples, mais les cotisations portent sur tout le chiffre d'affaires et le CA est plafonné à 83 600 € par an.</li>
-  <li><strong>Société (SASU, EURL) :</strong> quelques centaines d'euros de création, un comptable, mais les frais se déduisent.</li>
-  <li><strong>Rattachement :</strong> tu travailles sous la licence d'une société, contre un prix chaque semaine, sans avoir à t'inscrire toi-même au registre.</li>
-</ul>
-<p>Pour comparer avec tes propres chiffres, utilise le <a href="/calculateurs/comparateur-statut-vtc/">comparateur de statuts</a>.</p>
-
-<h2>Étape 5 : t'inscrire au registre des VTC</h2>
-<p>Si tu exploites toi-même (auto-entrepreneur ou société), tu dois inscrire ton entreprise au <strong>registre des exploitants VTC</strong>, en ligne. L'inscription coûte <strong>170 €</strong> et se renouvelle tous les 5 ans. Il faut fournir notamment ton numéro SIREN ou Kbis, ta carte professionnelle, la carte grise de la voiture et une attestation d'assurance responsabilité civile professionnelle.</p>
-<p>Tu reçois ensuite les <strong>macarons VTC</strong> à coller à l'avant et à l'arrière de la voiture (de l'ordre de 36 € l'unité).</p>
-
-<h2>Étape 6 : trouver la bonne voiture</h2>
-<p>La voiture doit respecter des critères précis :</p>
-<ul>
-  <li>au moins 4 portes, et de 4 à 9 places chauffeur compris ;</li>
-  <li>des dimensions minimales de 4,50 m de long et 1,70 m de large ;</li>
-  <li>une puissance d'au moins 84 kW (environ 114 ch) ;</li>
-  <li>moins de 6 ans.</li>
-</ul>
-<p>Les règles d'âge, de taille et de puissance sont assouplies pour les voitures hybrides et électriques : vérifie le détail auprès de ta préfecture avant d'acheter ou de louer. Pense aussi aux zones à faibles émissions (ZFE) de ta ville.</p>
-<p>Acheter ou louer ? Fais le calcul avec le <a href="/calculateurs/achat-ou-location-voiture-vtc/">comparateur achat ou location</a>, et estime le coût réel au kilomètre avec le <a href="/calculateurs/cout-voiture-km-vtc/">calculateur du coût de la voiture</a>.</p>
-
-<h2>Étape 7 : t'assurer</h2>
-<p>Deux assurances sont indispensables : une <strong>assurance de la voiture pour le transport de personnes à titre onéreux</strong>, et une <strong>responsabilité civile professionnelle</strong>. L'assurance VTC est souvent le poste le plus lourd après la voiture : demande plusieurs devis.</p>
-
-<h2>Le budget de départ</h2>
-<div class="tbl"><table>
-  <thead><tr><th>Poste</th><th class="n">Ordre de grandeur</th></tr></thead>
-  <tbody>
-    <tr><td>Examen VTC (inscription)</td><td class="n">≈ 200 €</td></tr>
-    <tr><td>Préparation à l'examen</td><td class="n">200 € à 3 000 €</td></tr>
-    <tr><td>Visite médicale</td><td class="n">quelques dizaines d'€</td></tr>
-    <tr><td>Carte professionnelle</td><td class="n">gratuite</td></tr>
-    <tr><td>Création de l'entreprise</td><td class="n">0 € à quelques centaines d'€</td></tr>
-    <tr><td>Inscription au registre VTC</td><td class="n">170 €</td></tr>
-    <tr><td>Macarons</td><td class="n">≈ 72 €</td></tr>
-    <tr><td>Premier mois de location ou apport voiture</td><td class="n">500 € à 1 200 € et plus</td></tr>
-  </tbody>
-</table></div>
-<p>En comptant une préparation en centre et la location d'une voiture, les sources estiment un budget de départ autour de <strong>2 500 à 5 000 €</strong>, hors achat de voiture.</p>
-
-<h2>Après le démarrage</h2>
-<ul>
-  <li><strong>La formation continue :</strong> un stage d'au moins 7 heures tous les 5 ans, dans un centre agréé, pour garder ta carte.</li>
-  <li><strong>Le justificatif de réservation :</strong> chaque course doit être réservée à l'avance et prouvée. Les règles ont changé en 2025 : lis <a href="/articles/bon-de-commande-vtc/">les 7 mentions obligatoires du bon de commande</a>.</li>
-  <li><strong>Tes chiffres :</strong> le montant affiché par les plateformes n'est pas ton revenu. Apprends à <a href="/articles/calcul-revenu-net-vtc/">calculer ton revenu net</a> dès les premières semaines, et compare ce que te laisse chaque plateforme avec le <a href="/calculateurs/comparateur-plateformes-vtc/">comparateur des plateformes</a>.</li>
-  <li><strong>Tes charges :</strong> lis <a href="/articles/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a> et garde la <a href="/modeles/">checklist des frais</a> sous la main.</li>
-</ul>
-<div class="box warn">
-  <p>Les montants de ce guide sont des ordres de grandeur relevés en novembre 2026 ; certains varient selon la région. Vérifie toujours auprès de ta CMA et de ta préfecture avant de t'engager.</p>
-</div>
-
-<h2>Bien démarrer avec VTC Rentable</h2>
-<p>Dès ta première semaine, note tes recettes, ton carburant et tes heures dans VTC Rentable, <a href="/#demarrer">prête en cinq minutes</a> : l'appli calcule ton revenu net, ton € / heure et ton € / km, avec les charges de ton statut.</p>
-""",
-  faq=[("Combien de temps faut-il pour devenir chauffeur VTC ?","En général deux à quatre mois : la préparation et le passage de l'examen à la CMA, la demande de carte professionnelle en préfecture, la création de l'entreprise et l'inscription au registre des VTC."),
-       ("Combien coûte le démarrage en VTC ?","Hors achat de voiture, compter environ 2 500 à 5 000 € avec une préparation en centre et la location d'un véhicule : examen (environ 200 €), formation, registre VTC (170 €), macarons, assurance et premier loyer.")],
-  sources=[("Devenir chauffeur VTC (Wisestart, mis à jour en octobre 2026)","https://wisestart.fr/guides/juridique/devenir-chauffeur-vtc/"),
-           ("Comment devenir chauffeur VTC (Dougs)","https://www.dougs.fr/blog/comment-devenir-chauffeur-vtc/"),
-           ("Chauffeur VTC : conditions et démarches (Service Public, fiche F31027)","https://sites.service-information-publique.fr/carnac/guide-professionnels/F31027.html")]),
-
-]
+ARTS = sorted((lire_article(os.path.join(ROOT, "content", "blog", f)) for f in os.listdir(os.path.join(ROOT, "content", "blog")) if f.endswith(".html")),
+              key=lambda a: (a["date"], a["slug"]), reverse=True)
+MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
+def date_fr(d):
+    an, m, j = d.split("-")
+    return f"{int(j)} {MOIS[int(m) - 1]} {an}"
+# anciennes adresses des articles (avant le blog) : on garde une redirection
+ANCIENS = ["bon-de-commande-vtc", "charges-chauffeur-vtc-auto-entrepreneur", "calcul-revenu-net-vtc", "devenir-chauffeur-vtc"]
 
 def e(s): return html.escape(s, quote=True)
 
-def head(title, desc, url, extra_ld, cur="articles", og="article", css=""):
+def head(title, desc, url, extra_ld, cur="blog", og="article", css=""):
     def li(href, label, key):
         c = ' aria-current="page"' if key == cur else ""
         return f'<li><a href="{href}"{c}>{label}</a></li>'
@@ -337,7 +76,7 @@ def head(title, desc, url, extra_ld, cur="articles", og="article", css=""):
     <ul>
       <li><a href="/">L'appli</a></li>
       {li("/calculateurs/", "Calculateurs", "calc")}
-      {li("/articles/", "Articles", "articles")}
+      {li("/blog/", "Blog", "blog")}
       <li><a href="/#faq">Questions</a></li>
     </ul>
     <a class="btn" href="{APP}">Ouvrir l'appli</a>
@@ -351,7 +90,7 @@ FOOT = f'''<footer>
     <nav aria-label="Liens utiles">
       <a href="/">Accueil</a>
       <a href="/calculateurs/">Calculateurs</a>
-      <a href="/articles/">Articles</a>
+      <a href="/blog/">Blog</a>
       <a href="/modeles/">Modèles gratuits</a>
       <a href="{APP}">Ouvrir l'appli</a>
       <a href="https://app.vtcrentable.com/mentions-legales.html">Mentions légales</a>
@@ -363,18 +102,22 @@ FOOT = f'''<footer>
 </html>
 '''
 
-def cards(exclude=None):
-    return "\n".join(f'<a class="card" href="/articles/{a["slug"]}/"><b>{e(a["h1"])}</b><span>{e(a["card"])}</span></a>' for a in ARTS if a["slug"] != exclude)
+def cards(exclude=None, limit=None):
+    choix = [a for a in ARTS if a["slug"] != exclude]
+    if exclude and limit:   # d'abord la même catégorie, puis les plus récents
+        cat = next(x["categorie"] for x in ARTS if x["slug"] == exclude)
+        choix = sorted(choix, key=lambda a: a["categorie"] != cat)[:limit]
+    return "\n".join(f'<a class="card" href="/blog/{a["slug"]}/" data-cat="{e(a["categorie"])}"><small class="cat">{e(a["categorie"])} · {date_fr(a["date"])}</small><b>{e(a["h1"])}</b><span>{e(a["card"])}</span></a>' for a in choix)
 
 ORG = {"@type": "Organization", "name": "VTC Rentable", "url": SITE + "/", "logo": SITE + "/icon-192.png"}
 for a in ARTS:
-    url = f"{SITE}/articles/{a['slug']}/"
+    url = f"{SITE}/blog/{a['slug']}/"
     ld = {"@context": "https://schema.org", "@graph": [
-        {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": DATE, "dateModified": DATE,
+        {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": a["date"], "dateModified": a["date"],
          "inLanguage": "fr-FR", "mainEntityOfPage": url, "image": "https://app.vtcrentable.com/og-image.png", "author": ORG, "publisher": ORG},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
-            {"@type": "ListItem", "position": 2, "name": "Articles", "item": SITE + "/articles/"},
+            {"@type": "ListItem", "position": 2, "name": "Blog", "item": SITE + "/blog/"},
             {"@type": "ListItem", "position": 3, "name": a["short"], "item": url}]},
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": r}} for q, r in a["faq"]]}]}
     faqhtml = "\n".join(f"<h3>{e(q)}</h3>\n<p>{e(r)}</p>" for q, r in a["faq"])
@@ -382,10 +125,10 @@ for a in ARTS:
     page = head(a["title"], a["desc"], url, ld) + f'''
 <header class="head">
   <div class="read">
-    <ol class="crumbs"><li><a href="/">Accueil</a></li><li><a href="/articles/">Articles</a></li><li>{e(a["short"])}</li></ol>
+    <ol class="crumbs"><li><a href="/">Accueil</a></li><li><a href="/blog/">Blog</a></li><li>{e(a["short"])}</li></ol>
     <h1>{e(a["h1"])}</h1>
     <p class="lede">{e(a["lede"])}</p>
-    <p class="meta">Mis à jour le {DATE_FR}</p>
+    <p class="meta">{e(a["categorie"])} · Mis à jour le {date_fr(a["date"])}</p>
   </div>
 </header>
 <main>
@@ -405,40 +148,74 @@ for a in ARTS:
 <section class="more read" aria-labelledby="more-t">
   <h2 id="more-t">À lire aussi</h2>
   <div class="cards">
-{cards(a["slug"])}
+{cards(a["slug"], 6)}
   </div>
 </section>
 </main>
 ''' + FOOT
-    os.makedirs(f"{ROOT}/articles/{a['slug']}", exist_ok=True)
-    open(f"{ROOT}/articles/{a['slug']}/index.html", "w", encoding="utf-8").write(page)
+    os.makedirs(f"{ROOT}/blog/{a['slug']}", exist_ok=True)
+    open(f"{ROOT}/blog/{a['slug']}/index.html", "w", encoding="utf-8").write(page)
 
-# index des articles
-url = SITE + "/articles/"
+# index du blog
+url = SITE + "/blog/"
+cats = sorted({a["categorie"] for a in ARTS})
 ld = {"@context": "https://schema.org", "@graph": [
-    {"@type": "CollectionPage", "name": "Articles pour chauffeurs VTC", "url": url, "inLanguage": "fr-FR",
-     "hasPart": [{"@type": "Article", "headline": a["h1"], "url": f"{SITE}/articles/{a['slug']}/"} for a in ARTS]},
+    {"@type": "Blog", "name": "Blog VTC Rentable", "url": url, "inLanguage": "fr-FR", "publisher": ORG,
+     "blogPost": [{"@type": "BlogPosting", "headline": a["h1"], "url": f"{SITE}/blog/{a['slug']}/", "datePublished": a["date"]} for a in ARTS]},
     {"@type": "BreadcrumbList", "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
-        {"@type": "ListItem", "position": 2, "name": "Articles", "item": url}]}]}
-page = head("Articles pour chauffeurs VTC | VTC Rentable", "Bon de commande VTC, charges d'un auto-entrepreneur, calcul du revenu net : des guides pratiques pour les chauffeurs VTC en France.", url, ld) + f'''
+        {"@type": "ListItem", "position": 2, "name": "Blog", "item": url}]}]}
+chips = '<button type="button" class="chip" aria-pressed="true" data-f="">Tout</button>' + "".join(f'<button type="button" class="chip" aria-pressed="false" data-f="{e(c)}">{e(c)}</button>' for c in cats)
+page = head("Blog VTC Rentable : guides et conseils pour chauffeurs VTC", "Réglementation, charges, statut, rentabilité : le blog des chauffeurs VTC qui veulent savoir ce qu'ils gagnent vraiment, avec des guides clairs et à jour.", url, ld, og="website") + f'''
+<style>
+.chips {{ display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }}
+.chip {{ font: 600 14px/1 var(--f-body); border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 9px 13px; border-radius: 999px; cursor: pointer; }}
+.chip[aria-pressed=true] {{ background: var(--night); color: var(--night-fg); border-color: var(--night); }}
+.card[hidden] {{ display: none; }}
+</style>
 <header class="head">
   <div class="read">
-    <ol class="crumbs"><li><a href="/">Accueil</a></li><li>Articles</li></ol>
-    <h1>Articles pour chauffeurs VTC</h1>
-    <p class="lede">Des réponses claires aux questions qu'on se pose en roulant : réglementation, charges, et comment savoir ce qu'on gagne vraiment.</p>
+    <ol class="crumbs"><li><a href="/">Accueil</a></li><li>Blog</li></ol>
+    <h1>Le blog des chauffeurs VTC</h1>
+    <p class="lede">Des réponses claires aux questions qu'on se pose en roulant : réglementation, charges, statut, et comment savoir ce qu'on gagne vraiment.</p>
   </div>
 </header>
 <main>
-<section class="more read" style="padding-top:36px" aria-label="Tous les articles">
-  <div class="cards">
+<section class="more read" style="padding-top:30px" aria-label="Tous les articles">
+  <div class="chips" role="group" aria-label="Filtrer par catégorie">{chips}</div>
+  <div class="cards" id="liste">
 {cards()}
   </div>
+  <p style="color:var(--muted);margin-top:22px">Pour passer aux chiffres, essaie nos <a href="/calculateurs/">calculateurs gratuits</a> ou télécharge les <a href="/modeles/">modèles gratuits</a>.</p>
 </section>
 </main>
+<script>
+(function () {{
+  var chips = document.querySelectorAll(".chip"), cards = document.querySelectorAll("#liste .card");
+  chips.forEach(function (b) {{ b.addEventListener("click", function () {{
+    chips.forEach(function (x) {{ x.setAttribute("aria-pressed", String(x === b)); }});
+    cards.forEach(function (c) {{ c.hidden = !!b.dataset.f && c.dataset.cat !== b.dataset.f; }});
+  }}); }});
+}})();
+</script>
 ''' + FOOT
+os.makedirs(f"{ROOT}/blog", exist_ok=True)
+open(f"{ROOT}/blog/index.html", "w", encoding="utf-8").write(page)
+
+# redirections des anciennes adresses /articles/ vers /blog/ (GitHub Pages n'a pas de redirection côté serveur)
+def redirection(vers):
+    return f'''<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Page déplacée | VTC Rentable</title>
+<link rel="canonical" href="{SITE}{vers}"><meta name="robots" content="noindex, follow">
+<meta http-equiv="refresh" content="0; url={vers}">
+<script>location.replace("{vers}" + location.hash);</script></head>
+<body><p>Cette page a déménagé : <a href="{vers}">continuer vers le blog</a>.</p></body></html>
+'''
 os.makedirs(f"{ROOT}/articles", exist_ok=True)
-open(f"{ROOT}/articles/index.html", "w", encoding="utf-8").write(page)
+open(f"{ROOT}/articles/index.html", "w", encoding="utf-8").write(redirection("/blog/"))
+for slug in ANCIENS:
+    os.makedirs(f"{ROOT}/articles/{slug}", exist_ok=True)
+    open(f"{ROOT}/articles/{slug}/index.html", "w", encoding="utf-8").write(redirection(f"/blog/{slug}/"))
 
 # ---------- calculateurs ----------
 CSS_CALC = '\n<link rel="stylesheet" href="/assets/calc.css">'
@@ -604,10 +381,10 @@ form = f'''
 '''
 method = '''
 <h2>Comment le calcul est fait</h2>
-<p>Le calculateur suit la méthode détaillée dans notre article <a href="/articles/calcul-revenu-net-vtc/">Comment calculer son revenu net de chauffeur VTC</a> :</p>
+<p>Le calculateur suit la méthode détaillée dans notre article <a href="/blog/calcul-revenu-net-vtc/">Comment calculer son revenu net de chauffeur VTC</a> :</p>
 <ol>
   <li><strong>Ce que tu encaisses :</strong> le montant versé par les plateformes, plus tes courses privées et tes pourboires. Si tu saisis le prix payé par les clients, la commission est retirée d'abord.</li>
-  <li><strong>Les charges de ton statut :</strong> pour un auto-entrepreneur, 21,2 % du CA plus la formation professionnelle, avec l'ACRE et le versement libératoire si tu les as (détails dans <a href="/articles/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>). En société, le pourcentage que tu mets de côté. En rattachement, le prix payé chaque semaine.</li>
+  <li><strong>Les charges de ton statut :</strong> pour un auto-entrepreneur, 21,2 % du CA plus la formation professionnelle, avec l'ACRE et le versement libératoire si tu les as (détails dans <a href="/blog/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>). En société, le pourcentage que tu mets de côté. En rattachement, le prix payé chaque semaine.</li>
   <li><strong>Tes frais de la période :</strong> carburant, entretien, péages, parking, lavage et repas.</li>
   <li><strong>Tes charges mensuelles</strong>, ramenées à la semaine si besoin : voiture, assurance, téléphone, comptable.</li>
 </ol>
@@ -689,7 +466,7 @@ method = """<h2>Comment le calcul est fait</h2>
   <li><strong>Les charges de ton statut :</strong> le total est divisé par la part qui te reste après les charges (par exemple 78,7 % en auto-entrepreneur), pour que l'objectif soit atteint une fois l'URSSAF payée.</li>
 </ol>
 <p>On obtient le montant minimum que la plateforme doit te verser. Divisé par la part qui te reste après sa commission, il donne le prix minimum payé par le client.</p>
-<p>Pour suivre ces chiffres sur toute ta semaine, et pas seulement course par course, utilise le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net VTC</a> ou lis <a href="/articles/calcul-revenu-net-vtc/">comment calculer son revenu net</a>.</p>
+<p>Pour suivre ces chiffres sur toute ta semaine, et pas seulement course par course, utilise le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net VTC</a> ou lis <a href="/blog/calcul-revenu-net-vtc/">comment calculer son revenu net</a>.</p>
 <div class="box warn"><p>Les montants proposés par les plateformes changent selon l'heure et la demande. Le calculateur donne un repère pour décider ; c'est à toi de juger si une course mal payée te place bien pour la suivante.</p></div>"""
 write_calc(c, title, desc, "Une course qui paie peu, avec du trajet à vide, peut te coûter de l'argent. Calcule le montant en dessous duquel elle ne vaut pas le coup, et teste une offre avant d'accepter.", faq, form, method, "calc-prix-minimum.js")
 
@@ -907,7 +684,7 @@ form = f"""
 method = """<h2>Comment la comparaison est faite</h2>
 <p>Les trois statuts partent du même chiffre d'affaires, des mêmes frais et des mêmes charges de voiture, ramenés au mois (× 52 ÷ 12). Seules les charges du statut changent :</p>
 <ul>
-  <li><strong>Auto-entrepreneur :</strong> 21,2 % du CA et la formation professionnelle, réduits par l'ACRE, plus 1,7 % avec le versement libératoire. Détails dans <a href="/articles/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>.</li>
+  <li><strong>Auto-entrepreneur :</strong> 21,2 % du CA et la formation professionnelle, réduits par l'ACRE, plus 1,7 % avec le versement libératoire. Détails dans <a href="/blog/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>.</li>
   <li><strong>Société :</strong> la part du CA mise de côté pour les charges et l'impôt, plus le comptable et la banque.</li>
   <li><strong>Rattachement :</strong> le prix payé chaque semaine, et les retenues éventuelles.</li>
 </ul>
@@ -1046,7 +823,7 @@ method = """<h2>Comment le calcul est fait</h2>
 </ol>
 <p>La TVA estimée correspond à 10 % du prix hors taxe sur une année au même rythme. Ce que tu reverses vraiment est plus bas, car tu récupères la TVA payée sur tes dépenses professionnelles.</p>
 <div class="box warn"><p><strong>Attention à la base :</strong> le chiffre qui se compare aux seuils est le prix total des courses payé par les clients, commission comprise, et non ce qui arrive sur ton compte. Avec 25 % de commission, l'écart est d'environ un tiers : beaucoup de chauffeurs dépassent la franchise sans le savoir. La commission facturée depuis l'étranger peut aussi entraîner une autoliquidation de TVA : fais le point avec ton comptable.</p></div>
-<p>Pour voir l'effet sur ce qu'il te reste, utilise le <a href="/calculateurs/comparateur-statut-vtc/">comparateur de statuts</a> et lis <a href="/articles/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>.</p>
+<p>Pour voir l'effet sur ce qu'il te reste, utilise le <a href="/calculateurs/comparateur-statut-vtc/">comparateur de statuts</a> et lis <a href="/blog/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>.</p>
 <div class="src"><p><strong>Sources</strong></p><ul>
 <li><a href="https://www.superindep.fr/blog/2024/nouveautes-tva-2025/" rel="noopener">Seuils de TVA en microentreprise 2026 (SuperIndep)</a></li>
 <li><a href="https://pro.credit-agricole.fr/tva/vtc" rel="noopener">Quelle TVA s'applique aux chauffeurs VTC (Crédit Agricole Pro)</a></li>
@@ -1216,7 +993,7 @@ open(f"{ROOT}/modeles/index.html", "w", encoding="utf-8").write(page)
 
 # sitemap
 urls = [(SITE + "/", "1.0"), (SITE + "/calculateurs/", "0.8")] + [(f"{SITE}/calculateurs/{c['slug']}/", "0.9") for c in CALCS] \
-     + [(SITE + "/modeles/", "0.6"), (SITE + "/articles/", "0.7")] + [(f"{SITE}/articles/{a['slug']}/", "0.8") for a in ARTS]
+     + [(SITE + "/modeles/", "0.6"), (SITE + "/blog/", "0.7")] + [(f"{SITE}/blog/{a['slug']}/", "0.8") for a in ARTS]
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
     f"  <url><loc>{u}</loc><lastmod>{DATE}</lastmod><priority>{p}</priority></url>\n" for u, p in urls) + "</urlset>\n"
 open(f"{ROOT}/sitemap.xml", "w").write(sm)
