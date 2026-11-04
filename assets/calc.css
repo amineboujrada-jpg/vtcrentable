@@ -52,3 +52,13 @@
 .res table.small td.n, .res table.small th.n { padding-left: 8px; }
 .res td small { display: block; font-size: 12.5px; line-height: 1.35; margin-top: 2px; }
 @media (max-width: 420px) { .calc { padding: 14px; } .res { padding: 18px 14px; } }
+.calc input[type=text] { width: 100%; font: 600 15px/1.2 var(--f-body); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; }
+.res .pf { margin: 0 0 14px; }
+.res .pf-h { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; font-size: 14px; }
+.res .pf-h b { font: 800 17px/1.2 var(--f-display); color: var(--night-fg); }
+.res .pf-h span, .res .pf-n span { color: var(--night-muted); font-size: 13px; }
+.res .pf-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--night-2); margin: 6px 0 4px; }
+.res .pf-bar i { display: block; height: 100%; }
+.res .pf-n { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; }
+.res .pf-n b { font-family: var(--f-num); font-variant-numeric: tabular-nums; color: #3ccf7d; }
+.res .legend li { color: var(--night-muted); margin: 0; }

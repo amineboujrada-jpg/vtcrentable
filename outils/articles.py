@@ -358,7 +358,9 @@ CALCS = [dict(slug="revenu-net-vtc", short="Revenu net VTC", h1="Calculateur de 
          dict(slug="objectif-chiffre-affaires-vtc", short="Objectif de chiffre d'affaires", h1="Objectif de chiffre d'affaires VTC",
               card="Le chiffre d'affaires à faire par semaine, par jour et par heure pour gagner le net que tu veux."),
          dict(slug="seuil-tva-vtc", short="Seuils de TVA", h1="Seuils de TVA du chauffeur VTC",
-              card="Vas-tu dépasser la franchise de TVA cette année ? Projection de ton chiffre d'affaires et date de passage.")]
+              card="Vas-tu dépasser la franchise de TVA cette année ? Projection de ton chiffre d'affaires et date de passage."),
+         dict(slug="comparateur-plateformes-vtc", short="Comparateur des plateformes", h1="Comparateur des plateformes VTC",
+              card="Uber, Bolt, Heetch, FreeNow : ce qu'il te reste sur une même course selon la commission de chaque plateforme.")]
 
 def calc_cards():
     return "\n".join(f'<a class="card" href="/calculateurs/{c["slug"]}/"><b>{e(c["h1"])}</b><span>{e(c["card"])}</span></a>' for c in CALCS)
@@ -954,6 +956,81 @@ method = """<h2>Comment le calcul est fait</h2>
 <li><a href="https://hayot-expertise.fr/blog/vtc-tva-commission-uber-deduction-vehicule-2026" rel="noopener">VTC : TVA 10 %, commission Uber et déduction du véhicule (Hayot Expertise)</a></li>
 </ul></div>"""
 write_calc(c, title, desc, "Vas-tu dépasser la franchise de TVA cette année ? À partir de ton chiffre depuis janvier, le calculateur projette ton année et te dit quand la TVA s'appliquera.", faq, form, method, "calc-seuil-tva.js")
+
+# --- comparateur des plateformes ---
+c = CALCS[7]
+title = "Commission Uber, Bolt, Heetch, FreeNow : comparateur VTC 2026"
+desc = "Compare ce qu'il te reste sur une course VTC selon la plateforme : commissions Uber, Bolt, Heetch et FreeNow en 2026, modifiables, et écart par mois."
+faq = [("Quelle commission prend Uber sur un chauffeur VTC ?",
+        "Depuis fin 2024, Uber applique une commission variable selon la course, entre environ 3 % et 45 % d'après les chiffres rapportés, avec une moyenne annoncée autour de 25 %. Le plus fiable est de calculer ta moyenne à partir de tes propres relevés."),
+       ("Quelle plateforme VTC prend le moins de commission ?",
+        "Parmi les grandes plateformes, Heetch annonce les commissions les plus basses pour les indépendants, autour de 18 %. Bolt et FreeNow se situent autour de 20 à 24 %. Mais une commission plus basse ne fait pas forcément gagner plus si tu as moins de courses."),
+       ("La commission est-elle hors taxe ou TTC ?",
+        "Ça dépend de la plateforme. FreeNow annonce par exemple 20 % hors taxe, soit 24 % une fois la TVA ajoutée. Compare toujours des taux sur la même base."),
+       ("Les chiffres de ce comparateur sont-ils à jour ?",
+        "Les taux préremplis sont des repères publics relevés en novembre 2026. Ils changent souvent et varient selon la ville : remplace-les par ceux de tes relevés de paiement.")]
+form = f"""
+<form id="calc" class="calc" novalidate aria-describedby="calc-intro">
+  <p id="calc-intro" class="note" style="margin:0 0 14px">Taux préremplis avec des repères publics de novembre 2026 : remplace-les par ceux de tes relevés.</p>
+  <fieldset>
+    <legend>La course</legend>
+    <div class="row">
+      {num_field("prix", "Prix payé par le client (€)", "30", step="0.5")}
+      {num_field("cout", "Coût de la course pour toi (€)", "4", "Carburant, entretien, temps à vide : voir le calculateur du prix minimum", step="0.1")}
+      {num_field("stat", "Charges de ton statut (% du CA)", "21.3", "Auto-entrepreneur : 21,3 %", step="0.1")}
+      {num_field("courses", "Courses par semaine", "60", "Pour estimer l'écart sur un mois")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Commission de chaque plateforme (%)</legend>
+    <div class="row">
+      {num_field("c-uber", "Uber", "25", "Variable selon la course ; moyenne annoncée", step="0.1")}
+      {num_field("c-bolt", "Bolt", "24", "24 % en Île-de-France et grandes villes", step="0.1")}
+      {num_field("c-heetch", "Heetch", "18", "Indépendants, en évolution en 2026", step="0.1")}
+      {num_field("c-freenow", "FreeNow", "24", "20 % hors taxe, 24 % TTC", step="0.1")}
+      <label for="nomautre"><span>Autre plateforme ou ta clientèle</span><small>Facultatif : LeCab, Allocab, courses privées…</small><input id="nomautre" type="text" value="" maxlength="30" placeholder="Nom"></label>
+      {num_field("c-autre", "Sa commission", "0", step="0.1")}
+    </div>
+  </fieldset>
+
+  <div class="res" aria-live="polite">
+    <p class="k">La plateforme qui te laisse le plus</p>
+    <p id="r-net" class="big">—</p>
+    <p id="r-sub" class="sub"></p>
+    <div id="r-bars"></div>
+    <ul class="legend"><li style="--c:#3ccf7d">Ce qu'il te reste</li><li style="--c:#f7b267">Charges et coût de la course</li></ul>
+    <div id="r-kpis" class="kpis"></div>
+    <p id="r-msg" class="msg"></p>
+    <div class="go">
+      <p>VTC Rentable sépare tes recettes par plateforme et te montre laquelle te rapporte vraiment le plus chaque semaine.</p>
+      <a class="btn" href="{APP}">Comparer mes plateformes gratuitement</a>
+    </div>
+  </div>
+  <p class="note" style="margin-top:12px">Résultat indicatif. Tes chiffres restent sur ton appareil. <button type="button" id="raz" style="font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline">Revenir à l'exemple</button></p>
+</form>
+"""
+method = """<h2>Les repères de novembre 2026</h2>
+<p>Ces chiffres viennent de sources publiques et varient selon la ville, le type de course et le contrat. Ils servent de point de départ, pas de vérité.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Plateforme</th><th>Commission annoncée</th><th>Ce qu'on en dit</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Uber</strong></td><td>Variable par course depuis fin 2024 (environ 3 % à 45 %), moyenne annoncée autour de 25 %</td><td>Clientèle d'affaires, aéroports, majorations fortes ; critères d'entrée stricts</td></tr>
+    <tr><td><strong>Bolt</strong></td><td>Environ 19 à 24 % selon la ville, 24 % en Île-de-France</td><td>Bonus d'inscription, concurrence sur les prix, majorations plus faibles</td></tr>
+    <tr><td><strong>Heetch</strong></td><td>Autour de 18 % pour les indépendants, modèle en évolution en 2026</td><td>Courses de nuit et en périphérie, inscription plus simple</td></tr>
+    <tr><td><strong>FreeNow</strong></td><td>20 % hors taxe, soit 24 % TTC</td><td>Forfaits aéroports, courses réservées à l'avance</td></tr>
+  </tbody>
+</table></div>
+<div class="box"><p><strong>À savoir :</strong> en octobre et novembre 2026, Uber, Bolt, FreeNow, Heetch et LeCab ont relevé temporairement leur garantie de revenu minimum de 30 à 32 € par heure d'activité. Elle ne change pas le prix de chaque course.</p></div>
+<h2>Comment le calcul est fait</h2>
+<p>Pour chaque plateforme, le comparateur part du prix payé par le client, retire la commission pour obtenir le montant versé, puis les charges de ton statut et le coût de la course. Le coût de la course, tu peux l'obtenir avec le <a href="/calculateurs/prix-minimum-course-vtc/">calculateur du prix minimum d'une course</a>.</p>
+<p>Une commission plus basse ne vaut que si tu as autant de courses. Le meilleur juge reste ton net de la semaine par plateforme : suis-le avec le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net</a>.</p>
+<div class="src"><p><strong>Sources</strong></p><ul>
+<li><a href="https://www.keobiz.fr/fiches-pratiques/creer-activite-vtc/plateformes-vtc-uber-bolt-heetch/" rel="noopener">Plateformes VTC Uber, Bolt, Heetch (Keobiz, septembre 2026)</a></li>
+<li><a href="https://up-cab.com/commission-vtc-uber-bolt-heetch" rel="noopener">Commission Uber, Bolt, Heetch 2026 (Up!, plateforme concurrente, octobre 2026)</a></li>
+<li><a href="https://www.portail-autoentrepreneur.fr/academie/comparatifs/plateformes/choix-plateforme-vtc" rel="noopener">Choisir sa plateforme VTC (Portail Auto-Entrepreneur)</a></li>
+<li><a href="https://lautomobiliste.fr/30/09/2026/vtc-frevalorisation-revenu-minimum-chauffeurs-octobre-novembre-2026/" rel="noopener">Revalorisation du revenu minimum des chauffeurs (L'Automobiliste, septembre 2026)</a></li>
+</ul></div>"""
+write_calc(c, title, desc, "Sur une même course, combien te reste-t-il avec Uber, Bolt, Heetch ou FreeNow ? Compare avec les repères de 2026 ou avec tes propres taux.", faq, form, method, "calc-plateformes.js")
 
 # index des calculateurs
 url = SITE + "/calculateurs/"
