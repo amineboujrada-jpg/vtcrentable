@@ -345,6 +345,7 @@ FOOT = f'''<footer>
       <a href="/">Accueil</a>
       <a href="/calculateurs/">Calculateurs</a>
       <a href="/articles/">Articles</a>
+      <a href="/modeles/">Modèles gratuits</a>
       <a href="{APP}">Ouvrir l'appli</a>
       <a href="https://app.vtcrentable.com/mentions-legales.html">Mentions légales</a>
       <a href="mailto:contact@vtcrentable.com">contact@vtcrentable.com</a>
@@ -1153,9 +1154,61 @@ page = head("Calculateurs gratuits pour chauffeurs VTC | VTC Rentable", "Calcula
 ''' + FOOT
 open(f"{ROOT}/calculateurs/index.html", "w", encoding="utf-8").write(page)
 
+# ---------- modèles gratuits ----------
+url = SITE + "/modeles/"
+ld = {"@context": "https://schema.org", "@graph": [
+    {"@type": "WebPage", "name": "Modèles gratuits pour chauffeurs VTC", "url": url, "inLanguage": "fr-FR"},
+    {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
+        {"@type": "ListItem", "position": 2, "name": "Modèles gratuits", "item": url}]}]}
+page = head("Modèles gratuits pour chauffeurs VTC : tableau de suivi et checklist", "Télécharge gratuitement un tableau Excel de suivi de semaine VTC et une checklist des frais à imprimer, pour savoir ce que tu gagnes vraiment.", url, ld, cur="modeles", og="website", css=CSS_CALC) + f"""
+<header class="head">
+  <div class="read">
+    <ol class="crumbs"><li><a href="/">Accueil</a></li><li>Modèles gratuits</li></ol>
+    <h1>Modèles gratuits pour chauffeurs VTC</h1>
+    <p class="lede">Un tableau de suivi de ta semaine et une checklist des frais à ne pas oublier. Laisse ton adresse e-mail et télécharge-les tout de suite.</p>
+  </div>
+</header>
+<main>
+<article class="read" style="padding-top:8px">
+<div class="modeles">
+  <div class="modele"><p class="fmt">Excel · .xlsx</p><b>Tableau de suivi de la semaine</b><span>Recettes par plateforme, carburant, heures et km jour par jour. Il calcule ton revenu net, ton € / heure et ton € / km, avec les charges de ton statut.</span></div>
+  <div class="modele"><p class="fmt">PDF · 1 page A4</p><b>Checklist des frais du chauffeur VTC</b><span>32 frais à cocher, de l'assurance à la CFE, pour être sûr de ne rien oublier dans ton calcul de rentabilité.</span></div>
+</div>
+<form id="modeles-form" class="calc" novalidate>
+  <fieldset>
+    <legend>Recevoir les modèles</legend>
+    <div style="display:grid;gap:14px">
+      <label for="m-email"><span>Ton adresse e-mail</span><input id="m-email" type="email" autocomplete="email" maxlength="254" required></label>
+      <div style="display:grid;gap:8px">
+        <label class="check" for="m-tab"><input id="m-tab" type="checkbox" name="modele" value="tableau-suivi" checked> Tableau de suivi de la semaine</label>
+        <label class="check" for="m-chk"><input id="m-chk" type="checkbox" name="modele" value="checklist-frais" checked> Checklist des frais</label>
+      </div>
+      <label class="consent" for="m-ok"><input id="m-ok" type="checkbox" required> <span>J'accepte que VTC Rentable conserve mon adresse pour m'envoyer ces modèles et, de temps en temps, des conseils et nouveautés pour chauffeurs VTC. Je peux demander sa suppression à tout moment en écrivant à <a href="mailto:contact@vtcrentable.com">contact@vtcrentable.com</a>.</span></label>
+      <div><button id="m-btn" class="btn" type="submit">Recevoir les modèles</button></div>
+    </div>
+    <p id="m-msg" class="m-msg" role="alert"></p>
+  </fieldset>
+</form>
+<div id="m-done" class="calc done" hidden tabindex="-1">
+  <b style="font:800 21px/1.25 var(--f-display)">Merci ! Tes modèles sont prêts.</b>
+  <a id="dl-tableau-suivi" class="btn" href="/assets/modeles/tableau-suivi-vtc.xlsx" download hidden>Télécharger le tableau de suivi (.xlsx)</a>
+  <a id="dl-checklist-frais" class="btn" href="/assets/modeles/checklist-frais-vtc.pdf" download hidden>Télécharger la checklist des frais (.pdf)</a>
+  <p style="color:var(--muted);margin:0">Pour aller plus vite que le tableur, essaie l'appli <a href="{APP}">VTC Rentable</a> : elle fait ces calculs pour toi chaque semaine.</p>
+</div>
+<p style="color:var(--muted);font-size:14px;margin-top:16px">Ton adresse est enregistrée de façon sécurisée et n'est jamais revendue.</p>
+<h2>Et pour un calcul rapide</h2>
+<p>Pas envie d'un tableur ? Les <a href="/calculateurs/">calculateurs gratuits</a> donnent ton revenu net, le prix minimum d'une course ou le coût de ta voiture en quelques secondes, sans inscription.</p>
+</article>
+</main>
+<script src="/assets/modeles.js" defer></script>
+""" + FOOT
+os.makedirs(f"{ROOT}/modeles", exist_ok=True)
+open(f"{ROOT}/modeles/index.html", "w", encoding="utf-8").write(page)
+
 # sitemap
 urls = [(SITE + "/", "1.0"), (SITE + "/calculateurs/", "0.8")] + [(f"{SITE}/calculateurs/{c['slug']}/", "0.9") for c in CALCS] \
-     + [(SITE + "/articles/", "0.7")] + [(f"{SITE}/articles/{a['slug']}/", "0.8") for a in ARTS]
+     + [(SITE + "/modeles/", "0.6"), (SITE + "/articles/", "0.7")] + [(f"{SITE}/articles/{a['slug']}/", "0.8") for a in ARTS]
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
     f"  <url><loc>{u}</loc><lastmod>{DATE}</lastmod><priority>{p}</priority></url>\n" for u, p in urls) + "</urlset>\n"
 open(f"{ROOT}/sitemap.xml", "w").write(sm)
