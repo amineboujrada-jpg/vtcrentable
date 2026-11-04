@@ -77,7 +77,7 @@ def head(title, desc, url, extra_ld, cur="blog", og="article", css=""):
       <li><a href="/">L'appli</a></li>
       {li("/calculateurs/", "Calculateurs", "calc")}
       {li("/blog/", "Blog", "blog")}
-      <li><a href="/#faq">Questions</a></li>
+      {li("/qui-sommes-nous/", "Qui sommes-nous", "qui-sommes-nous")}
     </ul>
     <a class="btn" href="{APP}">Ouvrir l'appli</a>
   </div>
@@ -92,9 +92,11 @@ FOOT = f'''<footer>
       <a href="/calculateurs/">Calculateurs</a>
       <a href="/blog/">Blog</a>
       <a href="/modeles/">Modèles gratuits</a>
+      <a href="/application-vtc/">Application VTC</a>
+      <a href="/qui-sommes-nous/">Qui sommes-nous</a>
       <a href="{APP}">Ouvrir l'appli</a>
       <a href="https://app.vtcrentable.com/mentions-legales.html">Mentions légales</a>
-      <a href="mailto:contact@vtcrentable.com">contact@vtcrentable.com</a>
+      <a href="mailto:contact@vtcrentable.com">contact@vtcrentable.com · réponse sous 24 h</a>
     </nav>
   </div>
 </footer>
@@ -337,7 +339,7 @@ form = f'''
   <fieldset>
     <legend>Tes frais sur <span data-per>la semaine</span></legend>
     <div class="row">
-      {num_field("carburant", "Carburant ou recharge (€)", "210")}
+      {num_field("carburant", "Carburant ou recharge (€)", "105", "Souvent 8 à 10 % du CA")}
       {num_field("entretien", "Entretien et pneus (€)", "0")}
       {num_field("peage", "Péages, parking, lavage (€)", "36")}
       {num_field("repas", "Repas et cafés (€)", "45")}
@@ -991,9 +993,13 @@ page = head("Modèles gratuits VTC : tableau de suivi et checklist des frais", "
 os.makedirs(f"{ROOT}/modeles", exist_ok=True)
 open(f"{ROOT}/modeles/index.html", "w", encoding="utf-8").write(page)
 
+# pages stratégiques et Qui sommes-nous
+exec(open(os.path.join(ROOT, "outils", "pages_landing.py"), encoding="utf-8").read())
+
 # sitemap
 urls = [(SITE + "/", "1.0"), (SITE + "/calculateurs/", "0.8")] + [(f"{SITE}/calculateurs/{c['slug']}/", "0.9") for c in CALCS] \
-     + [(SITE + "/modeles/", "0.6"), (SITE + "/blog/", "0.7")] + [(f"{SITE}/blog/{a['slug']}/", "0.8") for a in ARTS]
+     + [(SITE + "/modeles/", "0.6"), (SITE + "/blog/", "0.7")] + [(f"{SITE}/blog/{a['slug']}/", "0.8") for a in ARTS] \
+     + [(f"{SITE}/{p}/", "0.6" if p == "qui-sommes-nous" else "0.9") for p in LANDING]
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
     f"  <url><loc>{u}</loc><lastmod>{DATE}</lastmod><priority>{p}</priority></url>\n" for u, p in urls) + "</urlset>\n"
 open(f"{ROOT}/sitemap.xml", "w").write(sm)
