@@ -356,7 +356,9 @@ CALCS = [dict(slug="revenu-net-vtc", short="Revenu net VTC", h1="Calculateur de 
          dict(slug="comparateur-statut-vtc", short="Comparateur de statuts", h1="Quel statut pour un chauffeur VTC ?",
               card="Auto-entrepreneur, société ou rattachement : compare ce qu'il te reste chaque mois avec les mêmes chiffres."),
          dict(slug="objectif-chiffre-affaires-vtc", short="Objectif de chiffre d'affaires", h1="Objectif de chiffre d'affaires VTC",
-              card="Le chiffre d'affaires à faire par semaine, par jour et par heure pour gagner le net que tu veux.")]
+              card="Le chiffre d'affaires à faire par semaine, par jour et par heure pour gagner le net que tu veux."),
+         dict(slug="seuil-tva-vtc", short="Seuils de TVA", h1="Seuils de TVA du chauffeur VTC",
+              card="Vas-tu dépasser la franchise de TVA cette année ? Projection de ton chiffre d'affaires et date de passage.")]
 
 def calc_cards():
     return "\n".join(f'<a class="card" href="/calculateurs/{c["slug"]}/"><b>{e(c["h1"])}</b><span>{e(c["card"])}</span></a>' for c in CALCS)
@@ -890,6 +892,69 @@ method = """<h2>Comment le calcul est fait</h2>
 <p>Pour vérifier où tu en es, compare ce rythme à ton chiffre réel avec le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net</a>, et vérifie qu'une course précise vaut le coup avec le <a href="/calculateurs/prix-minimum-course-vtc/">prix minimum d'une course</a>.</p>"""
 write_calc(c, title, desc, "Tu vises un certain revenu net par mois ? Calcule le chiffre d'affaires à faire par semaine, par jour et par heure pour l'atteindre, congés compris.", faq, form, method, "calc-objectif-ca.js")
 
+# --- seuils de TVA ---
+c = CALCS[6]
+title = "Seuil de TVA VTC 2026 : vas-tu dépasser la franchise ?"
+desc = "Franchise de TVA 2026 pour un chauffeur VTC : seuils de 37 500 € et 41 250 €, projection de ton chiffre d'affaires et date de dépassement, TVA à 10 %."
+faq = [("Quels sont les seuils de TVA pour un chauffeur VTC en 2026 ?",
+        "Pour les prestations de services, la franchise en base s'applique jusqu'à 37 500 € de chiffre d'affaires hors taxes par an, avec un seuil majoré de 41 250 €. Le projet de baisse à 25 000 € a été abandonné."),
+       ("Que se passe-t-il si je dépasse 37 500 € ?",
+        "Si tu restes sous 41 250 €, tu gardes la franchise jusqu'à la fin de l'année, et la TVA s'applique à partir du 1er janvier suivant. Si tu dépasses 41 250 €, la franchise cesse dès le jour du dépassement."),
+       ("Quel taux de TVA pour une course VTC ?",
+        "Le transport de personnes relève du taux réduit de 10 %. Une course facturée uniquement à la durée, comme une mise à disposition à l'heure, peut relever du taux de 20 %."),
+       ("Faut-il compter le prix payé par le client ou ce que verse Uber ?",
+        "C'est le point à faire confirmer par ton comptable, car il décide souvent si tu dépasses le seuil. Le calculateur propose par défaut le calcul prudent, sur le prix total payé par les clients, commission comprise.")]
+form = f"""
+<form id="calc" class="calc" novalidate aria-describedby="calc-intro">
+  <p id="calc-intro" class="note" style="margin:0 0 14px">Prérempli avec un exemple : remplace par tes chiffres, le résultat se met à jour tout seul.</p>
+  <fieldset>
+    <legend>Ton chiffre d'affaires</legend>
+    <div class="row">
+      {num_field("caan", "Montant versé depuis le 1er janvier (€)", "25000", "Plateformes, courses privées et pourboires")}
+      {num_field("mois", "Nombre de mois écoulés", "10", "Mois complets depuis janvier")}
+      {num_field("caprec", "Montant versé l'an dernier (€)", "28000", "0 si tu as commencé cette année")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Base du calcul</legend>
+    <div class="row">
+      <label for="base">Comparer aux seuils
+        <select id="base"><option value="client">le prix payé par les clients (prudent)</option><option value="verse">le montant versé par les plateformes</option></select></label>
+      <div id="f-com">{num_field("com", "Commission moyenne des plateformes (%)", "25", "Pour retrouver le prix payé par les clients")}</div>
+    </div>
+  </fieldset>
+
+  <div class="res" aria-live="polite">
+    <p class="k">Ton chiffre d'affaires de l'année, au rythme actuel</p>
+    <p id="r-net" class="big">—</p>
+    <p class="sub">projection sur 12 mois</p>
+    <div id="r-verdict" class="verdict"></div>
+    <div id="r-kpis" class="kpis"></div>
+    <p id="r-msg" class="msg"></p>
+    <div class="go">
+      <p>VTC Rentable suit ton chiffre d'affaires de l'année et te montre où tu en es par rapport aux seuils.</p>
+      <a class="btn" href="{APP}">Suivre mon chiffre gratuitement</a>
+    </div>
+  </div>
+  <p class="note" style="margin-top:12px">Résultat indicatif avec les seuils connus en novembre 2026 ; il ne remplace pas l'avis d'un comptable. Tes chiffres restent sur ton appareil. <button type="button" id="raz" style="font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline">Revenir à l'exemple</button></p>
+</form>
+"""
+method = """<h2>Comment le calcul est fait</h2>
+<ol>
+  <li><strong>L'année dernière :</strong> si ton chiffre a dépassé 37 500 €, la franchise ne s'applique plus cette année.</li>
+  <li><strong>Cette année :</strong> le calculateur prend ton chiffre depuis janvier, le divise par les mois écoulés et le projette sur 12 mois.</li>
+  <li><strong>Le verdict :</strong> sous 37 500 €, tu restes en franchise ; entre 37 500 € et 41 250 €, la TVA s'applique au 1er janvier suivant ; au-delà de 41 250 €, dès le jour du dépassement, dont il estime le mois.</li>
+</ol>
+<p>La TVA estimée correspond à 10 % du prix hors taxe sur une année au même rythme. Ce que tu reverses vraiment est plus bas, car tu récupères la TVA payée sur tes dépenses professionnelles.</p>
+<div class="box warn"><p><strong>Le point à vérifier :</strong> selon la façon dont la plateforme facture les courses, le chiffre comparé au seuil peut être le prix total payé par les clients, commission comprise, et non ce qui arrive sur ton compte. L'écart est d'environ un tiers avec 25 % de commission. Fais confirmer la bonne base par ton comptable avant de te fier au résultat. La commission facturée depuis l'étranger peut aussi entraîner une autoliquidation de TVA.</p></div>
+<p>Pour voir l'effet sur ce qu'il te reste, utilise le <a href="/calculateurs/comparateur-statut-vtc/">comparateur de statuts</a> et lis <a href="/articles/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>.</p>
+<div class="src"><p><strong>Sources</strong></p><ul>
+<li><a href="https://www.superindep.fr/blog/2024/nouveautes-tva-2025/" rel="noopener">Seuils de TVA en microentreprise 2026 (SuperIndep)</a></li>
+<li><a href="https://pro.credit-agricole.fr/tva/vtc" rel="noopener">Quelle TVA s'applique aux chauffeurs VTC (Crédit Agricole Pro)</a></li>
+<li><a href="https://hayot-expertise.fr/blog/vtc-tva-commission-uber-deduction-vehicule-2026" rel="noopener">VTC : TVA 10 %, commission Uber et déduction du véhicule (Hayot Expertise)</a></li>
+</ul></div>"""
+write_calc(c, title, desc, "Vas-tu dépasser la franchise de TVA cette année ? À partir de ton chiffre depuis janvier, le calculateur projette ton année et te dit quand la TVA s'appliquera.", faq, form, method, "calc-seuil-tva.js")
+
 # index des calculateurs
 url = SITE + "/calculateurs/"
 ld = {"@context": "https://schema.org", "@graph": [
@@ -911,7 +976,6 @@ page = head("Calculateurs gratuits pour chauffeurs VTC | VTC Rentable", "Calcula
   <div class="cards">
 {calc_cards()}
   </div>
-  <p style="color:var(--muted);margin-top:22px">D'autres calculateurs arrivent, comme les seuils de TVA.</p>
 </section>
 <section class="more read" aria-labelledby="art-t">
   <h2 id="art-t">Nos guides</h2>
