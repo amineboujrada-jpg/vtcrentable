@@ -116,6 +116,7 @@ ARTS = [
   </tbody>
 </table></div>
 <p>Sur 1 150 € encaissés, il reste donc environ la moitié, et ce n'est pas encore le net final : l'impôt sur le revenu et la perte de valeur de la voiture viennent ensuite.</p>
+<p>Pour faire le calcul avec tes propres chiffres, ACRE et versement libératoire compris, utilise le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net VTC</a>.</p>
 <div class="box warn">
   <p>Les taux de cet article sont ceux connus en novembre 2026. Ils changent régulièrement : vérifie toujours sur ton espace URSSAF ou avec ton comptable avant de prendre une décision.</p>
 </div>
@@ -138,6 +139,9 @@ ARTS = [
   card="La méthode pas à pas pour passer du chiffre d'affaires au vrai revenu net, avec € / heure et € / km.",
   body="""
 <p>Les applications des plateformes affichent ce qu'elles te versent. C'est ton chiffre d'affaires, pas ton revenu. Entre les deux, il y a le carburant, l'assurance, la voiture, les charges de ton statut, et toutes les petites dépenses de la journée.</p>
+<div class="box">
+  <p><strong>Pressé ?</strong> Le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net VTC</a> fait ces étapes pour toi, gratuitement et sans inscription.</p>
+</div>
 
 <h2>Étape 1 : additionne tout ce que tu encaisses</h2>
 <p>Ton chiffre d'affaires de la semaine, c'est la somme de :</p>
@@ -199,7 +203,10 @@ ARTS = [
 
 def e(s): return html.escape(s, quote=True)
 
-def head(title, desc, url, extra_ld):
+def head(title, desc, url, extra_ld, cur="articles", og="article", css=""):
+    def li(href, label, key):
+        c = ' aria-current="page"' if key == cur else ""
+        return f'<li><a href="{href}"{c}>{label}</a></li>'
     return f'''<!doctype html>
 <html lang="fr">
 <head>
@@ -213,7 +220,7 @@ def head(title, desc, url, extra_ld):
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<meta property="og:type" content="article">
+<meta property="og:type" content="{og}">
 <meta property="og:site_name" content="VTC Rentable">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="{url}">
@@ -224,7 +231,7 @@ def head(title, desc, url, extra_ld):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,700..900&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@600&display=swap">
-<link rel="stylesheet" href="/assets/article.css">
+<link rel="stylesheet" href="/assets/article.css">{css}
 <script type="application/ld+json">{json.dumps(extra_ld, ensure_ascii=False)}</script>
 </head>
 <body>
@@ -233,7 +240,8 @@ def head(title, desc, url, extra_ld):
     <a class="logo" href="/"><img src="/icon-192.png" alt="" width="30" height="30">VTC <span>Rentable</span></a>
     <ul>
       <li><a href="/">L'appli</a></li>
-      <li><a href="/articles/" aria-current="page">Articles</a></li>
+      {li("/calculateurs/", "Calculateurs", "calc")}
+      {li("/articles/", "Articles", "articles")}
       <li><a href="/#faq">Questions</a></li>
     </ul>
     <a class="btn" href="{APP}">Ouvrir l'appli</a>
@@ -246,6 +254,7 @@ FOOT = f'''<footer>
     <span>© 2026 VTC Rentable</span>
     <nav aria-label="Liens utiles">
       <a href="/">Accueil</a>
+      <a href="/calculateurs/">Calculateurs</a>
       <a href="/articles/">Articles</a>
       <a href="{APP}">Ouvrir l'appli</a>
       <a href="https://app.vtcrentable.com/mentions-legales.html">Mentions légales</a>
@@ -334,8 +343,188 @@ page = head("Articles pour chauffeurs VTC | VTC Rentable", "Bon de commande VTC,
 os.makedirs(f"{ROOT}/articles", exist_ok=True)
 open(f"{ROOT}/articles/index.html", "w", encoding="utf-8").write(page)
 
+# ---------- calculateurs ----------
+CSS_CALC = '\n<link rel="stylesheet" href="/assets/calc.css">'
+CALCS = [dict(slug="revenu-net-vtc", short="Revenu net VTC", h1="Calculateur de revenu net VTC",
+              card="Ce qu'il te reste vraiment après commissions, charges de ton statut et frais, avec ton € / heure et ton € / km.")]
+
+def calc_cards():
+    return "\n".join(f'<a class="card" href="/calculateurs/{c["slug"]}/"><b>{e(c["h1"])}</b><span>{e(c["card"])}</span></a>' for c in CALCS)
+
+def num_field(id_, label, value="", hint="", step="1"):
+    h = f"<small>{hint}</small>" if hint else ""
+    return f'<label for="{id_}"><span>{label}</span>{h}<input id="{id_}" type="number" inputmode="decimal" min="0" step="{step}" value="{value}"></label>'
+
+c = CALCS[0]
+url = f"{SITE}/calculateurs/{c['slug']}/"
+title = "Calculateur revenu net VTC 2026 : gratuit et sans inscription"
+desc = "Calcule ton revenu net de chauffeur VTC en 2026 : auto-entrepreneur, société ou rattachement, avec ACRE, versement libératoire, € / heure et € / km."
+faq = [("Comment calculer son revenu net de chauffeur VTC ?",
+        "Pars de ce que tu encaisses (plateformes, courses privées, pourboires), retire les charges de ton statut, tes frais de la période et tes charges mensuelles ramenées à la période (× 12 ÷ 52 pour une semaine). Le calculateur fait ces étapes pour toi."),
+       ("Quel taux de cotisations pour un chauffeur VTC auto-entrepreneur en 2026 ?",
+        "21,2 % du chiffre d'affaires, plus environ 0,1 % de formation professionnelle. L'ACRE réduit les cotisations de 50 % pour une activité créée avant le 1er juillet 2026, et de 25 % depuis. Le versement libératoire ajoute 1,7 %."),
+       ("Faut-il saisir le montant avant ou après la commission Uber ou Bolt ?",
+        "Le plus simple est de saisir ce que la plateforme te verse, donc après commission. Si tu connais le prix payé par les clients, choisis « avant commission » et indique le taux : le calculateur retire la commission pour toi."),
+       ("Le résultat comprend-il l'impôt sur le revenu ?",
+        "Seulement si tu as coché le versement libératoire en auto-entrepreneur, ou si ton pourcentage en société inclut l'impôt. Sinon, l'impôt sur le revenu reste à prévoir en plus.")]
+ld = {"@context": "https://schema.org", "@graph": [
+    {"@type": "WebApplication", "name": c["h1"], "url": url, "description": desc, "applicationCategory": "FinanceApplication",
+     "operatingSystem": "Navigateur web", "inLanguage": "fr-FR", "isAccessibleForFree": True,
+     "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": ORG},
+    {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
+        {"@type": "ListItem", "position": 2, "name": "Calculateurs", "item": SITE + "/calculateurs/"},
+        {"@type": "ListItem", "position": 3, "name": c["short"], "item": url}]},
+    {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": r}} for q, r in faq]}]}
+faqhtml = "\n".join(f"<h3>{e(q)}</h3>\n<p>{e(r)}</p>" for q, r in faq)
+form = f'''
+<form id="calc" class="calc" novalidate aria-describedby="calc-intro">
+  <p id="calc-intro" class="note" style="margin:0 0 14px">Prérempli avec l'exemple de notre article : remplace par tes chiffres, le résultat se met à jour tout seul.</p>
+  <div class="seg" role="group" aria-label="Période">
+    <button type="button" data-p="semaine" aria-pressed="true">Semaine</button>
+    <button type="button" data-p="mois" aria-pressed="false">Mois</button>
+  </div>
+  <fieldset>
+    <legend>Ce que tu encaisses</legend>
+    <div class="row">
+      {num_field("ca", 'Chiffre d\'affaires sur <span data-per>la semaine</span> (€)', "1150", "Plateformes, courses privées, cash et pourboires")}
+      <label for="saisie">Ce montant est
+        <select id="saisie"><option value="apres">versé par les plateformes (après commission)</option><option value="avant">payé par les clients (avant commission)</option></select></label>
+      <div id="opt-com" class="hide">{num_field("com", "Commission moyenne des plateformes (%)", "25")}</div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Ton statut</legend>
+    <div class="row">
+      <label for="statut">Statut
+        <select id="statut"><option value="ae">Auto-entrepreneur</option><option value="societe">Société (SASU, EURL…)</option><option value="ratt">Salarié en rattachement</option></select></label>
+      <div id="opt-ae" style="display:grid;gap:12px">
+        <label for="acre">ACRE
+          <select id="acre"><option value="0">Pas d'ACRE</option><option value="0.5">Oui, activité créée avant le 1er juillet 2026 (− 50 %)</option><option value="0.25">Oui, activité créée depuis le 1er juillet 2026 (− 25 %)</option></select></label>
+        <label class="check" for="vl"><input id="vl" type="checkbox"> Versement libératoire de l'impôt (1,7 %)</label>
+      </div>
+      <div id="opt-soc" class="hide">{num_field("soc", "Part du CA mise de côté pour charges et impôt (%)", "25", "Souvent autour de 25 % : fixe-la avec ton comptable")}</div>
+      <div id="opt-ratt" class="hide">{num_field("ratt", "Prix du rattachement par semaine (€)", "50")}</div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Tes frais sur <span data-per>la semaine</span></legend>
+    <div class="row">
+      {num_field("carburant", "Carburant ou recharge (€)", "210")}
+      {num_field("entretien", "Entretien et pneus (€)", "0")}
+      {num_field("peage", "Péages, parking, lavage (€)", "36")}
+      {num_field("repas", "Repas et cafés (€)", "45")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Tes charges mensuelles</legend>
+    <div class="row">
+      {num_field("voiture", "Voiture : crédit, location ou perte de valeur (€ / mois)", "0")}
+      {num_field("assurance", "Assurance (€ / mois)", "160")}
+      {num_field("abos", "Téléphone, comptable, abonnements (€ / mois)", "0")}
+    </div>
+    <p class="note">En mode semaine, elles sont ramenées à la semaine (× 12 ÷ 52).</p>
+  </fieldset>
+  <fieldset>
+    <legend>Pour aller plus loin <small style="font:400 14px var(--f-body);color:var(--muted)">(facultatif)</small></legend>
+    <div class="row">
+      {num_field("heures", 'Heures travaillées sur <span data-per>la semaine</span>', "48")}
+      {num_field("km", 'Kilomètres parcourus sur <span data-per>la semaine</span>', "1340")}
+    </div>
+  </fieldset>
+
+  <div class="res" aria-live="polite">
+    <p class="k">Résultat</p>
+    <p id="r-net" class="big">—</p>
+    <p id="r-per" class="sub">de revenu net</p>
+    <div id="r-kpis" class="kpis"></div>
+    <div id="r-bar" class="bar" role="img" aria-label="Répartition du chiffre d'affaires"></div>
+    <ul class="legend">
+      <li style="--c:#8b93a7">Commissions</li><li style="--c:#e8743b">Charges du statut</li><li style="--c:#f7b267">Frais</li><li style="--c:#3ccf7d">Revenu net</li>
+    </ul>
+    <table><tbody id="r-tab"></tbody></table>
+    <p id="r-msg" class="msg"></p>
+    <div class="go">
+      <p>Ce calcul, VTC Rentable le fait chaque semaine pour toi, à partir de ta journée notée en une minute.</p>
+      <a class="btn" href="{APP}">Suivre ma rentabilité gratuitement</a>
+    </div>
+  </div>
+  <p class="note" style="margin-top:12px">Résultat indicatif, calculé avec les taux connus en novembre 2026 ; il ne remplace pas l'avis d'un comptable. Tes chiffres restent sur ton appareil. <button type="button" id="raz" style="font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline">Revenir à l'exemple</button></p>
+</form>
+'''
+page = head(title, desc, url, ld, cur="calc", og="website", css=CSS_CALC) + f'''
+<header class="head">
+  <div class="read">
+    <ol class="crumbs"><li><a href="/">Accueil</a></li><li><a href="/calculateurs/">Calculateurs</a></li><li>{e(c["short"])}</li></ol>
+    <h1>{e(c["h1"])}</h1>
+    <p class="lede">Combien te reste-t-il vraiment ? Entre ce que tu encaisses, tes frais et ton statut, le calculateur te donne ton net, ton € / heure et ton € / km.</p>
+    <p class="meta">Taux 2026 · Mis à jour le {DATE_FR}</p>
+  </div>
+</header>
+<main>
+<article class="read" style="padding-top:8px">
+{form}
+<h2>Comment le calcul est fait</h2>
+<p>Le calculateur suit la méthode détaillée dans notre article <a href="/articles/calcul-revenu-net-vtc/">Comment calculer son revenu net de chauffeur VTC</a> :</p>
+<ol>
+  <li><strong>Ce que tu encaisses :</strong> le montant versé par les plateformes, plus tes courses privées et tes pourboires. Si tu saisis le prix payé par les clients, la commission est retirée d'abord.</li>
+  <li><strong>Les charges de ton statut :</strong> pour un auto-entrepreneur, 21,2 % du CA plus la formation professionnelle, avec l'ACRE et le versement libératoire si tu les as (détails dans <a href="/articles/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>). En société, le pourcentage que tu mets de côté. En rattachement, le prix payé chaque semaine.</li>
+  <li><strong>Tes frais de la période :</strong> carburant, entretien, péages, parking, lavage et repas.</li>
+  <li><strong>Tes charges mensuelles</strong>, ramenées à la semaine si besoin : voiture, assurance, téléphone, comptable.</li>
+</ol>
+<p>Le revenu net est ce qu'il reste. Le € / heure et le € / km se calculent sur ce net, pour voir si tes heures et tes kilomètres valent le coup.</p>
+<div class="box warn"><p>L'impôt sur le revenu n'est compris que si tu as coché le versement libératoire, ou s'il est inclus dans ton pourcentage en société. Les taux changent chaque année : vérifie-les sur ton espace URSSAF.</p></div>
+<h2>Questions fréquentes</h2>
+{faqhtml}
+</article>
+<section class="more read" aria-labelledby="more-t">
+  <h2 id="more-t">À lire aussi</h2>
+  <div class="cards">
+{cards()}
+  </div>
+</section>
+</main>
+<script src="/assets/calc-revenu-net.js" defer></script>
+''' + FOOT
+os.makedirs(f"{ROOT}/calculateurs/{c['slug']}", exist_ok=True)
+open(f"{ROOT}/calculateurs/{c['slug']}/index.html", "w", encoding="utf-8").write(page)
+
+# index des calculateurs
+url = SITE + "/calculateurs/"
+ld = {"@context": "https://schema.org", "@graph": [
+    {"@type": "CollectionPage", "name": "Calculateurs pour chauffeurs VTC", "url": url, "inLanguage": "fr-FR",
+     "hasPart": [{"@type": "WebApplication", "name": c["h1"], "url": f"{SITE}/calculateurs/{c['slug']}/"} for c in CALCS]},
+    {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
+        {"@type": "ListItem", "position": 2, "name": "Calculateurs", "item": url}]}]}
+page = head("Calculateurs gratuits pour chauffeurs VTC | VTC Rentable", "Calculateurs gratuits et sans inscription pour chauffeurs VTC : revenu net, charges, € / heure et € / km, avec les taux 2026.", url, ld, cur="calc", og="website") + f'''
+<header class="head">
+  <div class="read">
+    <ol class="crumbs"><li><a href="/">Accueil</a></li><li>Calculateurs</li></ol>
+    <h1>Calculateurs pour chauffeurs VTC</h1>
+    <p class="lede">Des outils gratuits, sans inscription, pour savoir ce que tu gagnes vraiment. Tes chiffres restent sur ton appareil.</p>
+  </div>
+</header>
+<main>
+<section class="more read" style="padding-top:36px" aria-label="Tous les calculateurs">
+  <div class="cards">
+{calc_cards()}
+  </div>
+  <p style="color:var(--muted);margin-top:22px">D'autres calculateurs arrivent : prix minimum d'une course, coût de la voiture au kilomètre, achat ou location, comparaison des statuts.</p>
+</section>
+<section class="more read" aria-labelledby="art-t">
+  <h2 id="art-t">Nos guides</h2>
+  <div class="cards">
+{cards()}
+  </div>
+</section>
+</main>
+''' + FOOT
+open(f"{ROOT}/calculateurs/index.html", "w", encoding="utf-8").write(page)
+
 # sitemap
-urls = [(SITE + "/", "1.0"), (SITE + "/articles/", "0.7")] + [(f"{SITE}/articles/{a['slug']}/", "0.8") for a in ARTS]
+urls = [(SITE + "/", "1.0"), (SITE + "/calculateurs/", "0.8")] + [(f"{SITE}/calculateurs/{c['slug']}/", "0.9") for c in CALCS] \
+     + [(SITE + "/articles/", "0.7")] + [(f"{SITE}/articles/{a['slug']}/", "0.8") for a in ARTS]
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
     f"  <url><loc>{u}</loc><lastmod>{DATE}</lastmod><priority>{p}</priority></url>\n" for u, p in urls) + "</urlset>\n"
 open(f"{ROOT}/sitemap.xml", "w").write(sm)
