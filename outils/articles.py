@@ -837,7 +837,7 @@ write_calc(c, title, desc, "Perte de valeur, crédit et entretien d'un côté, l
 
 # --- comparateur de statuts ---
 c = CALCS[4]
-title = "Statut VTC : auto-entrepreneur, société ou rattachement ? Comparateur 2026"
+title = "Statut VTC : auto-entrepreneur, société ou rattachement ?"
 desc = "Compare ton revenu net de chauffeur VTC en auto-entrepreneur, en société ou en rattachement, avec les mêmes chiffres. Plafond micro et TVA inclus."
 faq = [("Quel est le meilleur statut pour un chauffeur VTC ?",
         "Il n'y a pas de réponse unique : tout dépend de ton chiffre d'affaires, de tes frais et de tes projets. L'auto-entreprise est simple et adaptée au démarrage, dans la limite de 83 600 € de CA par an. La société permet de déduire les frais et de grossir. Le rattachement évite les démarches, contre un prix chaque semaine."),
@@ -910,7 +910,7 @@ write_calc(c, title, desc, "Avec le même chiffre d'affaires et les mêmes frais
 
 # --- objectif de chiffre d'affaires ---
 c = CALCS[5]
-title = "Objectif de chiffre d'affaires VTC : combien faire pour gagner 2 000 € ?"
+title = "Chiffre d'affaires VTC : combien faire pour gagner 2 000 € ?"
 desc = "Calcule le chiffre d'affaires VTC à faire par semaine, par jour et par heure pour gagner le net que tu veux, selon ton statut, tes frais et tes congés."
 faq = [("Quel chiffre d'affaires faire en VTC pour gagner 2 000 € nets par mois ?",
         "Ça dépend de ton statut et de tes frais. Avec l'exemple du calculateur (auto-entrepreneur, frais variables de 25 % du CA, 460 € de charges fixes par mois et 47 semaines travaillées par an), il faut environ 4 580 € de CA par mois, soit près de 1 170 € par semaine travaillée."),
@@ -1161,7 +1161,7 @@ ld = {"@context": "https://schema.org", "@graph": [
     {"@type": "BreadcrumbList", "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
         {"@type": "ListItem", "position": 2, "name": "Modèles gratuits", "item": url}]}]}
-page = head("Modèles gratuits pour chauffeurs VTC : tableau de suivi et checklist", "Télécharge gratuitement un tableau Excel de suivi de semaine VTC et une checklist des frais à imprimer, pour savoir ce que tu gagnes vraiment.", url, ld, cur="modeles", og="website", css=CSS_CALC) + f"""
+page = head("Modèles gratuits VTC : tableau de suivi et checklist des frais", "Télécharge gratuitement un tableau Excel de suivi de semaine VTC et une checklist des frais à imprimer, pour savoir ce que tu gagnes vraiment.", url, ld, cur="modeles", og="website", css=CSS_CALC) + f"""
 <header class="head">
   <div class="read">
     <ol class="crumbs"><li><a href="/">Accueil</a></li><li>Modèles gratuits</li></ol>
