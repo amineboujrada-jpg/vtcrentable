@@ -44,3 +44,6 @@
 .res .verdict.ok { border-left-color: #3ccf7d; } .res .verdict.ok b { color: #3ccf7d; }
 .res .verdict.mid { border-left-color: #f7b267; } .res .verdict.mid b { color: #f7b267; }
 .res .verdict.bad { border-left-color: #ff8a7a; } .res .verdict.bad b { color: #ff8a7a; }
+.res thead th { font: 600 11.5px/1.3 var(--f-num); letter-spacing: .06em; text-transform: uppercase; color: var(--night-muted); border-top: 0; }
+.res th.n { text-align: right; }
+.res td.n, .res th.n { padding-left: 12px; }
