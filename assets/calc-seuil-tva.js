@@ -12,10 +12,10 @@
   var eur = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
   function calc() {
-    var prudent = $("base").value === "client";
+    var verse = $("base").value === "verse";   // la base des seuils est toujours le prix total des courses
     var com = Math.min(num("com"), 90) / 100;
-    var conv = prudent ? 1 / (1 - com) : 1;   // montants versés → prix payés par les clients
-    $("f-com").classList.toggle("hide", !prudent);
+    var conv = verse ? 1 / (1 - com) : 1;   // montants versés → prix total des courses
+    $("f-com").classList.toggle("hide", !verse);
 
     var mois = Math.min(Math.max(num("mois"), 0), 12);
     var caNow = num("caan") * conv;
@@ -47,7 +47,7 @@
     $("r-net").textContent = mois ? eur.format(projection) : "—";
     var tva = projection * T.taux / (1 + T.taux);
     $("r-kpis").innerHTML = [
-      [eur.format(caNow), "fait depuis janvier" + (prudent ? " (prix clients)" : "")],
+      [eur.format(caNow), "de prix des courses depuis janvier"],
       [eur.format(Math.max(T.base - caNow, 0)), "avant le seuil de 37 500 €"],
       [eur.format(Math.max(T.majore - caNow, 0)), "avant le seuil de 41 250 €"],
       [eur.format(tva), "de TVA à 10 % sur une année comme celle-ci"]
@@ -64,7 +64,11 @@
 
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || "null");
-    if (saved) Object.keys(saved).forEach(function (id) { if ($(id)) $(id).value = saved[id]; });
+    if (saved) Object.keys(saved).forEach(function (id) {
+      var el = $(id); if (!el) return;
+      if (el.tagName === "SELECT" && !Array.prototype.some.call(el.options, function (o) { return o.value === saved[id]; })) return;
+      el.value = saved[id];
+    });
   } catch (e) { /* ignore */ }
 
   f.addEventListener("input", calc);

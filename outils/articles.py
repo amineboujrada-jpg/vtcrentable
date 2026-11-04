@@ -1002,24 +1002,24 @@ faq = [("Quels sont les seuils de TVA pour un chauffeur VTC en 2026 ?",
        ("Quel taux de TVA pour une course VTC ?",
         "Le transport de personnes relève du taux réduit de 10 %. Une course facturée uniquement à la durée, comme une mise à disposition à l'heure, peut relever du taux de 20 %."),
        ("Faut-il compter le prix payé par le client ou ce que verse Uber ?",
-        "C'est le point à faire confirmer par ton comptable, car il décide souvent si tu dépasses le seuil. Le calculateur propose par défaut le calcul prudent, sur le prix total payé par les clients, commission comprise.")]
+        "Le prix total de la course, payé par le client, commission comprise : c'est ce chiffre qui se compare aux seuils. Si tu ne connais que les montants versés par les plateformes, le calculateur les convertit avec ta commission moyenne.")]
 form = f"""
 <form id="calc" class="calc" novalidate aria-describedby="calc-intro">
   <p id="calc-intro" class="note" style="margin:0 0 14px">Prérempli avec un exemple : remplace par tes chiffres, le résultat se met à jour tout seul.</p>
   <fieldset>
     <legend>Ton chiffre d'affaires</legend>
     <div class="row">
-      {num_field("caan", "Montant versé depuis le 1er janvier (€)", "25000", "Plateformes, courses privées et pourboires")}
+      {num_field("caan", "Chiffre depuis le 1er janvier (€)", "25000", "Plateformes, courses privées et pourboires")}
       {num_field("mois", "Nombre de mois écoulés", "10", "Mois complets depuis janvier")}
-      {num_field("caprec", "Montant versé l'an dernier (€)", "28000", "0 si tu as commencé cette année")}
+      {num_field("caprec", "Chiffre de l'an dernier (€)", "28000", "0 si tu as commencé cette année")}
     </div>
   </fieldset>
   <fieldset>
     <legend>Base du calcul</legend>
     <div class="row">
-      <label for="base">Comparer aux seuils
-        <select id="base"><option value="client">le prix payé par les clients (prudent)</option><option value="verse">le montant versé par les plateformes</option></select></label>
-      <div id="f-com">{num_field("com", "Commission moyenne des plateformes (%)", "25", "Pour retrouver le prix payé par les clients")}</div>
+      <label for="base">Les montants saisis sont
+        <select id="base"><option value="verse">ce que versent les plateformes (après commission)</option><option value="prix">le prix total des courses (avant commission)</option></select></label>
+      <div id="f-com">{num_field("com", "Commission moyenne des plateformes (%)", "25", "Pour retrouver le prix total des courses")}</div>
     </div>
   </fieldset>
 
@@ -1045,7 +1045,7 @@ method = """<h2>Comment le calcul est fait</h2>
   <li><strong>Le verdict :</strong> sous 37 500 €, tu restes en franchise ; entre 37 500 € et 41 250 €, la TVA s'applique au 1er janvier suivant ; au-delà de 41 250 €, dès le jour du dépassement, dont il estime le mois.</li>
 </ol>
 <p>La TVA estimée correspond à 10 % du prix hors taxe sur une année au même rythme. Ce que tu reverses vraiment est plus bas, car tu récupères la TVA payée sur tes dépenses professionnelles.</p>
-<div class="box warn"><p><strong>Le point à vérifier :</strong> selon la façon dont la plateforme facture les courses, le chiffre comparé au seuil peut être le prix total payé par les clients, commission comprise, et non ce qui arrive sur ton compte. L'écart est d'environ un tiers avec 25 % de commission. Fais confirmer la bonne base par ton comptable avant de te fier au résultat. La commission facturée depuis l'étranger peut aussi entraîner une autoliquidation de TVA.</p></div>
+<div class="box warn"><p><strong>Attention à la base :</strong> le chiffre qui se compare aux seuils est le prix total des courses payé par les clients, commission comprise, et non ce qui arrive sur ton compte. Avec 25 % de commission, l'écart est d'environ un tiers : beaucoup de chauffeurs dépassent la franchise sans le savoir. La commission facturée depuis l'étranger peut aussi entraîner une autoliquidation de TVA : fais le point avec ton comptable.</p></div>
 <p>Pour voir l'effet sur ce qu'il te reste, utilise le <a href="/calculateurs/comparateur-statut-vtc/">comparateur de statuts</a> et lis <a href="/articles/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>.</p>
 <div class="src"><p><strong>Sources</strong></p><ul>
 <li><a href="https://www.superindep.fr/blog/2024/nouveautes-tva-2025/" rel="noopener">Seuils de TVA en microentreprise 2026 (SuperIndep)</a></li>
