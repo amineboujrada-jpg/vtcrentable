@@ -354,7 +354,9 @@ CALCS = [dict(slug="revenu-net-vtc", short="Revenu net VTC", h1="Calculateur de 
          dict(slug="achat-ou-location-voiture-vtc", short="Achat ou location", h1="Voiture VTC : acheter ou louer ?",
               card="Compare le coût total d'une voiture achetée et d'une voiture louée sur la même durée, km supplémentaires compris."),
          dict(slug="comparateur-statut-vtc", short="Comparateur de statuts", h1="Quel statut pour un chauffeur VTC ?",
-              card="Auto-entrepreneur, société ou rattachement : compare ce qu'il te reste chaque mois avec les mêmes chiffres.")]
+              card="Auto-entrepreneur, société ou rattachement : compare ce qu'il te reste chaque mois avec les mêmes chiffres."),
+         dict(slug="objectif-chiffre-affaires-vtc", short="Objectif de chiffre d'affaires", h1="Objectif de chiffre d'affaires VTC",
+              card="Le chiffre d'affaires à faire par semaine, par jour et par heure pour gagner le net que tu veux.")]
 
 def calc_cards():
     return "\n".join(f'<a class="card" href="/calculateurs/{c["slug"]}/"><b>{e(c["h1"])}</b><span>{e(c["card"])}</span></a>' for c in CALCS)
@@ -812,6 +814,82 @@ method = """<h2>Comment la comparaison est faite</h2>
 <div class="box warn"><p>Le choix d'un statut ne se résume pas au net du mois : protection sociale, retraite, démarches, possibilité d'embaucher ou d'acheter une voiture au nom de la société comptent aussi. Prends conseil auprès d'un comptable avant de changer.</p></div>"""
 write_calc(c, title, desc, "Avec le même chiffre d'affaires et les mêmes frais, compare ce qu'il te reste chaque mois en auto-entrepreneur, en société et en rattachement.", faq, form, method, "calc-statuts.js")
 
+# --- objectif de chiffre d'affaires ---
+c = CALCS[5]
+title = "Objectif de chiffre d'affaires VTC : combien faire pour gagner 2 000 € ?"
+desc = "Calcule le chiffre d'affaires VTC à faire par semaine, par jour et par heure pour gagner le net que tu veux, selon ton statut, tes frais et tes congés."
+faq = [("Quel chiffre d'affaires faire en VTC pour gagner 2 000 € nets par mois ?",
+        "Ça dépend de ton statut et de tes frais. Avec l'exemple du calculateur (auto-entrepreneur, frais variables de 25 % du CA, 460 € de charges fixes par mois et 47 semaines travaillées par an), il faut environ 4 580 € de CA par mois, soit près de 1 170 € par semaine travaillée."),
+       ("Pourquoi compter les semaines de congés ?",
+        "Tes charges fixes tombent tous les mois, même quand tu ne roules pas. Si tu prends cinq semaines de congés, ton chiffre d'affaires de l'année doit être fait en 47 semaines : chaque semaine travaillée doit donc rapporter un peu plus."),
+       ("Que mettre dans les frais variables ?",
+        "Ce qui augmente quand tu roules plus : carburant, entretien, péages, repas, lavage. Exprime-les en pourcentage de ton chiffre d'affaires : par exemple 291 € de frais pour 1 150 € encaissés, c'est environ 25 %."),
+       ("Le net calculé est-il avant ou après impôt ?",
+        "Avant l'impôt sur le revenu, sauf si tu coches le versement libératoire en auto-entrepreneur, ou si ton pourcentage en société comprend l'impôt.")]
+form = f"""
+<form id="calc" class="calc" novalidate aria-describedby="calc-intro">
+  <p id="calc-intro" class="note" style="margin:0 0 14px">Prérempli avec un exemple : remplace par tes chiffres, le résultat se met à jour tout seul.</p>
+  <fieldset>
+    <legend>Ton objectif</legend>
+    <div class="row">
+      {num_field("net", "Revenu net voulu (€ / mois)", "2000")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Ton statut</legend>
+    <div class="row">
+      <label for="statut">Statut
+        <select id="statut"><option value="ae">Auto-entrepreneur</option><option value="societe">Société (SASU, EURL…)</option><option value="ratt">Salarié en rattachement</option></select></label>
+      <div id="opt-ae" style="display:grid;gap:12px">
+        <label for="acre">ACRE
+          <select id="acre"><option value="0">Pas d'ACRE</option><option value="0.5">Activité créée avant le 1er juillet 2026 (− 50 %)</option><option value="0.25">Activité créée depuis le 1er juillet 2026 (− 25 %)</option></select></label>
+        <label class="check" for="vl"><input id="vl" type="checkbox"> Versement libératoire de l'impôt (1,7 %)</label>
+      </div>
+      <div id="opt-soc" class="hide" style="display:grid;gap:12px">{num_field("soc", "Part du CA pour charges et impôt (%)", "25", "Estimation : à fixer avec ton comptable")}{num_field("compta", "Comptable et banque pro (€ / mois)", "100")}</div>
+      <div id="opt-ratt" class="hide">{num_field("ratt", "Prix du rattachement (€ / semaine)", "50")}</div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Tes frais</legend>
+    <div class="row">
+      {num_field("var", "Frais variables (% du CA)", "25", "Carburant, entretien, péages, repas", step="0.5")}
+      {num_field("fixes", "Charges fixes (€ / mois)", "460", "Assurance, voiture, téléphone")}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Ton rythme</legend>
+    <div class="row">
+      {num_field("semaines", "Semaines travaillées par an", "47", "52 moins tes congés")}
+      {num_field("jours", "Jours travaillés par semaine", "6")}
+      {num_field("heures", "Heures par jour", "9", step="0.5")}
+    </div>
+  </fieldset>
+
+  <div class="res" aria-live="polite">
+    <p class="k">Ton objectif</p>
+    <p id="r-net" class="big">—</p>
+    <p id="r-sub" class="sub"></p>
+    <div id="r-kpis" class="kpis"></div>
+    <table><tbody id="r-tab"></tbody></table>
+    <p id="r-msg" class="msg"></p>
+    <div class="go">
+      <p>Fixe ton objectif dans VTC Rentable et vois chaque jour où tu en es.</p>
+      <a class="btn" href="{APP}">Suivre mon objectif gratuitement</a>
+    </div>
+  </div>
+  <p class="note" style="margin-top:12px">Résultat indicatif avec les taux connus en novembre 2026 ; il ne remplace pas l'avis d'un comptable. Tes chiffres restent sur ton appareil. <button type="button" id="raz" style="font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline">Revenir à l'exemple</button></p>
+</form>
+"""
+method = """<h2>Comment le calcul est fait</h2>
+<p>Le calculateur part du net que tu veux et remonte au chiffre d'affaires :</p>
+<ol>
+  <li>Il ajoute à ton objectif tes <strong>charges fixes</strong> du mois (et le rattachement ou le comptable selon ton statut).</li>
+  <li>Il divise ce total par la <strong>part qui te reste sur chaque euro encaissé</strong>, une fois retirés les frais variables et les charges de ton statut. En auto-entrepreneur sans ACRE, avec 25 % de frais variables, il reste environ 54 centimes par euro.</li>
+  <li>Il répartit le chiffre d'affaires de l'année sur tes <strong>semaines travaillées</strong>, puis sur tes jours et tes heures.</li>
+</ol>
+<p>Pour vérifier où tu en es, compare ce rythme à ton chiffre réel avec le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net</a>, et vérifie qu'une course précise vaut le coup avec le <a href="/calculateurs/prix-minimum-course-vtc/">prix minimum d'une course</a>.</p>"""
+write_calc(c, title, desc, "Tu vises un certain revenu net par mois ? Calcule le chiffre d'affaires à faire par semaine, par jour et par heure pour l'atteindre, congés compris.", faq, form, method, "calc-objectif-ca.js")
+
 # index des calculateurs
 url = SITE + "/calculateurs/"
 ld = {"@context": "https://schema.org", "@graph": [
@@ -833,7 +911,7 @@ page = head("Calculateurs gratuits pour chauffeurs VTC | VTC Rentable", "Calcula
   <div class="cards">
 {calc_cards()}
   </div>
-  <p style="color:var(--muted);margin-top:22px">D'autres calculateurs arrivent : objectif de chiffre d'affaires, seuils de TVA.</p>
+  <p style="color:var(--muted);margin-top:22px">D'autres calculateurs arrivent, comme les seuils de TVA.</p>
 </section>
 <section class="more read" aria-labelledby="art-t">
   <h2 id="art-t">Nos guides</h2>
