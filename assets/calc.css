@@ -62,3 +62,14 @@
 .res .pf-n { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; }
 .res .pf-n b { font-family: var(--f-num); font-variant-numeric: tabular-nums; color: #3ccf7d; }
 .res .legend li { color: var(--night-muted); margin: 0; }
+.modeles { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 26px 0 18px; }
+.modele { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 6px; align-content: start; }
+.modele b { font: 800 18px/1.25 var(--f-display); } .modele span { color: var(--muted); font-size: 15px; line-height: 1.5; }
+.modele .fmt { font: 600 12px/1 var(--f-num); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.calc .m-msg { margin: 10px 0 0; font-size: 14.5px; } .calc .m-msg.err { color: var(--charge); font-weight: 600; }
+.calc .consent { display: flex; gap: 10px; align-items: flex-start; font: 400 14px/1.5 var(--f-body); color: var(--muted); }
+.calc .consent input { width: 18px; height: 18px; margin-top: 2px; flex: none; accent-color: var(--accent); }
+.calc input[type=email] { width: 100%; font: 600 16px/1.2 var(--f-body); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.calc button.btn { border: 0; cursor: pointer; } .calc button.btn:disabled { opacity: .6; cursor: wait; }
+.done { display: grid; gap: 10px; justify-items: start; } .done:focus { outline: none; }
+[hidden] { display: none !important; }
