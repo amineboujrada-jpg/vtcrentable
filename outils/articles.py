@@ -68,6 +68,7 @@ def head(title, desc, url, extra_ld, cur="blog", og="article", css=""):
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,700..900&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@600&display=swap">
 <link rel="stylesheet" href="/assets/article.css">{css}
 <script type="application/ld+json">{json.dumps(extra_ld, ensure_ascii=False)}</script>
+<script src="/assets/analytics.js" defer></script>
 </head>
 <body>
 <nav class="top" aria-label="Navigation principale">

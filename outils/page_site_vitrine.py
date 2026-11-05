@@ -113,6 +113,7 @@ _page = f'''<!doctype html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>{_css_home}{_css_page}</style>
+<script src="/assets/analytics.js" defer></script>
 </head>
 <body>
 <header class="night">
