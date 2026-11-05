@@ -244,6 +244,84 @@ write_landing("logiciel-vtc-gratuit",
    ("Puis-je l'utiliser sur ordinateur ?", "Oui. Le même compte fonctionne sur le téléphone et sur l'ordinateur, avec tes données synchronisées.")],
   kind="SoftwareApplication")
 
+# ---------- /site-vitrine-chauffeur-vtc ----------
+write_landing("site-vitrine-chauffeur-vtc",
+  "Site internet chauffeur VTC avec réservation : 20 € / mois",
+  "Un site vitrine à ton nom, avec réservation en ligne et bon de commande automatique, visible sur Google dans ta ville. 20 € par mois, sans engagement.",
+  "Ton site de chauffeur VTC, avec la réservation en ligne", "Site vitrine chauffeur VTC",
+  "Tes clients réservent directement chez toi, sans commission de plateforme. On crée ton site, tu reçois les réservations : 20 € par mois, sans engagement et sans frais de création.",
+  f'''<div class="price-pack">
+  <div class="big">20 €<small>par mois, sans engagement,<br>sans frais de création</small></div>
+  <ul>
+    <li>Un site d'une page à ton nom : présentation, véhicule, zones, tarifs, contact</li>
+    <li>La réservation en ligne : ton client choisit la date, l'adresse et le trajet</li>
+    <li>Le bon de commande PDF créé automatiquement à chaque réservation</li>
+    <li>Le référencement local : ta fiche Google et ton site visibles dans ta ville</li>
+  </ul>
+</div>
+
+<h2>Pourquoi un site à ton nom</h2>
+<p>Sur une course privée, il n'y a <strong>pas de commission de plateforme</strong> : tout le prix de la course est pour toi. Un client fidèle qui réserve ses trajets aéroport chez toi rapporte bien plus qu'une course Uber ou Bolt. Le calcul est dans notre article sur le <a href="/blog/salaire-chauffeur-vtc/">salaire d'un chauffeur VTC</a>.</p>
+<p>Le site sert aussi de carte de visite : tu donnes ton lien à un client satisfait, il réserve la prochaine fois en deux minutes, même la nuit.</p>
+
+<h2>Ce qui est compris</h2>
+<h3>Un site d'une page à ton nom</h3>
+<p>Ta présentation, ta photo si tu le souhaites, ton véhicule, tes zones de prise en charge et tes tarifs ou tes forfaits (aéroports, gares, mise à disposition). Le site s'affiche bien sur téléphone, là où tes clients le consultent.</p>
+<h3>La réservation en ligne</h3>
+<p>Le client remplit la date, l'heure, l'adresse de départ et d'arrivée et ses coordonnées. Tu reçois la demande et tu la confirmes.</p>
+<h3>Le bon de commande automatique</h3>
+<p>Chaque réservation crée le <a href="/blog/bon-de-commande-vtc/">bon de commande</a> que tu dois pouvoir présenter en cas de contrôle, avec les mentions obligatoires et l'heure de la commande.</p>
+<h3>Le référencement local</h3>
+<p>On t'aide à créer ou améliorer ta fiche Google (Google Business Profile) et on prépare ton site pour qu'il apparaisse quand quelqu'un cherche « chauffeur VTC » dans ta ville.</p>
+
+<h2>Comment ça se passe</h2>
+<ol>
+  <li><strong>Tu envoies ta demande</strong> avec le formulaire ci-dessous.</li>
+  <li><strong>On t'appelle</strong> pour récupérer tes infos : nom, véhicule, zones, tarifs.</li>
+  <li><strong>On crée ton site</strong> et on te l'envoie pour validation.</li>
+  <li><strong>Tu reçois tes premières réservations.</strong> Tu paies 20 € par mois et tu arrêtes quand tu veux.</li>
+</ol>
+
+<h2 id="demande">Demander mon site</h2>
+<form id="site-form" class="calc" novalidate>
+  <fieldset>
+    <legend>Ta demande</legend>
+    <div style="display:grid;gap:14px">
+      <label for="s-nom"><span>Nom et prénom</span><input id="s-nom" type="text" autocomplete="name" maxlength="100" required></label>
+      <label for="s-tel"><span>Téléphone</span><input id="s-tel" type="tel" autocomplete="tel" maxlength="30" required></label>
+      <label for="s-email"><span>E-mail (facultatif)</span><input id="s-email" type="email" autocomplete="email" maxlength="254"></label>
+      <label for="s-ville"><span>Ville ou zone où tu travailles</span><input id="s-ville" type="text" autocomplete="address-level2" maxlength="100" required></label>
+      <label for="s-message"><span>Un message (facultatif)</span><textarea id="s-message" rows="3" maxlength="1000" placeholder="Ton véhicule, tes trajets habituels, une question…"></textarea></label>
+      <label class="consent" for="s-ok"><input id="s-ok" type="checkbox" required> <span>J'accepte que VTC Rentable conserve ces informations pour me recontacter au sujet du site vitrine. Je peux demander leur suppression à tout moment à contact@vtcrentable.com.</span></label>
+      <div><button id="s-btn" class="btn" type="submit">Envoyer ma demande</button></div>
+    </div>
+    <p id="s-msg" class="m-msg" role="alert"></p>
+  </fieldset>
+</form>
+<div id="s-done" class="calc done" hidden tabindex="-1">
+  <b style="font:800 21px/1.25 var(--f-display)">Merci, ta demande est bien envoyée.</b>
+  <p style="margin:0">On te rappelle sous 48 h pour préparer ton site. En attendant, tu peux déjà suivre ton activité avec l'appli <a href="{APP}">VTC Rentable</a>, gratuite.</p>
+</div>
+<p style="color:var(--muted);font-size:14px;margin-top:16px">Tes informations sont enregistrées de façon sécurisée, ne servent qu'à te recontacter et ne sont jamais revendues.</p>
+<style>
+.price-pack {{ background: var(--surface); border: 2px solid var(--accent); border-radius: 20px; padding: 24px; display: grid; gap: 18px; margin: 8px 0 28px; }}
+.price-pack .big {{ font: 600 48px/1 var(--f-num); }}
+.price-pack .big small {{ display: block; font: 600 14px/1.35 var(--f-body); color: var(--muted); margin-top: 8px; }}
+.price-pack ul {{ margin: 0; padding-left: 20px; display: grid; gap: 8px; }}
+#site-form input[type=tel], #site-form input[type=text], #site-form textarea {{ width: 100%; box-sizing: border-box; font: 600 16px/1.3 var(--f-body); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }}
+#site-form textarea {{ resize: vertical; font-weight: 500; }}
+</style>
+{CTA}''',
+  [("Combien coûte un site internet pour chauffeur VTC ?",
+    "Avec VTC Rentable, le site vitrine avec réservation en ligne coûte 20 € par mois, sans frais de création et sans engagement. Tu peux arrêter à tout moment."),
+   ("Est-ce que je paie une commission sur les réservations ?",
+    "Non. Les réservations faites sur ton site sont des courses privées : tu fixes ton prix et tu gardes la totalité, sans commission de plateforme."),
+   ("Le bon de commande est-il fait automatiquement ?",
+    "Oui. Chaque réservation reçue par ton site crée un bon de commande PDF avec les mentions obligatoires et l'heure de la commande, à présenter en cas de contrôle."),
+   ("Combien de temps faut-il pour avoir mon site ?",
+    "Après ta demande, on te rappelle sous 48 h pour récupérer tes informations. Le site t'est ensuite envoyé pour validation avant sa mise en ligne.")],
+  kind="WebPage", js="demande-site.js", css=CSS_CALC)
+
 # ---------- /qui-sommes-nous ----------
 write_landing("qui-sommes-nous",
   "Qui sommes-nous ? VTC Rentable, créée par un chauffeur VTC",
