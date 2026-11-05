@@ -112,11 +112,12 @@ def cards(exclude=None, limit=None):
     return "\n".join(f'<a class="card" href="/blog/{a["slug"]}/" data-cat="{e(a["categorie"])}"><small class="cat">{e(a["categorie"])} · {date_fr(a["date"])}</small><b>{e(a["h1"])}</b><span>{e(a["card"])}</span></a>' for a in choix)
 
 ORG = {"@type": "Organization", "name": "VTC Rentable", "url": SITE + "/", "logo": SITE + "/icon-192.png"}
+AUTEUR = {"@type": "Person", "name": "Mohamed Amine", "jobTitle": "Chauffeur VTC et fondateur de VTC Rentable", "url": SITE + "/qui-sommes-nous/", "worksFor": ORG}
 for a in ARTS:
     url = f"{SITE}/blog/{a['slug']}/"
     ld = {"@context": "https://schema.org", "@graph": [
         {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": a["date"], "dateModified": a["date"],
-         "inLanguage": "fr-FR", "mainEntityOfPage": url, "image": "https://app.vtcrentable.com/og-image.png", "author": ORG, "publisher": ORG},
+         "inLanguage": "fr-FR", "mainEntityOfPage": url, "image": "https://app.vtcrentable.com/og-image.png", "author": AUTEUR, "publisher": ORG},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
             {"@type": "ListItem", "position": 2, "name": "Blog", "item": SITE + "/blog/"},
@@ -130,7 +131,7 @@ for a in ARTS:
     <ol class="crumbs"><li><a href="/">Accueil</a></li><li><a href="/blog/">Blog</a></li><li>{e(a["short"])}</li></ol>
     <h1>{e(a["h1"])}</h1>
     <p class="lede">{e(a["lede"])}</p>
-    <p class="meta">{e(a["categorie"])} · Mis à jour le {date_fr(a["date"])}</p>
+    <p class="meta">Par <a href="/qui-sommes-nous/">Mohamed Amine</a>, chauffeur VTC · {e(a["categorie"])} · Mis à jour le {date_fr(a["date"])}</p>
   </div>
 </header>
 <main>

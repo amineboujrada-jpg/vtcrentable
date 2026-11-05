@@ -8,7 +8,7 @@ CTA = f'''<div class="cta">
   <a class="btn" href="{APP}">Créer mon compte gratuit</a>
 </div>'''
 SUPPORT = '<p>Une question ? Écris à <a href="mailto:contact@vtcrentable.com">contact@vtcrentable.com</a> : réponse sous 24 h.</p>'
-TEMOIGNAGES = '''<blockquote class="quote-l"><p>« VTC Rentable a changé ma façon de voir mon activité. Je sais enfin ce que je gagne vraiment, et je gère mon activité beaucoup plus clairement. »</p><cite>Amine, chauffeur VTC et fondateur de VTC Rentable</cite></blockquote>
+TEMOIGNAGES = '''<blockquote class="quote-l"><p>« VTC Rentable a changé ma façon de voir mon activité. Je sais enfin ce que je gagne vraiment, et je gère mon activité beaucoup plus clairement. »</p><cite>Mohamed Amine, chauffeur VTC et fondateur de VTC Rentable</cite></blockquote>
 <blockquote class="quote-l"><p>« C'est efficace : je vois ma rentabilité et j'ai enfin la main dessus. »</p><cite>Jawad, chauffeur VTC, utilisateur de l'appli</cite></blockquote>'''
 LANDING = []
 
@@ -23,6 +23,8 @@ def write_landing(slug, title, desc, h1, short, lede, body, faq, kind="WebPage",
         graph[0].update({"applicationCategory": "BusinessApplication", "operatingSystem": "iPhone, Android, navigateur web", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}})
     if kind == "WebApplication":
         graph[0].update({"applicationCategory": "FinanceApplication", "operatingSystem": "Navigateur web", "isAccessibleForFree": True, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}})
+    if kind == "AboutPage":
+        graph[0]["mainEntity"] = AUTEUR
     if faq: graph.append({"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": r}} for q, r in faq]})
     faqhtml = ("<h2>Questions fréquentes</h2>\n" + "\n".join(f"<h3>{e(q)}</h3>\n<p>{e(r)}</p>" for q, r in faq)) if faq else ""
     page = head(title, desc, url, {"@context": "https://schema.org", "@graph": graph}, cur=slug, og="website", css=css) + f'''
@@ -245,11 +247,11 @@ write_landing("logiciel-vtc-gratuit",
 # ---------- /qui-sommes-nous ----------
 write_landing("qui-sommes-nous",
   "Qui sommes-nous ? VTC Rentable, créée par un chauffeur VTC",
-  "VTC Rentable est créée par Amine, chauffeur VTC en Île-de-France. Notre histoire, nos engagements et comment nous contacter.",
+  "VTC Rentable est créée par Mohamed Amine, chauffeur VTC en Île-de-France. Notre histoire, nos engagements et comment nous contacter.",
   "Qui sommes-nous ?", "Qui sommes-nous",
   "VTC Rentable est née derrière le volant, d'un chauffeur qui voulait savoir ce qu'il gagnait vraiment.",
   f'''<h2>Le fondateur</h2>
-<p><strong>Amine, le fondateur, est chauffeur VTC en Île-de-France</strong>, rattaché à une société de transport. Comme beaucoup de chauffeurs, il notait ses journées dans un tableur pour savoir ce qu'il lui restait après le carburant, l'assurance et la commission de rattachement.</p>
+<p><strong>Mohamed Amine, le fondateur, est chauffeur VTC en Île-de-France</strong>, rattaché à une société de transport. Comme beaucoup de chauffeurs, il notait ses journées dans un tableur pour savoir ce qu'il lui restait après le carburant, l'assurance et la commission de rattachement.</p>
 <p>Le tableur prenait du temps et les chiffres n'étaient jamais à jour. Développeur de formation, il a donc créé l'outil qu'il cherchait : une appli qui se remplit en une minute le soir, et qui donne enfin le vrai revenu net de la semaine, le € / heure et le € / km.</p>
 <p>VTC Rentable est utilisée chaque jour pour son activité. Chaque fonction vient d'un besoin réel du terrain : le bon de commande pour les contrôles, le rappel de la visite technique, la vérification des virements des plateformes.</p>
 <h2>Ce qu'en disent les chauffeurs</h2>
