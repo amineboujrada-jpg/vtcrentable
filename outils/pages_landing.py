@@ -246,12 +246,12 @@ write_landing("logiciel-vtc-gratuit",
 
 # ---------- /site-vitrine-chauffeur-vtc ----------
 write_landing("site-vitrine-chauffeur-vtc",
-  "Site internet chauffeur VTC avec réservation : 20 € / mois",
-  "Un site vitrine à ton nom, avec réservation en ligne et bon de commande automatique, visible sur Google dans ta ville. 20 € par mois, sans engagement.",
+  "Site chauffeur VTC avec réservation en ligne : 19,99 €/mois",
+  "Un site vitrine à ton nom, avec réservation en ligne et bon de commande automatique, visible sur Google dans ta ville. 19,99 € par mois, sans engagement.",
   "Ton site de chauffeur VTC, avec la réservation en ligne", "Site vitrine chauffeur VTC",
-  "Tes clients réservent directement chez toi, sans commission de plateforme. On crée ton site, tu reçois les réservations : 20 € par mois, sans engagement et sans frais de création.",
+  "Tes clients réservent directement chez toi, sans commission de plateforme. On crée ton site, tu reçois les réservations : 19,99 € par mois, sans engagement et sans frais de création.",
   f'''<div class="price-pack">
-  <div class="big">20 €<small>par mois, sans engagement,<br>sans frais de création</small></div>
+  <div class="big">19,99 €<small>par mois, sans engagement,<br>sans frais de création</small></div>
   <ul>
     <li>Un site d'une page à ton nom : présentation, véhicule, zones, tarifs, contact</li>
     <li>La réservation en ligne : ton client choisit la date, l'adresse et le trajet</li>
@@ -259,6 +259,15 @@ write_landing("site-vitrine-chauffeur-vtc",
     <li>Le référencement local : ta fiche Google et ton site visibles dans ta ville</li>
   </ul>
 </div>
+
+<h2>Un exemple de site</h2>
+<p>Voici à quoi ressemble un site créé avec l'offre, sur téléphone. Le chauffeur, les tarifs et la réservation sont fictifs : ton site reprendra ton nom, ton véhicule, tes zones et tes prix.</p>
+<div class="figs">
+{fig("exemple-site-accueil", "L'accueil : ton nom, ta ville, tes services et le bouton Réserver.", "Exemple fictif de site vitrine de chauffeur VTC : page d'accueil")}
+{fig("exemple-site-reservation", "La réservation : départ, arrivée, date, heure et coordonnées du client.", "Exemple fictif de formulaire de réservation sur un site de chauffeur VTC")}
+{fig("exemple-site-bon", "La confirmation, avec le bon de commande PDF créé automatiquement.", "Exemple fictif de confirmation de réservation avec bon de commande PDF")}
+</div>
+<p class="figs-note">Exemple fictif réalisé pour illustrer l'offre : ce chauffeur n'existe pas.</p>
 
 <h2>Pourquoi un site à ton nom</h2>
 <p>Sur une course privée, il n'y a <strong>pas de commission de plateforme</strong> : tout le prix de la course est pour toi. Un client fidèle qui réserve ses trajets aéroport chez toi rapporte bien plus qu'une course Uber ou Bolt. Le calcul est dans notre article sur le <a href="/blog/salaire-chauffeur-vtc/">salaire d'un chauffeur VTC</a>.</p>
@@ -279,7 +288,7 @@ write_landing("site-vitrine-chauffeur-vtc",
   <li><strong>Tu envoies ta demande</strong> avec le formulaire ci-dessous.</li>
   <li><strong>On t'appelle</strong> pour récupérer tes infos : nom, véhicule, zones, tarifs.</li>
   <li><strong>On crée ton site</strong> et on te l'envoie pour validation.</li>
-  <li><strong>Tu reçois tes premières réservations.</strong> Tu paies 20 € par mois et tu arrêtes quand tu veux.</li>
+  <li><strong>Tu reçois tes premières réservations.</strong> Tu paies 19,99 € par mois et tu arrêtes quand tu veux.</li>
 </ol>
 
 <h2 id="demande">Demander mon site</h2>
@@ -289,7 +298,7 @@ write_landing("site-vitrine-chauffeur-vtc",
     <div style="display:grid;gap:14px">
       <label for="s-nom"><span>Nom et prénom</span><input id="s-nom" type="text" autocomplete="name" maxlength="100" required></label>
       <label for="s-tel"><span>Téléphone</span><input id="s-tel" type="tel" autocomplete="tel" maxlength="30" required></label>
-      <label for="s-email"><span>E-mail (facultatif)</span><input id="s-email" type="email" autocomplete="email" maxlength="254"></label>
+      <label for="s-email"><span>E-mail</span><input id="s-email" type="email" autocomplete="email" maxlength="254" required></label>
       <label for="s-ville"><span>Ville ou zone où tu travailles</span><input id="s-ville" type="text" autocomplete="address-level2" maxlength="100" required></label>
       <label for="s-message"><span>Un message (facultatif)</span><textarea id="s-message" rows="3" maxlength="1000" placeholder="Ton véhicule, tes trajets habituels, une question…"></textarea></label>
       <label class="consent" for="s-ok"><input id="s-ok" type="checkbox" required> <span>J'accepte que VTC Rentable conserve ces informations pour me recontacter au sujet du site vitrine. Je peux demander leur suppression à tout moment à contact@vtcrentable.com.</span></label>
@@ -313,7 +322,7 @@ write_landing("site-vitrine-chauffeur-vtc",
 </style>
 {CTA}''',
   [("Combien coûte un site internet pour chauffeur VTC ?",
-    "Avec VTC Rentable, le site vitrine avec réservation en ligne coûte 20 € par mois, sans frais de création et sans engagement. Tu peux arrêter à tout moment."),
+    "Avec VTC Rentable, le site vitrine avec réservation en ligne coûte 19,99 € par mois, sans frais de création et sans engagement. Tu peux arrêter à tout moment."),
    ("Est-ce que je paie une commission sur les réservations ?",
     "Non. Les réservations faites sur ton site sont des courses privées : tu fixes ton prix et tu gardes la totalité, sans commission de plateforme."),
    ("Le bon de commande est-il fait automatiquement ?",
