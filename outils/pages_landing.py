@@ -54,7 +54,7 @@ def write_landing(slug, title, desc, h1, short, lede, body, faq, kind="WebPage",
 
 # ---------- /application-vtc ----------
 write_landing("application-vtc",
-  "Application VTC gratuite : revenu net, charges et bon de commande",
+  "Application VTC gratuite : revenu net et bon de commande",
   "VTC Rentable, l'application des chauffeurs VTC : revenu net de la semaine, € / heure, € / km, dépenses, bon de commande PDF et entretien. Gratuite.",
   "L'application VTC pour savoir ce que tu gagnes vraiment", "Application VTC",
   "Tu notes ta journée le soir, l'appli calcule ton revenu net, ton € / heure et ton € / km, retire tes charges et prépare tes bons de commande.",

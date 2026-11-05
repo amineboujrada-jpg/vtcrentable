@@ -296,7 +296,7 @@ def write_calc(c, title, desc, lede, faq, form, method, js):
 # --- revenu net ---
 c = CALCS[0]
 url = f"{SITE}/calculateurs/{c['slug']}/"
-title = "Calculateur revenu net VTC 2026 : gratuit et sans inscription"
+title = "Calculateur revenu net VTC 2026 : gratuit, sans inscription"
 desc = "Calcule ton revenu net de chauffeur VTC en 2026 : auto-entrepreneur, société ou rattachement, avec ACRE, versement libératoire, € / heure et € / km."
 faq = [("Comment calculer son revenu net de chauffeur VTC ?",
         "Pars de ce que tu encaisses (plateformes, courses privées, pourboires), retire les charges de ton statut, tes frais de la période et tes charges mensuelles ramenées à la période (× 12 ÷ 52 pour une semaine). Le calculateur fait ces étapes pour toi."),
@@ -835,7 +835,7 @@ write_calc(c, title, desc, "Vas-tu dépasser la franchise de TVA cette année ? 
 
 # --- comparateur des plateformes ---
 c = CALCS[7]
-title = "Commission Uber, Bolt, Heetch, FreeNow : comparateur VTC 2026"
+title = "Commission Uber, Bolt, Heetch, FreeNow : comparateur 2026"
 desc = "Compare ce qu'il te reste sur une course VTC selon la plateforme : commissions Uber, Bolt, Heetch et FreeNow en 2026, modifiables, et écart par mois."
 faq = [("Quelle commission prend Uber sur un chauffeur VTC ?",
         "Depuis fin 2024, Uber applique une commission variable selon la course, entre environ 3 % et 45 % d'après les chiffres rapportés, avec une moyenne annoncée autour de 25 %. Le plus fiable est de calculer ta moyenne à partir de tes propres relevés."),
@@ -947,7 +947,7 @@ ld = {"@context": "https://schema.org", "@graph": [
     {"@type": "BreadcrumbList", "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
         {"@type": "ListItem", "position": 2, "name": "Modèles gratuits", "item": url}]}]}
-page = head("Modèles gratuits VTC : tableau de suivi et checklist des frais", "Télécharge gratuitement un tableau Excel de suivi de semaine VTC et une checklist des frais à imprimer, pour savoir ce que tu gagnes vraiment.", url, ld, cur="modeles", og="website", css=CSS_CALC) + f"""
+page = head("Modèles VTC gratuits : tableau de suivi et checklist frais", "Télécharge gratuitement un tableau Excel de suivi de semaine VTC et une checklist des frais à imprimer, pour savoir ce que tu gagnes vraiment.", url, ld, cur="modeles", og="website", css=CSS_CALC) + f"""
 <header class="head">
   <div class="read">
     <ol class="crumbs"><li><a href="/">Accueil</a></li><li>Modèles gratuits</li></ol>
