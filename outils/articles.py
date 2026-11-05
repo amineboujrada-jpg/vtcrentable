@@ -1,7 +1,7 @@
 import json, os, html
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATE = "2026-11-04"
-DATE_FR = "4 novembre 2026"
+DATE = "2026-11-05"
+DATE_FR = "5 novembre 2026"
 APP = "https://app.vtcrentable.com/"
 SITE = "https://vtcrentable.com"
 
@@ -236,7 +236,9 @@ CALCS = [dict(slug="revenu-net-vtc", short="Revenu net VTC", h1="Calculateur de 
          dict(slug="seuil-tva-vtc", short="Seuils de TVA", h1="Seuils de TVA du chauffeur VTC",
               card="Vas-tu dépasser la franchise de TVA cette année ? Projection de ton chiffre d'affaires et date de passage."),
          dict(slug="comparateur-plateformes-vtc", short="Comparateur des plateformes", h1="Comparateur des plateformes VTC",
-              card="Uber, Bolt, Heetch, FreeNow : ce qu'il te reste sur une même course selon la commission de chaque plateforme.")]
+              card="Uber, Bolt, Heetch, FreeNow : ce qu'il te reste sur une même course selon la commission de chaque plateforme."),
+         dict(slug="indemnites-kilometriques-vtc", short="Indemnités kilométriques", h1="Calcul des indemnités kilométriques VTC",
+              card="Le barème kilométrique 2026 selon ta voiture et tes km, et ce qu'il te fait gagner selon ton statut.")]
 
 def calc_cards():
     return "\n".join(f'<a class="card" href="/calculateurs/{c["slug"]}/"><b>{e(c["h1"])}</b><span>{e(c["card"])}</span></a>' for c in CALCS)
@@ -547,6 +549,7 @@ method = """<h2>Comment le calcul est fait</h2>
   <li><strong>L'entretien :</strong> révisions, réparations, pneus, contrôle technique et lavage.</li>
 </ol>
 <p>Le total de l'année, divisé par tes kilomètres, donne le coût au kilomètre. Les coûts fixes sont ceux que tu paies même sans rouler : c'est pour ça qu'une voiture peu utilisée revient cher au kilomètre.</p>
+<p>Salarié en rattachement ou président de SASU avec ta propre voiture ? Compare ce coût réel au barème officiel avec le <a href="/calculateurs/indemnites-kilometriques-vtc/">calculateur des indemnités kilométriques</a>.</p>
 <p>Ce coût au km sert à savoir si une course vaut le coup : reprends-le dans le <a href="/calculateurs/prix-minimum-course-vtc/">calculateur du prix minimum d'une course</a>, ou suis ton net complet avec le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net</a>.</p>"""
 write_calc(c, title, desc, "Carburant, assurance, perte de valeur ou location, entretien : calcule ce que ta voiture te coûte vraiment par kilomètre et par mois.", faq, form, method, "calc-cout-voiture.js")
 
@@ -907,6 +910,99 @@ method = """<h2>Les repères de novembre 2026</h2>
 <li><a href="https://lautomobiliste.fr/30/09/2026/vtc-frevalorisation-revenu-minimum-chauffeurs-octobre-novembre-2026/" rel="noopener">Revalorisation du revenu minimum des chauffeurs (L'Automobiliste, septembre 2026)</a></li>
 </ul></div>"""
 write_calc(c, title, desc, "Sur une même course, combien te reste-t-il avec Uber, Bolt, Heetch ou FreeNow ? Compare avec les repères de 2026 ou avec tes propres taux.", faq, form, method, "calc-plateformes.js")
+
+# --- indemnités kilométriques ---
+c = CALCS[8]
+title = "Calcul indemnités kilométriques VTC 2026 : barème officiel"
+desc = "Calcule tes indemnités kilométriques de chauffeur VTC avec le barème 2026 : salarié en rattachement, SASU, auto-entrepreneur, électrique + 20 %."
+faq = [("Un chauffeur VTC a-t-il droit aux indemnités kilométriques ?",
+        "Ça dépend du statut. Le salarié en rattachement qui utilise sa propre voiture peut déduire ses frais avec le barème en optant pour les frais réels. Le président de SASU peut se faire verser des indemnités par sa société s'il roule avec sa voiture personnelle. L'auto-entrepreneur n'y a pas droit : son abattement forfaitaire couvre déjà tous ses frais."),
+       ("Quel est le barème kilométrique 2026 ?",
+        "Le barème utilisé en 2026 pour déclarer les revenus de 2025 n'a pas été revalorisé : il est identique à celui de 2024 et 2025. Pour une 5 CV au-delà de 20 000 km par an, il donne 0,427 € par km. Il est majoré de 20 % pour une voiture 100 % électrique."),
+       ("Peut-on ajouter le carburant ou l'assurance aux indemnités kilométriques ?",
+        "Non. Le barème couvre la perte de valeur de la voiture, l'entretien, les réparations, les pneus, le carburant et l'assurance. Si la voiture est louée, le loyer est aussi couvert. Les péages et le stationnement peuvent en revanche s'ajouter, avec justificatifs."),
+       ("Une voiture de plus de 7 CV donne-t-elle plus d'indemnités ?",
+        "Non. Le barème s'arrête à la ligne « 7 CV et plus » : une voiture de 8 ou 11 CV est comptée comme une 7 CV.")]
+form = f"""
+<form id="calc" class="calc" novalidate aria-describedby="calc-intro">
+  <p id="calc-intro" class="note" style="margin:0 0 14px">Prérempli avec un exemple : remplace par tes chiffres, le résultat se met à jour tout seul.</p>
+  <fieldset>
+    <legend>Ton statut</legend>
+    <div class="row">
+      <label for="statut">Tu roules en tant que
+        <select id="statut"><option value="ratt">Salarié en rattachement, avec ta voiture</option><option value="sasu">Président de SASU, avec ta voiture personnelle</option><option value="ae">Auto-entrepreneur</option><option value="ei">Entreprise individuelle au réel</option></select></label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Ta voiture et tes kilomètres</legend>
+    <div class="row">
+      <label for="cv">Puissance fiscale (carte grise, case P.6)
+        <select id="cv"><option value="3">3 CV et moins</option><option value="4">4 CV</option><option value="5" selected>5 CV</option><option value="6">6 CV</option><option value="7">7 CV et plus</option></select></label>
+      <label for="elec">Motorisation
+        <select id="elec"><option value="0">Essence, diesel ou hybride</option><option value="1">100 % électrique (+ 20 %)</option></select></label>
+      {num_field("km", "Kilomètres professionnels sur l'année", "45000", "Courses, approches et trajets entre deux courses")}
+    </div>
+  </fieldset>
+  <fieldset id="f-ratt">
+    <legend>Ta déclaration de revenus</legend>
+    <div class="row">
+      {num_field("sal", "Salaire net imposable de l'année (€)", "15000", "Sur tes bulletins de paie ou ta déclaration préremplie")}
+      {num_field("indem", "Frais déjà remboursés par l'employeur (€)", "8000", "Indemnités non imposables versées par la société de rattachement")}
+      {num_field("autres", "Autres frais réels (€)", "1500", "Péages, parking, repas sur la route, téléphone")}
+      <label for="tmi">Ta tranche d'imposition
+        <select id="tmi"><option value="0">0 % (non imposable)</option><option value="0.11" selected>11 %</option><option value="0.30">30 %</option><option value="0.41">41 %</option></select></label>
+    </div>
+  </fieldset>
+  <fieldset id="f-sasu" class="hide">
+    <legend>Ta société</legend>
+    <div class="row">
+      {num_field("cout", "Coût réel de ta voiture sur l'année (€)", "0", "Facultatif : pour comparer, voir le calculateur du coût au km")}
+      <label for="is">Taux d'impôt sur les sociétés
+        <select id="is"><option value="0.15">15 % (bénéfice jusqu'à 42 500 €)</option><option value="0.25">25 %</option></select></label>
+    </div>
+  </fieldset>
+
+  <div class="res" aria-live="polite">
+    <p class="k">Tes indemnités kilométriques sur l'année</p>
+    <p id="r-net" class="big">—</p>
+    <p id="r-sub" class="sub"></p>
+    <div id="r-verdict" class="verdict"></div>
+    <div id="r-kpis" class="kpis"></div>
+    <p id="r-msg" class="msg"></p>
+    <div class="go">
+      <p>VTC Rentable enregistre tes kilomètres jour après jour : tu as ton total de l'année prêt pour ta déclaration.</p>
+      <a class="btn" href="{APP}">Suivre mes kilomètres gratuitement</a>
+    </div>
+  </div>
+  <p class="note" style="margin-top:12px">Résultat indicatif avec le barème publié en avril 2026 ; il ne remplace pas l'avis d'un comptable. Tes chiffres restent sur ton appareil. <button type="button" id="raz" style="font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline">Revenir à l'exemple</button></p>
+</form>
+"""
+method = """<h2>Le barème kilométrique 2026</h2>
+<p>C'est le barème publié en avril 2026 pour déclarer les revenus de 2025. Il n'a pas été revalorisé depuis 2023. Il sert aussi d'estimation pour les kilomètres de 2026, en attendant le barème de 2027. <em>d</em> représente la distance professionnelle parcourue dans l'année.</p>
+<div class="tbl"><table>
+  <thead><tr><th>Puissance</th><th>Jusqu'à 5 000 km</th><th>De 5 001 à 20 000 km</th><th>Au-delà de 20 000 km</th></tr></thead>
+  <tbody>
+    <tr><td><strong>3 CV et moins</strong></td><td>d × 0,529</td><td>(d × 0,316) + 1 065</td><td>d × 0,370</td></tr>
+    <tr><td><strong>4 CV</strong></td><td>d × 0,606</td><td>(d × 0,340) + 1 330</td><td>d × 0,407</td></tr>
+    <tr><td><strong>5 CV</strong></td><td>d × 0,636</td><td>(d × 0,357) + 1 395</td><td>d × 0,427</td></tr>
+    <tr><td><strong>6 CV</strong></td><td>d × 0,665</td><td>(d × 0,374) + 1 457</td><td>d × 0,447</td></tr>
+    <tr><td><strong>7 CV et plus</strong></td><td>d × 0,697</td><td>(d × 0,394) + 1 515</td><td>d × 0,470</td></tr>
+  </tbody>
+</table></div>
+<p>Pour une voiture 100 % électrique, le résultat est majoré de 20 %. Un chauffeur VTC dépasse presque toujours 20 000 km par an : c'est la dernière colonne qui s'applique.</p>
+<h2>Comment le calcul est fait</h2>
+<ol>
+  <li><strong>Les indemnités :</strong> le calculateur applique la ligne de ta puissance fiscale et la colonne de ton kilométrage, puis la majoration si ta voiture est électrique.</li>
+  <li><strong>Salarié en rattachement :</strong> il compare la déduction forfaitaire de 10 % (au minimum 509 € et au maximum 14 555 € pour les revenus de 2025) à tes frais réels, c'est-à-dire tes indemnités plus tes autres frais. Les frais déjà remboursés par ton employeur sont ajoutés à ton revenu, comme le demande l'administration quand on choisit les frais réels.</li>
+  <li><strong>Président de SASU :</strong> les indemnités que la société te verse ne sont pas imposables pour toi, dans la limite du barème, et elles sont déduites de son bénéfice. Le calculateur estime l'impôt sur les sociétés évité et, si tu indiques le coût réel de ta voiture, l'écart entre les deux.</li>
+</ol>
+<div class="box warn"><p><strong>Ce que le barème couvre déjà :</strong> perte de valeur, entretien, réparations, pneus, carburant, assurance, et le loyer si la voiture est louée. Tu ne peux pas les ajouter en plus. Les péages et le stationnement, eux, s'ajoutent avec leurs justificatifs. Garde un relevé de tes trajets : sans lui, les indemnités peuvent être refusées en cas de contrôle.</p></div>
+<p>Pour aller plus loin, lis <a href="/blog/indemnites-kilometriques-vtc/">qui a droit aux indemnités kilométriques en VTC</a>, compare avec le <a href="/calculateurs/cout-voiture-km-vtc/">coût réel de ta voiture au km</a> et vérifie ton statut avec le <a href="/calculateurs/comparateur-statut-vtc/">comparateur de statuts</a>.</p>
+<div class="src"><p><strong>Sources</strong></p><ul>
+<li><a href="https://www.service-public.gouv.fr/particuliers/actualites/A14686" rel="noopener">Barème kilométrique 2026 pour la déclaration des revenus 2025 (Service-public.fr, avril 2026)</a></li>
+<li><a href="https://www.weblex.fr/chiffres-cles/deduction-forfaitaire-de-10-pour-frais-professionnels-declaration-2026" rel="noopener">Déduction forfaitaire de 10 % pour la déclaration 2026 (WebLex)</a></li>
+</ul></div>"""
+write_calc(c, title, desc, "Combien valent tes kilomètres avec le barème officiel, et est-ce que tu peux vraiment t'en servir ? Le calculateur répond selon ton statut : rattachement, SASU ou auto-entrepreneur.", faq, form, method, "calc-ik.js")
 
 # index des calculateurs
 url = SITE + "/calculateurs/"
