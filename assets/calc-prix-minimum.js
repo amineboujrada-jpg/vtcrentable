@@ -18,7 +18,13 @@
     var heuresMois = num("heuresmois");
     var coutFixe = heuresMois ? num("fixes") / heuresMois * h : 0;
     var objectif = num("objh") * h;
-    var garde = 1 - tStat;
+    // Les charges du statut portent sur le prix facturé au client (montant versé ÷ (1 − commission)).
+    var garde = 1 - tStat / (1 - tCom);
+    if (garde <= 0) {
+      $("r-net").textContent = "—"; $("r-kpis").innerHTML = ""; $("r-tab").innerHTML = "";
+      $("r-verdict").className = "verdict bad"; $("r-verdict").innerHTML = "<b>Impossible</b>Avec cette commission et ces charges, il ne te resterait rien sur aucune course.";
+      $("r-msg").textContent = ""; return;
+    }
 
     var plancher = (coutRoute + coutFixe) / garde;          // montant versé pour ne rien perdre
     var verseMin = (coutRoute + coutFixe + objectif) / garde; // montant versé pour atteindre l'objectif
@@ -33,7 +39,7 @@
     if (kmCourse) kpis.push([eur.format(verseMin / kmCourse), "minimum par km de course"]);
     $("r-kpis").innerHTML = kpis.map(function (k) { return '<div class="kpi"><b>' + k[0] + "</b><span>" + k[1] + "</span></div>"; }).join("");
 
-    var statMontant = verseMin * tStat;
+    var statMontant = clientMin * tStat;
     $("r-tab").innerHTML = [
       ["Carburant et entretien (" + (kmCourse + kmVide).toLocaleString("fr-FR") + " km, dont " + kmVide.toLocaleString("fr-FR") + " à vide)", coutRoute],
       ["Part des charges fixes (" + Math.round(h * 60) + " min)", coutFixe],

@@ -11,13 +11,14 @@
   var eur = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
   function calc() {
-    var caM = num("ca") * T.semParMois;
+    var caM = num("ca") * T.semParMois;                       // ce que versent les plateformes
+    var factM = caM / (1 - Math.min(num("com"), 90) / 100);  // prix facturé aux clients : base des cotisations et des seuils
     var fraisM = num("frais") * T.semParMois + num("charges");
     var base = caM - fraisM;
 
     var acre = parseFloat($("acre").value) || 0;
     var tauxAE = T.urssaf * (1 - acre) + T.formation + ($("vl").checked ? T.vl : 0);
-    var ae = caM * tauxAE;
+    var ae = factM * tauxAE;
     var soc = caM * num("soc") / 100 + num("compta");
     var ratt = num("ratt") * T.semParMois + caM * num("rattpct") / 100;
 
@@ -36,12 +37,12 @@
       return '<div class="kpi"' + (r === tri[0] ? ' style="border-color:#3ccf7d"' : "") + "><b>" + eur.format(r.net) + "</b><span>par mois en " + r.nom.toLowerCase() + "</span></div>";
     }).join("");
 
-    $("r-base").textContent = "Pour " + eur.format(caM) + " de chiffre d'affaires et " + eur.format(fraisM) + " de frais et charges de voiture par mois :";
+    $("r-base").textContent = "Pour " + eur.format(factM) + " facturés aux clients (" + eur.format(caM) + " versés) et " + eur.format(fraisM) + " de frais et charges de voiture par mois :";
     $("r-tab").innerHTML = res.map(function (r) {
       return '<tr' + (r === tri[0] ? ' class="tot"' : "") + '><td>' + r.nom + '<small style="color:var(--night-muted)">' + r.detail + '</small></td><td class="n">− ' + eur.format(r.charge) + '</td><td class="n">' + eur.format(r.net) + "</td></tr>";
     }).join("");
 
-    var caAn = caM * 12, alertes = [];
+    var caAn = factM * 12, alertes = [];
     if (caAn > T.plafondMicro) alertes.push("Ton CA annuel estimé (" + eur.format(caAn) + ") dépasse le plafond de la micro-entreprise (83 600 €) : l'auto-entreprise n'est pas possible sur la durée.");
     else if (caAn > T.franchiseTVA) alertes.push("Ton CA annuel estimé (" + eur.format(caAn) + ") dépasse la franchise de TVA (37 500 €) : en auto-entrepreneur, tu devras facturer et reverser la TVA, ce que ce calcul ne compte pas.");
     if (caM && tri[0].nom === "Rattachement" && !num("rattpct")) alertes.push("Vérifie ce que ta société de rattachement retient vraiment (cotisations, frais, TVA) : si elle prend plus que le prix affiché, indique-le dans les retenues.");

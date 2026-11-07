@@ -297,11 +297,11 @@ url = f"{SITE}/calculateurs/{c['slug']}/"
 title = "Calculateur revenu net VTC 2026 : gratuit et sans inscription"
 desc = "Calcule ton revenu net de chauffeur VTC en 2026 : auto-entrepreneur, société ou rattachement, avec ACRE, versement libératoire, € / heure et € / km."
 faq = [("Comment calculer son revenu net de chauffeur VTC ?",
-        "Pars de ce que tu encaisses (plateformes, courses privées, pourboires), retire les charges de ton statut, tes frais de la période et tes charges mensuelles ramenées à la période (× 12 ÷ 52 pour une semaine). Le calculateur fait ces étapes pour toi."),
+        "Pars du prix facturé aux clients, commission comprise : c'est ton chiffre d'affaires. Retire la commission des plateformes, les charges de ton statut (calculées sur ce chiffre d'affaires), tes frais de la période et tes charges mensuelles ramenées à la période (× 12 ÷ 52 pour une semaine). Le calculateur fait ces étapes pour toi."),
        ("Quel taux de cotisations pour un chauffeur VTC auto-entrepreneur en 2026 ?",
-        "21,2 % du chiffre d'affaires, plus environ 0,1 % de formation professionnelle. L'ACRE réduit les cotisations de 50 % pour une activité créée avant le 1er juillet 2026, et de 25 % depuis. Le versement libératoire ajoute 1,7 %."),
+        "21,2 % du chiffre d'affaires, c'est-à-dire du prix facturé aux clients avant commission, plus environ 0,1 % de formation professionnelle. L'ACRE réduit les cotisations de 50 % pour une activité créée avant le 1er juillet 2026, et de 25 % depuis. Le versement libératoire ajoute 1,7 %."),
        ("Faut-il saisir le montant avant ou après la commission Uber ou Bolt ?",
-        "Le plus simple est de saisir ce que la plateforme te verse, donc après commission. Si tu connais le prix payé par les clients, choisis « avant commission » et indique le taux : le calculateur retire la commission pour toi."),
+        "Les deux marchent. Saisis ce que la plateforme te verse et ta commission moyenne : le calculateur retrouve le prix facturé aux clients, qui est la base des cotisations. Si tu connais directement ce prix, choisis « avant commission »."),
        ("Le résultat comprend-il l'impôt sur le revenu ?",
         "Seulement si tu as coché le versement libératoire en auto-entrepreneur, ou si ton pourcentage en société inclut l'impôt. Sinon, l'impôt sur le revenu reste à prévoir en plus.")]
 form = f'''
@@ -314,10 +314,10 @@ form = f'''
   <fieldset>
     <legend>Ce que tu encaisses</legend>
     <div class="row">
-      {num_field("ca", 'Chiffre d\'affaires sur <span data-per>la semaine</span> (€)', "1150", "Plateformes, courses privées, cash et pourboires")}
+      {num_field("ca", 'Montant sur <span data-per>la semaine</span> (€)', "1150", "Plateformes, courses privées, cash et pourboires")}
       <label for="saisie">Ce montant est
-        <select id="saisie"><option value="apres">versé par les plateformes (après commission)</option><option value="avant">payé par les clients (avant commission)</option></select></label>
-      <div id="opt-com" class="hide">{num_field("com", "Commission moyenne des plateformes (%)", "25")}</div>
+        <select id="saisie"><option value="apres">versé par les plateformes (après commission)</option><option value="avant">facturé aux clients (avant commission)</option></select></label>
+      <div id="opt-com">{num_field("com", "Commission moyenne des plateformes (%)", "25", "Les cotisations se calculent sur le prix facturé, commission comprise")}</div>
     </div>
   </fieldset>
   <fieldset>
@@ -383,8 +383,8 @@ method = '''
 <h2>Comment le calcul est fait</h2>
 <p>Le calculateur suit la méthode détaillée dans notre article <a href="/blog/calcul-revenu-net-vtc/">Comment calculer son revenu net de chauffeur VTC</a> :</p>
 <ol>
-  <li><strong>Ce que tu encaisses :</strong> le montant versé par les plateformes, plus tes courses privées et tes pourboires. Si tu saisis le prix payé par les clients, la commission est retirée d'abord.</li>
-  <li><strong>Les charges de ton statut :</strong> pour un auto-entrepreneur, 21,2 % du CA plus la formation professionnelle, avec l'ACRE et le versement libératoire si tu les as (détails dans <a href="/blog/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>). En société, le pourcentage que tu mets de côté. En rattachement, le prix payé chaque semaine.</li>
+  <li><strong>Ton chiffre d'affaires :</strong> le prix facturé aux clients, commission comprise. Si tu saisis ce que versent les plateformes, le calculateur le retrouve avec ta commission moyenne. La commission est ensuite retirée pour obtenir ce que tu encaisses.</li>
+  <li><strong>Les charges de ton statut :</strong> pour un auto-entrepreneur, 21,2 % du chiffre d'affaires facturé plus la formation professionnelle, avec l'ACRE et le versement libératoire si tu les as (détails dans <a href="/blog/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>). En société, le pourcentage que tu mets de côté. En rattachement, le prix payé chaque semaine.</li>
   <li><strong>Tes frais de la période :</strong> carburant, entretien, péages, parking, lavage et repas.</li>
   <li><strong>Tes charges mensuelles</strong>, ramenées à la semaine si besoin : voiture, assurance, téléphone, comptable.</li>
 </ol>
@@ -398,7 +398,7 @@ c = CALCS[1]
 title = "Prix minimum d'une course VTC : le calculateur gratuit 2026"
 desc = "Calcule le prix minimum d'une course VTC : carburant, trajet à vide, commission, charges et objectif horaire. Teste une offre Uber ou Bolt avant d'accepter."
 faq = [("Comment savoir si une course VTC est rentable ?",
-        "Additionne ce que la course te coûte (carburant et entretien sur tous les kilomètres, à vide compris, et une part de tes charges fixes pour le temps passé), ajoute le revenu net que tu veux gagner, puis divise par la part qui te reste après les charges de ton statut. Si l'offre est en dessous, la course ne vaut pas le coup."),
+        "Additionne ce que la course te coûte (carburant et entretien sur tous les kilomètres, à vide compris, et une part de tes charges fixes pour le temps passé), ajoute le revenu net que tu veux gagner, puis divise par la part qui te reste une fois payées les charges de ton statut, calculées sur le prix client commission comprise. Si l'offre est en dessous, la course ne vaut pas le coup."),
        ("Pourquoi compter les kilomètres à vide ?",
         "Pour aller chercher le client, et parfois pour revenir d'une zone sans demande, tu roules sans être payé. Ces kilomètres coûtent autant que ceux de la course : les oublier fait paraître rentables des courses qui ne le sont pas."),
        ("Quel taux de charges indiquer ?",
@@ -463,7 +463,7 @@ method = """<h2>Comment le calcul est fait</h2>
   <li><strong>Le coût de la route :</strong> carburant et entretien sur tous les kilomètres, ceux de la course et ceux faits à vide.</li>
   <li><strong>La part de tes charges fixes :</strong> tes charges du mois divisées par tes heures travaillées, multipliées par le temps de la course et de l'approche.</li>
   <li><strong>Ton objectif :</strong> le revenu net que tu veux gagner par heure, sur ce même temps.</li>
-  <li><strong>Les charges de ton statut :</strong> le total est divisé par la part qui te reste après les charges (par exemple 78,7 % en auto-entrepreneur), pour que l'objectif soit atteint une fois l'URSSAF payée.</li>
+  <li><strong>Les charges de ton statut :</strong> en auto-entrepreneur, l'URSSAF se calcule sur le prix payé par le client, commission comprise. Avec 21,3 % de charges et 25 % de commission, il te reste environ 71,6 % de chaque euro versé : le total est divisé par cette part, pour que l'objectif soit atteint une fois l'URSSAF payée.</li>
 </ol>
 <p>On obtient le montant minimum que la plateforme doit te verser. Divisé par la part qui te reste après sa commission, il donne le prix minimum payé par le client.</p>
 <p>Pour suivre ces chiffres sur toute ta semaine, et pas seulement course par course, utilise le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net VTC</a> ou lis <a href="/blog/calcul-revenu-net-vtc/">comment calculer son revenu net</a>.</p>
@@ -637,7 +637,8 @@ form = f"""
   <fieldset>
     <legend>Ton activité</legend>
     <div class="row">
-      {num_field("ca", "Chiffre d'affaires par semaine (€)", "1150", "Ce que les plateformes te versent, plus tes courses privées")}
+      {num_field("ca", "Montant versé par semaine (€)", "1150", "Ce que les plateformes te versent, plus tes courses privées")}
+      {num_field("com", "Commission moyenne des plateformes (%)", "25", "Pour retrouver le prix facturé aux clients, base des cotisations")}
       {num_field("frais", "Frais par semaine (€)", "291", "Carburant, repas, péages, parking, lavage")}
       {num_field("charges", "Charges mensuelles de la voiture (€)", "460", "Assurance, location ou crédit, téléphone")}
     </div>
@@ -697,7 +698,7 @@ c = CALCS[5]
 title = "Chiffre d'affaires VTC : combien faire pour gagner 2 000 € ?"
 desc = "Calcule le chiffre d'affaires VTC à faire par semaine, par jour et par heure pour gagner le net que tu veux, selon ton statut, tes frais et tes congés."
 faq = [("Quel chiffre d'affaires faire en VTC pour gagner 2 000 € nets par mois ?",
-        "Ça dépend de ton statut et de tes frais. Avec l'exemple du calculateur (auto-entrepreneur, frais variables de 25 % du CA, 460 € de charges fixes par mois et 47 semaines travaillées par an), il faut environ 4 580 € de CA par mois, soit près de 1 170 € par semaine travaillée."),
+        "Ça dépend de ton statut, de tes frais et de la commission des plateformes. Avec l'exemple du calculateur (auto-entrepreneur, 25 % de commission, frais variables de 25 %, 460 € de charges fixes par mois et 47 semaines travaillées), il faut qu'on te verse environ 5 280 € par mois, soit près de 1 350 € par semaine travaillée. Cela représente environ 84 500 € facturés aux clients par an, juste au-dessus du plafond de la micro-entreprise."),
        ("Pourquoi compter les semaines de congés ?",
         "Tes charges fixes tombent tous les mois, même quand tu ne roules pas. Si tu prends cinq semaines de congés, ton chiffre d'affaires de l'année doit être fait en 47 semaines : chaque semaine travaillée doit donc rapporter un peu plus."),
        ("Que mettre dans les frais variables ?",
@@ -730,7 +731,8 @@ form = f"""
   <fieldset>
     <legend>Tes frais</legend>
     <div class="row">
-      {num_field("var", "Frais variables (% du CA)", "25", "Carburant, entretien, péages, repas", step="0.5")}
+      {num_field("com", "Commission moyenne des plateformes (%)", "25", "Les cotisations portent sur le prix facturé, commission comprise")}
+      {num_field("var", "Frais variables (% de ce que tu encaisses)", "25", "Carburant, entretien, péages, repas", step="0.5")}
       {num_field("fixes", "Charges fixes (€ / mois)", "460", "Assurance, voiture, téléphone")}
     </div>
   </fieldset>
@@ -762,7 +764,7 @@ method = """<h2>Comment le calcul est fait</h2>
 <p>Le calculateur part du net que tu veux et remonte au chiffre d'affaires :</p>
 <ol>
   <li>Il ajoute à ton objectif tes <strong>charges fixes</strong> du mois (et le rattachement ou le comptable selon ton statut).</li>
-  <li>Il divise ce total par la <strong>part qui te reste sur chaque euro encaissé</strong>, une fois retirés les frais variables et les charges de ton statut. En auto-entrepreneur sans ACRE, avec 25 % de frais variables, il reste environ 54 centimes par euro.</li>
+  <li>Il divise ce total par la <strong>part qui te reste sur chaque euro encaissé</strong>, une fois retirés les frais variables et les charges de ton statut. En auto-entrepreneur, les cotisations portent sur le prix facturé aux clients, commission comprise : avec 25 % de commission et 25 % de frais variables, il reste environ 47 centimes par euro versé.</li>
   <li>Il répartit le chiffre d'affaires de l'année sur tes <strong>semaines travaillées</strong>, puis sur tes jours et tes heures.</li>
 </ol>
 <p>Pour vérifier où tu en es, compare ce rythme à ton chiffre réel avec le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net</a>, et vérifie qu'une course précise vaut le coup avec le <a href="/calculateurs/prix-minimum-course-vtc/">prix minimum d'une course</a>.</p>"""
@@ -896,7 +898,7 @@ method = """<h2>Les repères de novembre 2026</h2>
 </table></div>
 <div class="box"><p><strong>À savoir :</strong> en octobre et novembre 2026, Uber, Bolt, FreeNow, Heetch et LeCab ont relevé temporairement leur garantie de revenu minimum de 30 à 32 € par heure d'activité. Elle ne change pas le prix de chaque course.</p></div>
 <h2>Comment le calcul est fait</h2>
-<p>Pour chaque plateforme, le comparateur part du prix payé par le client, retire la commission pour obtenir le montant versé, puis les charges de ton statut et le coût de la course. Le coût de la course, tu peux l'obtenir avec le <a href="/calculateurs/prix-minimum-course-vtc/">calculateur du prix minimum d'une course</a>.</p>
+<p>Pour chaque plateforme, le comparateur part du prix payé par le client, retire la commission pour obtenir le montant versé, puis les charges de ton statut, calculées sur le prix payé par le client, et le coût de la course. Le coût de la course, tu peux l'obtenir avec le <a href="/calculateurs/prix-minimum-course-vtc/">calculateur du prix minimum d'une course</a>.</p>
 <p>Une commission plus basse ne vaut que si tu as autant de courses. Le meilleur juge reste ton net de la semaine par plateforme : suis-le avec le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net</a>.</p>
 <div class="src"><p><strong>Sources</strong></p><ul>
 <li><a href="https://www.keobiz.fr/fiches-pratiques/creer-activite-vtc/plateformes-vtc-uber-bolt-heetch/" rel="noopener">Plateformes VTC Uber, Bolt, Heetch (Keobiz, septembre 2026)</a></li>

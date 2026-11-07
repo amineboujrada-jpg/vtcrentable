@@ -29,7 +29,6 @@
     $("opt-ae").classList.toggle("hide", s !== "ae");
     $("opt-soc").classList.toggle("hide", s !== "societe");
     $("opt-ratt").classList.toggle("hide", s !== "ratt");
-    $("opt-com").classList.toggle("hide", $("saisie").value !== "avant");
   }
 
   function calc() {
@@ -38,15 +37,18 @@
     var moisVersPeriode = parSem ? 12 / 52 : 1;   // charges mensuelles ramenées à la période
     var semVersPeriode = parSem ? 1 : TAUX.semParMois;
 
-    var ca = num("ca");
-    var commissions = $("saisie").value === "avant" ? ca * num("com") / 100 : 0;
-    var encaisse = ca - commissions;
+    // Le chiffre d'affaires est le prix facturé aux clients, commission comprise : c'est la base des cotisations URSSAF.
+    var ca = num("ca"), tCom = Math.min(num("com"), 90) / 100;
+    var avant = $("saisie").value === "avant";
+    var facture = avant ? ca : ca / (1 - tCom);
+    var commissions = facture * tCom;
+    var encaisse = facture - commissions;
 
     var s = $("statut").value, statutLib, statutMontant;
     if (s === "ae") {
       var acre = parseFloat($("acre").value) || 0;
       var taux = TAUX.urssaf * (1 - acre) + TAUX.formation + ($("vl").checked ? TAUX.versementLib : 0);
-      statutMontant = encaisse * taux;
+      statutMontant = facture * taux;
       statutLib = "Cotisations URSSAF" + ($("vl").checked ? " et impôt" : "") + " (" + (taux * 100).toFixed(1).replace(".", ",") + " %)";
     } else if (s === "societe") {
       statutMontant = encaisse * num("soc") / 100;
@@ -62,7 +64,7 @@
     var net = encaisse - statutMontant - frais;
 
     var h = num("heures"), km = num("km");
-    var base = ca > 0 ? ca : 1;
+    var base = facture > 0 ? facture : 1;
     var part = function (x) { return Math.max(0, x) / base * 100; };
 
     var big = $("r-net");
@@ -72,7 +74,7 @@
 
     var kpis = [];
     kpis.push(parSem ? [fmt.format(net * TAUX.semParMois), "par mois en moyenne"] : [fmt.format(net / TAUX.semParMois), "par semaine en moyenne"]);
-    if (ca > 0) kpis.push([Math.round(net / ca * 100) + " %", "du chiffre d'affaires gardé"]);
+    if (encaisse > 0) kpis.push([Math.round(net / encaisse * 100) + " %", "de ce que tu encaisses gardé"]);
     if (h) kpis.push([fmt2.format(net / h), "net par heure"]);
     if (km) kpis.push([fmt2.format(net / km), "net par km"]);
     if (km && frais) kpis.push([fmt2.format(frais / km), "de frais par km"]);
@@ -84,8 +86,8 @@
       '<i style="width:' + part(frais) + '%;background:#f7b267"></i>' +
       '<i style="width:' + part(net) + '%;background:#3ccf7d"></i>';
 
-    var rows = [["Chiffre d'affaires saisi", ca, ""]];
-    if (commissions) rows.push(["Commissions des plateformes", -commissions, "minus"]);
+    var rows = [["Chiffre d'affaires facturé aux clients", facture, ""]];
+    if (commissions) rows.push(["Commissions des plateformes (" + Math.round(tCom * 100) + " %)", -commissions, "minus"]);
     rows.push([statutLib, -statutMontant, "minus"]);
     if (fixes) rows.push(["Voiture, assurance et abonnements" + (parSem ? " (ramenés à la semaine)" : ""), -fixes, "minus"]);
     if (variables) rows.push(["Carburant, entretien, péages, repas", -variables, "minus"]);
@@ -96,7 +98,7 @@
     var msg = "";
     if (!ca) msg = "Saisis ton chiffre d'affaires pour voir le résultat.";
     else if (net < 0) msg = "Sur cette période, tes charges dépassent ce que tu encaisses : tu travailles à perte.";
-    else if (net / ca < 0.35) msg = "Il te reste moins d'un tiers de ce que tu encaisses. Regarde en priorité ton plus gros poste de dépense.";
+    else if (net / encaisse < 0.35) msg = "Il te reste moins d'un tiers de ce que tu encaisses. Regarde en priorité ton plus gros poste de dépense.";
     else msg = "Pense à l'impôt sur le revenu s'il n'est pas déjà compris, et à refaire le calcul chaque semaine : le net change beaucoup d'une semaine à l'autre.";
     $("r-msg").textContent = msg;
 

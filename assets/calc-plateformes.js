@@ -21,7 +21,7 @@
     var res = PF.map(function (p) {
       var com = Math.min(num("c-" + p[0]), 95) / 100;
       var verse = prix * (1 - com);
-      var reste = verse * (1 - tStat) - cout;
+      var reste = verse - prix * tStat - cout;   // les charges du statut portent sur le prix payé par le client
       return { nom: p[0] === "autre" ? nomAutre : p[1], com: com, verse: verse, reste: reste };
     }).filter(function (r) { return r.nom; });
 

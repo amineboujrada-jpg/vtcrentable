@@ -30,7 +30,9 @@
     var tVar = num("var") / 100;
     var fixes = num("fixes");
     var net = num("net");
-    var garde = 1 - tStat - tVar;
+    var tCom = Math.min(num("com"), 90) / 100;
+    var tStatVerse = s === "ae" ? tStat / (1 - tCom) : tStat;   // en auto-entrepreneur, l'URSSAF porte sur le prix facturé
+    var garde = 1 - tStatVerse - tVar;
 
     var semAn = Math.min(num("semaines"), 52), jours = Math.min(num("jours"), 7), heures = num("heures");
     if (garde <= 0) {
@@ -41,28 +43,29 @@
     }
     var caMois = (net + fixes + fixesStatut) / garde;
     var caAn = caMois * 12;
+    var factAn = caAn / (1 - tCom);
     var caSem = semAn ? caAn / semAn : 0;
     var caJour = jours ? caSem / jours : 0;
     var caHeure = heures ? caJour / heures : 0;
 
     $("r-net").textContent = semAn ? eur.format(caSem) : "—";
     $("r-sub").textContent = "à encaisser par semaine travaillée, pour " + eur.format(net) + " nets par mois";
-    var kpis = [[eur.format(caMois), "par mois en moyenne"], [eur.format(caAn), "par an"]];
+    var kpis = [[eur.format(caMois), "versés par mois en moyenne"], [eur.format(factAn), "facturés aux clients par an"]];
     if (caJour) kpis.push([eur.format(caJour), "par jour travaillé"]);
     if (caHeure) kpis.push([eur2.format(caHeure), "par heure de travail"]);
     $("r-kpis").innerHTML = kpis.map(function (k) { return '<div class="kpi"><b>' + k[0] + "</b><span>" + k[1] + "</span></div>"; }).join("");
 
-    var rows = [["Chiffre d'affaires nécessaire", caMois, ""],
+    var rows = [["Montant versé nécessaire", caMois, ""],
                 ["Frais variables (" + num("var") + " %)", -caMois * tVar, "minus"],
-                [lib, -(caMois * tStat + fixesStatut), "minus"],
+                [lib, -(caMois * tStatVerse + fixesStatut), "minus"],
                 ["Charges fixes", -fixes, "minus"]];
     $("r-tab").innerHTML = '<tr><th colspan="2">Par mois</th></tr>' + rows.filter(function (r) { return r[1] !== 0; }).map(function (r) {
       return '<tr class="' + r[2] + '"><td>' + r[0] + '</td><td class="n">' + (r[1] < 0 ? "− " + eur.format(-r[1]) : eur.format(r[1])) + "</td></tr>";
     }).join("") + '<tr class="tot"><td>Revenu net</td><td class="n">' + eur.format(net) + "</td></tr>";
 
     var msg = [];
-    if (s === "ae" && caAn > T.plafondMicro) msg.push("Ce chiffre d'affaires (" + eur.format(caAn) + " par an) dépasse le plafond de la micro-entreprise (83 600 €) : en auto-entrepreneur, l'objectif n'est pas tenable sur la durée.");
-    else if (s === "ae" && caAn > T.franchiseTVA) msg.push("Au-delà de 37 500 € de CA par an, la TVA s'applique : ce calcul ne la compte pas, prévois-la en plus.");
+    if (s === "ae" && factAn > T.plafondMicro) msg.push("Ce chiffre d'affaires (" + eur.format(factAn) + " facturés par an) dépasse le plafond de la micro-entreprise (83 600 €) : en auto-entrepreneur, l'objectif n'est pas tenable sur la durée.");
+    else if (s === "ae" && factAn > T.franchiseTVA) msg.push("Au-delà de 37 500 € de CA par an, la TVA s'applique : ce calcul ne la compte pas, prévois-la en plus.");
     if (caHeure > 30) msg.push("Plus de 30 € de CA par heure, c'est ambitieux : vérifie que ton nombre d'heures est réaliste.");
     if (!msg.length) msg.push("Compare ce rythme à tes vraies semaines : si tu en es loin, joue sur les heures, les créneaux ou les frais.");
     $("r-msg").textContent = msg.join(" ");
