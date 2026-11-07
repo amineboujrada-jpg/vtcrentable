@@ -14,7 +14,7 @@ ARTS = [
   card="Les 7 informations à faire figurer sur le justificatif de réservation, selon l'arrêté du 6 août 2025.",
   body="""
 <p>Un VTC ne peut pas prendre un client qui le hèle dans la rue : chaque course doit avoir été réservée avant. En cas de contrôle, tu dois pouvoir le prouver avec un <strong>justificatif de réservation préalable</strong>, que beaucoup de chauffeurs appellent bon de commande ou bon de réservation.</p>
-<p>Pour une course Uber, Bolt ou Heetch, la plateforme s'en charge dans son application. Le sujet concerne surtout <strong>tes clients en direct</strong> : un habitué qui t'appelle, un hôtel, une réservation par SMS ou WhatsApp.</p>
+<p>Pour une course Uber, Bolt ou Heetch, la plateforme s'en charge dans son application. Le sujet concerne surtout <strong>tes clients en direct</strong> : un habitué qui t'appelle, un hôtel, une réservation par SMS ou WhatsApp. Ces courses ne te coûtent aucune commission : le <a href="/calculateurs/comparateur-plateformes-vtc/">comparateur des plateformes</a> montre ce qu'elles te rapportent de plus.</p>
 
 <h2>Ce qui a changé en 2025</h2>
 <p>Un arrêté du 6 août 2025, publié au Journal officiel le 29 août 2025, a remplacé celui de 2013. Il s'applique depuis le 30 octobre 2025. Il ajoute deux informations sur l'exploitant (son numéro au registre VTC et son numéro SIREN) et assouplit la règle sur les coordonnées du client.</p>
@@ -40,6 +40,7 @@ ARTS = [
 
 <h2>Ce que tu risques sans justificatif</h2>
 <p>Prendre un client sans réservation préalable est sanctionné par le Code des transports. Les cas les plus graves relèvent de l'article L. 3124-12, qui prévoit jusqu'à un an d'emprisonnement et 15 000 € d'amende, avec des peines complémentaires comme la suspension du permis ou l'immobilisation du véhicule. D'autres manquements relèvent d'une contravention de 5e classe.</p>
+<p>Si tu démarres dans le métier, notre guide pour <a href="/articles/devenir-chauffeur-vtc/">devenir chauffeur VTC</a> reprend toutes les obligations, dans l'ordre.</p>
 <div class="box warn">
   <p>Cet article résume la réglementation pour t'aider au quotidien. Il ne remplace pas le texte officiel : en cas de doute, consulte l'arrêté sur Légifrance ou la préfecture de ton département.</p>
 </div>
@@ -47,6 +48,7 @@ ARTS = [
 <h2>Le faire en 30 secondes avec VTC Rentable</h2>
 <p>Dans l'onglet <strong>Réservations</strong> de l'appli, tu notes le client, son téléphone, l'heure et le lieu de prise en charge. L'appli enregistre toute seule l'heure de la commande, qui ne peut plus être modifiée ensuite, et reprend les informations de l'exploitant que tu as remplies une fois dans tes réglages.</p>
 <p>Elle produit un bon de commande en PDF, directement sur le téléphone et même sans réseau, que tu peux montrer ou envoyer au client. Elle refuse de le créer tant qu'une mention de l'exploitant manque.</p>
+<p>Le bon de commande n'est qu'une des <a href="/#fonctions">fonctions de l'appli</a> : elle suit aussi tes recettes, tes frais et ton revenu net, et elle est <a href="/#prix">gratuite</a>.</p>
 """,
   faq=[("Quelles sont les mentions obligatoires du bon de commande VTC ?","Depuis l'arrêté du 6 août 2025 : le nom et les coordonnées de l'exploitant, son numéro au registre des VTC, son numéro SIREN, le nom et le téléphone du client, la date et l'heure de la réservation, la date et l'heure de prise en charge, et le lieu de prise en charge."),
        ("Le bon de commande VTC peut-il être sur le téléphone ?","Oui, le justificatif peut être papier ou électronique. Il doit pouvoir être présenté immédiatement lors d'un contrôle, y compris sans réseau.")],
@@ -78,6 +80,7 @@ ARTS = [
   <li><strong>Activité créée depuis le 1er juillet 2026 :</strong> réduction de 25 %. Tu paies donc 75 % du taux normal.</li>
 </ul>
 <p>L'ACRE ne baisse que les cotisations sociales, pas l'impôt ni la formation professionnelle. La demande se fait dans les 60 jours qui suivent la création.</p>
+<p>Tu hésites encore sur ton statut ? Le <a href="/calculateurs/comparateur-statut-vtc/">comparateur de statuts</a> met côte à côte auto-entrepreneur, société et rattachement, avec tes chiffres.</p>
 
 <h2>L'impôt sur le revenu</h2>
 <p>Tu as deux possibilités :</p>
@@ -88,7 +91,7 @@ ARTS = [
 
 <h2>Le plafond et la TVA</h2>
 <p>Pour rester en micro-entreprise, ton chiffre d'affaires annuel ne doit pas dépasser <strong>83 600 € hors taxes</strong> pour les prestations de services. Ce plafond vaut pour 2026, 2027 et 2028.</p>
-<p>La franchise de TVA est un seuil différent : <strong>37 500 €</strong> pour les services en 2026. Au-dessus, tu dois facturer et reverser la TVA, même en restant micro-entrepreneur.</p>
+<p>La franchise de TVA est un seuil différent : <strong>37 500 €</strong> pour les services en 2026. Au-dessus, tu dois facturer et reverser la TVA, même en restant micro-entrepreneur. Vérifie où tu en es avec le <a href="/calculateurs/seuil-tva-vtc/">calculateur des seuils de TVA</a>, et vois quel chiffre viser avec l'<a href="/calculateurs/objectif-chiffre-affaires-vtc/">objectif de chiffre d'affaires</a>.</p>
 
 <h2>Les frais de l'activité</h2>
 <p>En micro-entreprise, tu ne déduis pas tes frais de ton chiffre d'affaires pour calculer tes cotisations. Ils pèsent pourtant lourd sur ce qu'il te reste :</p>
@@ -100,6 +103,7 @@ ARTS = [
   <li>le téléphone, les péages, le parking, les amendes ;</li>
   <li>la cotisation foncière des entreprises (CFE), due à partir de ta deuxième année.</li>
 </ul>
+<p>Pour ne rien oublier, télécharge la <a href="/modeles/">checklist des frais du chauffeur VTC</a>, et calcule ce que te coûte vraiment ta voiture avec le <a href="/calculateurs/cout-voiture-km-vtc/">calculateur du coût au kilomètre</a>.</p>
 
 <h2>Exemple sur une semaine</h2>
 <p>Un chauffeur auto-entrepreneur, sans ACRE ni versement libératoire, encaisse 1 150 € dans la semaine.</p>
@@ -122,7 +126,7 @@ ARTS = [
 </div>
 
 <h2>Suivre tout ça sans tableur</h2>
-<p>Dans VTC Rentable, tu choisis le statut <strong>Auto-entrepreneur</strong>, puis ton taux, ton ACRE et le versement libératoire si tu l'as. Chaque semaine, l'appli calcule les cotisations sur ton CA réel et les retire de ton revenu net, avec l'assurance et tes autres charges.</p>
+<p>Dans VTC Rentable, qui gère <a href="/#statut">tous les statuts</a>, tu choisis le statut <strong>Auto-entrepreneur</strong>, puis ton taux, ton ACRE et le versement libératoire si tu l'as. Chaque semaine, l'appli calcule les cotisations sur ton CA réel et les retire de ton revenu net, avec l'assurance et tes autres charges.</p>
 """,
   faq=[("Quel est le taux de cotisations d'un chauffeur VTC auto-entrepreneur en 2026 ?","21,2 % du chiffre d'affaires pour les prestations de services commerciales (BIC), auxquels s'ajoute la contribution à la formation professionnelle. Avec le versement libératoire, il faut ajouter 1,7 % pour l'impôt sur le revenu."),
        ("Quel est le plafond de chiffre d'affaires d'un VTC en micro-entreprise ?","83 600 € hors taxes par an pour les prestations de services, en 2026, 2027 et 2028. La franchise de TVA est un seuil distinct de 37 500 € en 2026.")],
@@ -165,9 +169,10 @@ ARTS = [
   <li><strong>Auto-entrepreneur :</strong> les cotisations URSSAF, 21,2 % du CA en 2026, plus la formation professionnelle et le versement libératoire si tu l'as choisi.</li>
   <li><strong>Salarié en rattachement :</strong> la commission de ta société de rattachement, souvent un montant fixe par semaine.</li>
 </ul>
+<p>Pour voir lequel te laisse le plus, utilise le <a href="/calculateurs/comparateur-statut-vtc/">comparateur de statuts</a>.</p>
 
 <h2>Étape 5 : n'oublie pas la voiture</h2>
-<p>Si tu as acheté ta voiture, elle perd de la valeur chaque mois. Une façon simple de le compter : (prix d'achat − prix de revente prévu) ÷ nombre de mois d'utilisation. Une voiture achetée 15 000 €, revendue 4 000 € au bout de 3 ans, coûte environ 305 € par mois, soit 70 € par semaine. Ajoute l'entretien et les pneus.</p>
+<p>Si tu as acheté ta voiture, elle perd de la valeur chaque mois. Une façon simple de le compter : (prix d'achat − prix de revente prévu) ÷ nombre de mois d'utilisation. Une voiture achetée 15 000 €, revendue 4 000 € au bout de 3 ans, coûte environ 305 € par mois, soit 70 € par semaine. Ajoute l'entretien et les pneus. Le <a href="/calculateurs/cout-voiture-km-vtc/">calculateur du coût de la voiture</a> fait ce calcul pour toi, location comprise.</p>
 
 <h2>Exemple complet</h2>
 <p>Un auto-entrepreneur a travaillé 48 heures et roulé 1 340 km dans la semaine.</p>
@@ -186,13 +191,14 @@ ARTS = [
 
 <h2>€ / heure et € / km : les deux chiffres à suivre</h2>
 <p><strong>Le € / heure</strong> te dit si tes journées valent le coup. Dans l'exemple, 577 € pour 48 heures donnent 12 € de l'heure net. Sur le brut, 1 150 € pour 48 heures, c'est 24 € de l'heure : l'écart montre tout ce que coûte l'activité.</p>
-<p><strong>Le € / km</strong> te dit si tu roules pour rien. 1 150 € pour 1 340 km, c'est 0,86 € par km en brut. Compare-le d'une semaine à l'autre, et entre plateformes : une course qui paie bien mais fait revenir à vide de loin fait chuter ce chiffre.</p>
+<p><strong>Le € / km</strong> te dit si tu roules pour rien. 1 150 € pour 1 340 km, c'est 0,86 € par km en brut. Compare-le d'une semaine à l'autre, et entre plateformes : une course qui paie bien mais fait revenir à vide de loin fait chuter ce chiffre. Avant d'accepter, vérifie-la avec le <a href="/calculateurs/prix-minimum-course-vtc/">calculateur du prix minimum d'une course</a>.</p>
 <div class="box">
   <p><strong>Astuce :</strong> regarde ces chiffres par jour de la semaine et par créneau. Beaucoup de chauffeurs découvrent qu'une partie de leurs heures rapporte moins que le reste et réorganisent leur planning en conséquence.</p>
 </div>
 
 <h2>Le faire automatiquement</h2>
-<p>VTC Rentable fait ces cinq étapes pour toi. Tu notes ta journée le soir (recettes par plateforme, carburant, heures, km), et l'appli ajoute chaque semaine l'assurance répartie, les charges de ton statut et tes charges fixes. Tu vois ton net de la semaine et du mois, ton € / heure, ton € / km et le coût de ta voiture.</p>
+<p>Tu préfères un tableur ? Télécharge notre <a href="/modeles/">tableau de suivi de la semaine</a>, gratuit.</p>
+<p>VTC Rentable fait ces cinq étapes pour toi. Tu notes ta journée le soir (recettes par plateforme, carburant, heures, km), et l'appli ajoute chaque semaine l'assurance répartie, les charges de ton statut et tes charges fixes. Tu vois ton net de la semaine et du mois, ton € / heure, ton € / km et le coût de ta voiture. Découvre <a href="/#fonctions">tout ce que fait l'appli</a>.</p>
 """,
   faq=[("Comment calculer son revenu net de chauffeur VTC ?","Additionne tout ce que tu encaisses (plateformes, courses privées, cash, pourboires), puis retire tes frais de la semaine, tes charges mensuelles ramenées à la semaine (× 12 ÷ 52), les charges de ton statut et le coût de la voiture."),
        ("Comment calculer son € / heure en VTC ?","Divise ce que tu as encaissé par le nombre d'heures travaillées pour le brut, ou ton revenu net par ces mêmes heures pour le net. Exemple : 577 € nets pour 48 heures donnent 12 € de l'heure.")],
@@ -273,14 +279,15 @@ ARTS = [
 <ul>
   <li><strong>La formation continue :</strong> un stage d'au moins 7 heures tous les 5 ans, dans un centre agréé, pour garder ta carte.</li>
   <li><strong>Le justificatif de réservation :</strong> chaque course doit être réservée à l'avance et prouvée. Les règles ont changé en 2025 : lis <a href="/articles/bon-de-commande-vtc/">les 7 mentions obligatoires du bon de commande</a>.</li>
-  <li><strong>Tes chiffres :</strong> le montant affiché par les plateformes n'est pas ton revenu. Apprends à <a href="/articles/calcul-revenu-net-vtc/">calculer ton revenu net</a> dès les premières semaines.</li>
+  <li><strong>Tes chiffres :</strong> le montant affiché par les plateformes n'est pas ton revenu. Apprends à <a href="/articles/calcul-revenu-net-vtc/">calculer ton revenu net</a> dès les premières semaines, et compare ce que te laisse chaque plateforme avec le <a href="/calculateurs/comparateur-plateformes-vtc/">comparateur des plateformes</a>.</li>
+  <li><strong>Tes charges :</strong> lis <a href="/articles/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a> et garde la <a href="/modeles/">checklist des frais</a> sous la main.</li>
 </ul>
 <div class="box warn">
   <p>Les montants de ce guide sont des ordres de grandeur relevés en novembre 2026 ; certains varient selon la région. Vérifie toujours auprès de ta CMA et de ta préfecture avant de t'engager.</p>
 </div>
 
 <h2>Bien démarrer avec VTC Rentable</h2>
-<p>Dès ta première semaine, note tes recettes, ton carburant et tes heures dans VTC Rentable : l'appli calcule ton revenu net, ton € / heure et ton € / km, avec les charges de ton statut.</p>
+<p>Dès ta première semaine, note tes recettes, ton carburant et tes heures dans VTC Rentable, <a href="/#demarrer">prête en cinq minutes</a> : l'appli calcule ton revenu net, ton € / heure et ton € / km, avec les charges de ton statut.</p>
 """,
   faq=[("Combien de temps faut-il pour devenir chauffeur VTC ?","En général deux à quatre mois : la préparation et le passage de l'examen à la CMA, la demande de carte professionnelle en préfecture, la création de l'entreprise et l'inscription au registre des VTC."),
        ("Combien coûte le démarrage en VTC ?","Hors achat de voiture, compter environ 2 500 à 5 000 € avec une préparation en centre et la location d'un véhicule : examen (environ 200 €), formation, registre VTC (170 €), macarons, assurance et premier loyer.")],
@@ -837,7 +844,7 @@ write_calc(c, title, desc, "Perte de valeur, crédit et entretien d'un côté, l
 
 # --- comparateur de statuts ---
 c = CALCS[4]
-title = "Statut VTC : auto-entrepreneur, société ou rattachement ? Comparateur 2026"
+title = "Statut VTC : auto-entrepreneur, société ou rattachement ?"
 desc = "Compare ton revenu net de chauffeur VTC en auto-entrepreneur, en société ou en rattachement, avec les mêmes chiffres. Plafond micro et TVA inclus."
 faq = [("Quel est le meilleur statut pour un chauffeur VTC ?",
         "Il n'y a pas de réponse unique : tout dépend de ton chiffre d'affaires, de tes frais et de tes projets. L'auto-entreprise est simple et adaptée au démarrage, dans la limite de 83 600 € de CA par an. La société permet de déduire les frais et de grossir. Le rattachement évite les démarches, contre un prix chaque semaine."),
@@ -910,7 +917,7 @@ write_calc(c, title, desc, "Avec le même chiffre d'affaires et les mêmes frais
 
 # --- objectif de chiffre d'affaires ---
 c = CALCS[5]
-title = "Objectif de chiffre d'affaires VTC : combien faire pour gagner 2 000 € ?"
+title = "Chiffre d'affaires VTC : combien faire pour gagner 2 000 € ?"
 desc = "Calcule le chiffre d'affaires VTC à faire par semaine, par jour et par heure pour gagner le net que tu veux, selon ton statut, tes frais et tes congés."
 faq = [("Quel chiffre d'affaires faire en VTC pour gagner 2 000 € nets par mois ?",
         "Ça dépend de ton statut et de tes frais. Avec l'exemple du calculateur (auto-entrepreneur, frais variables de 25 % du CA, 460 € de charges fixes par mois et 47 semaines travaillées par an), il faut environ 4 580 € de CA par mois, soit près de 1 170 € par semaine travaillée."),
@@ -1161,7 +1168,7 @@ ld = {"@context": "https://schema.org", "@graph": [
     {"@type": "BreadcrumbList", "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "Accueil", "item": SITE + "/"},
         {"@type": "ListItem", "position": 2, "name": "Modèles gratuits", "item": url}]}]}
-page = head("Modèles gratuits pour chauffeurs VTC : tableau de suivi et checklist", "Télécharge gratuitement un tableau Excel de suivi de semaine VTC et une checklist des frais à imprimer, pour savoir ce que tu gagnes vraiment.", url, ld, cur="modeles", og="website", css=CSS_CALC) + f"""
+page = head("Modèles gratuits VTC : tableau de suivi et checklist des frais", "Télécharge gratuitement un tableau Excel de suivi de semaine VTC et une checklist des frais à imprimer, pour savoir ce que tu gagnes vraiment.", url, ld, cur="modeles", og="website", css=CSS_CALC) + f"""
 <header class="head">
   <div class="read">
     <ol class="crumbs"><li><a href="/">Accueil</a></li><li>Modèles gratuits</li></ol>
