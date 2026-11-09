@@ -74,7 +74,7 @@
       zone.innerHTML = '<form id="f-ins" novalidate>' +
         '<label for="ins-mail"><span>Adresse e-mail</span><input id="ins-mail" type="email" autocomplete="email" required></label>' +
         '<label for="ins-mdp"><span>Mot de passe</span><small>8 caractères minimum</small><input id="ins-mdp" type="password" autocomplete="new-password" minlength="8" required></label>' +
-        '<label for="ins-date"><span>Date de ton examen <small>(facultatif)</small></span><small>Pour suivre ton compte à rebours</small><input id="ins-date" type="date" min="' + aujourdhui() + '"></label>' +
+        '<label for="ins-date"><span>Date de ton examen</span><small>Pour suivre ton compte à rebours</small><input id="ins-date" type="date" required min="' + aujourdhui() + '"></label>' +
         '<label class="consent"><input id="ins-ok" type="checkbox"><span>J\'accepte que VTC Rentable utilise mon adresse e-mail pour créer mon compte et gérer mon accès à l\'examen blanc. Je peux demander la suppression de mon compte à tout moment à contact@vtcrentable.com. <a href="https://app.vtcrentable.com/confidentialite.html">Politique de confidentialité</a></span></label>' +
         '<label class="consent"><input id="ins-nl" type="checkbox"><span>Facultatif : je souhaite recevoir par e-mail des conseils pour préparer l\'examen et des nouveautés de VTC Rentable. Je peux me désinscrire à tout moment.</span></label>' +
         '<p style="margin:14px 0 0"><button type="submit" class="btn" id="ins-go">Créer mon compte</button></p><p id="ins-msg" class="m-msg" role="status"></p></form>';
@@ -110,7 +110,8 @@
     var m = root.querySelector("#ins-msg"), b = root.querySelector("#ins-go");
     if (!mailValide(mail)) return msg(m, "Vérifie ton adresse e-mail.", true);
     if (mdp.length < 8) return msg(m, "Le mot de passe doit faire 8 caractères au minimum.", true);
-    if (dex && (dex < aujourdhui() || dex > "2100-01-01")) return msg(m, "La date de ton examen doit être aujourd'hui ou plus tard.", true);
+    if (!dex) return msg(m, "Indique la date de ton examen pour créer ton compte.", true);
+    if (dex < aujourdhui() || dex > "2100-01-01") return msg(m, "La date de ton examen doit être aujourd'hui ou plus tard.", true);
     if (!ok) return msg(m, "Coche la case d'acceptation pour créer ton compte.", true);
     b.disabled = true; msg(m, "Création du compte…");
     ajax("/auth/v1/signup?redirect_to=" + encodeURIComponent(RETOUR), { method: "POST",
