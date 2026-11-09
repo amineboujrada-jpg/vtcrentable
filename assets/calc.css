@@ -73,3 +73,41 @@
 .calc button.btn { border: 0; cursor: pointer; } .calc button.btn:disabled { opacity: .6; cursor: wait; }
 .done { display: grid; gap: 10px; justify-items: start; } .done:focus { outline: none; }
 [hidden] { display: none !important; }
+
+/* Examen blanc VTC */
+.calc .exam-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 14px; align-items: baseline; font: 600 13px/1.4 var(--f-num); letter-spacing: .04em; color: var(--muted); margin: 0 0 8px; }
+.calc .exam-top [data-focus] { color: var(--fg); outline: none; }
+.calc .chrono { font-size: 15px; color: var(--fg); font-variant-numeric: tabular-nums; }
+.calc .chrono.urgent { color: var(--charge); }
+.calc .exam-bar { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; margin: 0 0 18px; }
+.calc .exam-bar i { display: block; height: 100%; background: var(--amber); transition: width .25s; }
+.calc .exam-text { margin: 0 0 16px; padding: 14px 16px; background: var(--surface-2); border-left: 4px solid var(--amber); border-radius: 0 10px 10px 0; font-size: 15.5px; line-height: 1.6; }
+.calc .exam-q { border: 0; padding: 0; margin: 0 0 14px; min-width: 0; display: grid; gap: 10px; }
+.calc .exam-q legend { font: 800 clamp(18px, 3.2vw, 21px)/1.3 var(--f-display); margin-bottom: 12px; padding: 0; }
+.calc .opt { display: flex; align-items: flex-start; gap: 12px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); cursor: pointer; font: 600 15.5px/1.45 var(--f-body); }
+.calc .opt input { width: 18px; height: 18px; margin-top: 2px; flex: none; accent-color: var(--accent); }
+.calc .opt:hover { border-color: var(--accent); }
+.calc .opt:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent); }
+.calc .opt:has(input:disabled) { cursor: default; }
+.calc .opt.good { border-color: var(--net); background: color-mix(in srgb, var(--net) 12%, var(--bg)); box-shadow: none; }
+.calc .opt.bad { border-color: var(--charge); background: color-mix(in srgb, var(--charge) 12%, var(--bg)); box-shadow: none; }
+.calc .fb { border-radius: 12px; padding: 12px 14px; margin: 0 0 14px; font-size: 15px; line-height: 1.55; background: var(--surface-2); border-left: 4px solid var(--muted); }
+.calc .fb b { margin-right: 4px; }
+.calc .fb.ok { border-left-color: var(--net); } .calc .fb.ok b { color: var(--net); }
+.calc .fb.ko { border-left-color: var(--charge); } .calc .fb.ko b { color: var(--charge); }
+.calc .exam-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+.calc .btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); }
+.calc .btn:disabled { opacity: .5; cursor: not-allowed; }
+.calc .exam-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
+.calc .btn.ghost-night { background: transparent; color: var(--night-fg); border: 1px solid var(--night-line); }
+.calc .tbl-res { overflow-x: auto; margin: 0 -4px; }
+.calc .tag { font: 700 12px/1 var(--f-num); padding: 3px 7px; border-radius: 6px; }
+.calc .tag.ok { color: #3ccf7d; background: color-mix(in srgb, #3ccf7d 15%, transparent); }
+.calc .tag.ko { color: #ff8a7a; background: color-mix(in srgb, #ff8a7a 15%, transparent); }
+.res .note-res { font-size: 13px; color: var(--night-muted); margin: 12px 0 0; }
+.calc h2 { font: 800 clamp(23px, 3vw, 29px)/1.2 var(--f-display); margin: 28px 0 12px; }
+.calc .rev { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 14px; }
+.calc .rev p { margin: 0 0 8px; font-size: 15.5px; }
+.calc .rev .rev-ep { font: 600 12px/1.3 var(--f-num); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.calc .rev .rev-ko { color: var(--charge); } .calc .rev .rev-ok { color: var(--net); font-weight: 600; }
+.calc .rev .rev-why { color: var(--muted); }
