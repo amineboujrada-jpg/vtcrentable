@@ -26,8 +26,8 @@ write_landing("examen-blanc-vtc",
 <div id="exam" class="calc" aria-labelledby="exam-t">
   <noscript><p>L'examen blanc a besoin de JavaScript pour fonctionner. Active-le dans ton navigateur puis recharge la page.</p></noscript>
 </div>
-<script src="/assets/examen-blanc-data.js" defer></script>
-<script src="/assets/examen-blanc.js" defer></script>
+<script src="/assets/examen-blanc-data.js?v=20261110" defer></script>
+<script src="/assets/examen-blanc.js?v=20261110" defer></script>
 <p class="note-pg" style="font-size:14.5px;color:var(--muted)">Sans compte, rien n'est enregistré : ton score reste dans ton navigateur. Les questions sont tirées au hasard à chaque essai.</p>
 
 <section id="espace-section" aria-labelledby="espace-t" style="margin-top:34px">
@@ -60,4 +60,4 @@ write_landing("examen-blanc-vtc",
    ("Cet examen blanc reproduit-il les vraies questions de l'examen VTC ?", "Non. Les questions sont originales, uniquement à choix multiples, et suivent la structure de l'examen (épreuves, coefficients, seuils). Elles servent à t'entraîner, pas à prédire le sujet du jour J."),
    ("L'examen blanc VTC est-il vraiment gratuit ?", "Oui. L'examen blanc complet est accessible sans inscription. Un compte gratuit (adresse e-mail et mot de passe) débloque en plus toute la banque de questions, des examens plus longs, le suivi de ta progression et la revue de tes erreurs."),
    ("Quelle note faut-il à l'épreuve pratique du VTC ?", "Il faut au moins 12 sur 20. L'épreuve comprend une phase de conduite d'au moins 20 minutes, et un candidat admissible peut s'y présenter trois fois dans l'année qui suit les résultats de l'admissibilité.")],
-  js="examen-compte.js", css=CSS_CALC)
+  js="examen-compte.js?v=20261110", css=CSS_CALC)
