@@ -111,3 +111,24 @@
 .calc .rev .rev-ep { font: 600 12px/1.3 var(--f-num); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .calc .rev .rev-ko { color: var(--charge); } .calc .rev .rev-ok { color: var(--net); font-weight: 600; }
 .calc .rev .rev-why { color: var(--muted); }
+
+/* Espace compte de l'examen blanc */
+.calc input[type=password] { width: 100%; font: 600 16px/1.2 var(--f-body); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.calc input[type=password]:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.calc form > label { margin-bottom: 14px; }
+.calc .benef { margin: 0 0 18px; padding-left: 20px; }
+.calc .benef li { margin-bottom: 6px; font-size: 15.5px; }
+.calc .lien { background: none; border: 0; padding: 0; color: var(--accent); text-decoration: underline; cursor: pointer; font: inherit; }
+.calc .kp { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin: 0 0 18px; }
+.calc .kp .kpi { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+.calc .kp .kpi b { display: block; font: 800 22px/1.15 var(--f-num); font-variant-numeric: tabular-nums; }
+.calc .kp .kpi span { display: block; font-size: 13px; color: var(--muted); margin-top: 4px; line-height: 1.35; }
+.calc .act { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin: 0 0 14px; }
+.calc .act .btn { flex: 1 1 220px; }
+.calc .pg { margin: 0 0 12px; }
+.calc .pg-h { display: flex; justify-content: space-between; gap: 10px; font-size: 14.5px; }
+.calc .pg-h span { color: var(--muted); font-size: 13px; }
+.calc .pg-bar { height: 10px; border-radius: 5px; background: var(--surface-2); overflow: hidden; margin-top: 5px; }
+.calc .pg-bar i { display: block; height: 100%; background: var(--net); }
+.calc h3 { font: 700 18px/1.3 var(--f-body); margin: 22px 0 10px; }
+.cta-compte { margin: 18px 0 0; padding: 16px 18px; background: var(--surface-2); border-left: 4px solid var(--amber); border-radius: 0 12px 12px 0; display: grid; gap: 12px; justify-items: start; font-size: 15.5px; }
