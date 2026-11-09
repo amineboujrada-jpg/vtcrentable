@@ -12,7 +12,7 @@
   var STORE = "vtcr-exam-session";
   var h = M.h, fr = M.fr;
   var EP = {}; D.epreuves.forEach(function (e) { EP[e.id] = e; });
-  var moteur = null, banque = null, reponses = [], essais = [];
+  var moteur = null, banque = null, reponses = [], essais = [], profil = { uid: null, date: null }, courant = { setId: null };
 
   // ---------- Session ----------
   function lire() { try { return JSON.parse(localStorage.getItem(STORE) || "null"); } catch (e) { return null; } }
@@ -74,6 +74,7 @@
       zone.innerHTML = '<form id="f-ins" novalidate>' +
         '<label for="ins-mail"><span>Adresse e-mail</span><input id="ins-mail" type="email" autocomplete="email" required></label>' +
         '<label for="ins-mdp"><span>Mot de passe</span><small>8 caractères minimum</small><input id="ins-mdp" type="password" autocomplete="new-password" minlength="8" required></label>' +
+        '<label for="ins-date"><span>Date de ton examen <small>(facultatif)</small></span><small>Pour suivre ton compte à rebours</small><input id="ins-date" type="date" min="' + aujourdhui() + '"></label>' +
         '<label class="consent"><input id="ins-ok" type="checkbox"><span>J\'accepte que VTC Rentable utilise mon adresse e-mail pour créer mon compte et gérer mon accès à l\'examen blanc. Je peux demander la suppression de mon compte à tout moment à contact@vtcrentable.com. <a href="https://app.vtcrentable.com/confidentialite.html">Politique de confidentialité</a></span></label>' +
         '<label class="consent"><input id="ins-nl" type="checkbox"><span>Facultatif : je souhaite recevoir par e-mail des conseils pour préparer l\'examen et des nouveautés de VTC Rentable. Je peux me désinscrire à tout moment.</span></label>' +
         '<p style="margin:14px 0 0"><button type="submit" class="btn" id="ins-go">Créer mon compte</button></p><p id="ins-msg" class="m-msg" role="status"></p></form>';
@@ -99,19 +100,21 @@
     });
   }
 
+  function aujourdhui() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
   function mailValide(s) { return /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(s); }
 
   function inscrire(ev) {
     ev.preventDefault();
     var mail = root.querySelector("#ins-mail").value.trim(), mdp = root.querySelector("#ins-mdp").value;
-    var ok = root.querySelector("#ins-ok").checked, nl = root.querySelector("#ins-nl").checked;
+    var ok = root.querySelector("#ins-ok").checked, nl = root.querySelector("#ins-nl").checked, dex = root.querySelector("#ins-date").value;
     var m = root.querySelector("#ins-msg"), b = root.querySelector("#ins-go");
     if (!mailValide(mail)) return msg(m, "Vérifie ton adresse e-mail.", true);
     if (mdp.length < 8) return msg(m, "Le mot de passe doit faire 8 caractères au minimum.", true);
+    if (dex && (dex < aujourdhui() || dex > "2100-01-01")) return msg(m, "La date de ton examen doit être aujourd'hui ou plus tard.", true);
     if (!ok) return msg(m, "Coche la case d'acceptation pour créer ton compte.", true);
     b.disabled = true; msg(m, "Création du compte…");
     ajax("/auth/v1/signup?redirect_to=" + encodeURIComponent(RETOUR), { method: "POST",
-      body: { email: mail, password: mdp, data: { source: "examen", consentement: "true", newsletter: nl ? "true" : "false" } } })
+      body: { email: mail, password: mdp, data: { source: "examen", consentement: "true", newsletter: nl ? "true" : "false", date_examen: dex || "" } } })
       .then(function (r) {
         b.disabled = false;
         if (r.ok && r.json && r.json.access_token) { ecrire(sessionDe(r.json)); ouvrir(); return; }
@@ -181,21 +184,39 @@
   }
 
   // ---------- Données du compte ----------
+  // Lecture paginée (1000 lignes par page) : la banque peut grandir sans changer ce code
+  function pages(path, off, acc) {
+    return api(path + "&limit=1000&offset=" + off).then(function (r) {
+      if (!r.ok || !Array.isArray(r.json)) throw new Error("page");
+      acc = acc.concat(r.json);
+      return r.json.length === 1000 ? pages(path, off + 1000, acc) : acc;
+    });
+  }
   function chargerBanque() {
     if (banque) return Promise.resolve(banque);
-    return api("/rest/v1/exam_questions?select=e,q,texte,o,a,why&actif=eq.true&limit=1000").then(function (r) {
-      if (!r.ok || !Array.isArray(r.json)) throw new Error("banque");
-      var vus = {}, tout = [];
-      D.questions.concat(r.json).forEach(function (q) { var k = M.cle(q); if (!vus[k]) { vus[k] = 1; tout.push(q); } });
-      banque = { questions: tout, premium: r.json.length };
+    return Promise.all([
+      pages("/rest/v1/exam_questions?select=id,e,q,texte,o,a,why&actif=eq.true&order=id", 0, []),
+      pages("/rest/v1/exam_sets?select=id,titre,description,duree_minutes&order=ordre,id", 0, []),
+      pages("/rest/v1/exam_set_questions?select=set_id,question_id,position&order=set_id,position", 0, [])
+    ]).then(function (res) {
+      var db = res[0], parId = {}, vus = {}, tout = [];
+      db.forEach(function (q) { parId[q.id] = q; });
+      D.questions.concat(db).forEach(function (q) { var k = M.cle(q); if (!vus[k]) { vus[k] = 1; tout.push(q); } });
+      var sets = res[1].map(function (x) {
+        var qs = res[2].filter(function (l) { return l.set_id === x.id && parId[l.question_id]; }).map(function (l) { return parId[l.question_id]; });
+        return { id: x.id, titre: x.titre, description: x.description, minutes: x.duree_minutes, questions: qs };
+      }).filter(function (x) { return x.questions.length; });
+      banque = { questions: tout, premium: db.length, sets: sets };
       return banque;
     });
   }
   function chargerHistorique() {
     return Promise.all([
-      api("/rest/v1/exam_attempts?select=mode,ep,total,correct,moyenne,admissible,created_at&order=created_at.desc&limit=30"),
-      api("/rest/v1/exam_answers?select=question_key,ok,created_at&order=created_at.desc&limit=3000")
+      api("/rest/v1/exam_attempts?select=mode,ep,total,correct,moyenne,admissible,created_at,set_id&order=created_at.desc&limit=200"),
+      api("/rest/v1/exam_answers?select=question_key,ok,created_at&order=created_at.desc&limit=3000"),
+      api("/rest/v1/exam_profiles?select=user_id,date_examen&limit=1")
     ]).then(function (res) {
+      profil = res[2].ok && Array.isArray(res[2].json) && res[2].json[0] ? { uid: res[2].json[0].user_id, date: res[2].json[0].date_examen } : { uid: null, date: null };
       essais = res[0].ok && Array.isArray(res[0].json) ? res[0].json : [];
       reponses = res[1].ok && Array.isArray(res[1].json) ? res[1].json : [];
     });
@@ -212,19 +233,40 @@
   }
 
   function enregistrer(resume) {
-    var tentative = { mode: resume.mode, ep: resume.ep, total: resume.total, correct: resume.correct, moyenne: resume.moyenne, admissible: resume.admissible, par_epreuve: resume.par_epreuve };
+    var tentative = { mode: resume.mode, ep: resume.ep, total: resume.total, correct: resume.correct, moyenne: resume.moyenne, admissible: resume.admissible, par_epreuve: resume.par_epreuve, set_id: courant.setId };
     api("/rest/v1/exam_attempts", { method: "POST", prefer: "return=minimal", body: tentative });
     if (resume.reponses.length) {
       api("/rest/v1/exam_answers", { method: "POST", prefer: "return=minimal", body: resume.reponses.map(function (r) { return { question_key: r.cle, ok: r.ok }; }) });
     }
     var now = new Date().toISOString();
-    essais.unshift({ mode: resume.mode, ep: resume.ep, total: resume.total, correct: resume.correct, moyenne: resume.moyenne, admissible: resume.admissible, created_at: now });
+    essais.unshift({ mode: resume.mode, ep: resume.ep, total: resume.total, correct: resume.correct, moyenne: resume.moyenne, admissible: resume.admissible, created_at: now, set_id: courant.setId });
     resume.reponses.slice().reverse().forEach(function (r) { reponses.unshift({ question_key: r.cle, ok: r.ok, created_at: now }); });
   }
 
   // ---------- Tableau de bord ----------
   var LIB = { examen: "Examen complet", entrainement: "Entraînement", erreurs: "Revue des erreurs" };
   function dateFr(iso) { try { return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" }); } catch (e) { return ""; } }
+
+  function bandeauDate() {
+    var txt;
+    if (profil.date) {
+      var j = Math.round((new Date(profil.date + "T00:00:00") - new Date(aujourdhui() + "T00:00:00")) / 864e5);
+      var d = new Date(profil.date + "T00:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+      txt = j > 1 ? "Ton examen : <b>" + d + "</b> · dans <b>" + j + " jours</b>" : j === 1 ? "Ton examen : <b>demain</b>. Bonne chance !" : j === 0 ? "Ton examen, c'est <b>aujourd'hui</b>. Bonne chance !" : "Ta date d'examen (" + d + ") est passée : mets-la à jour si tu repasses l'examen.";
+    } else txt = "Ajoute la date de ton examen pour suivre ton compte à rebours.";
+    return '<div class="dex"><p>' + txt + '</p><div class="dex-f"><input id="d-ex" type="date" aria-label="Date de ton examen" min="' + aujourdhui() + '" value="' + (profil.date && profil.date >= aujourdhui() ? profil.date : "") + '">' +
+      '<button type="button" class="btn ghost" id="d-save">' + (profil.date ? "Modifier" : "Enregistrer") + '</button></div><p id="d-msg" class="m-msg" role="status"></p></div>';
+  }
+  function carteExamens() {
+    if (!banque.sets.length) return "";
+    return "<h3>Examens blancs</h3>" + banque.sets.map(function (x) {
+      var f = essais.filter(function (a) { return a.set_id === x.id && a.moyenne !== null; });
+      var best = f.reduce(function (m, a) { return Math.max(m, Number(a.moyenne)); }, -1);
+      return '<div class="xset"><div><b>' + h(x.titre) + "</b><span>" + x.questions.length + " questions · " + x.minutes + " min" + (x.description ? " · " + h(x.description) : "") + "</span>" +
+        '<span class="xs-s">' + (f.length ? "Meilleure moyenne : " + fr(best) + " / 20 · " + f.length + " essai" + (f.length > 1 ? "s" : "") : "Pas encore fait") + "</span></div>" +
+        '<button type="button" class="btn ' + (f.length ? "ghost" : "") + '" data-set="' + x.id + '">' + (f.length ? "Refaire" : "Commencer") + "</button></div>";
+    }).join("");
+  }
 
   function tableau() {
     var s = lire(); if (!s) return ecranAccueil();
@@ -241,14 +283,16 @@
     var kpi = '<div class="kpis kp"><div class="kpi"><b>' + essais.length + "</b><span>essais</span></div>" +
       '<div class="kpi"><b>' + (best >= 0 ? fr(best) : "–") + "</b><span>meilleure moyenne /20</span></div>" +
       '<div class="kpi"><b>' + banque.questions.length + "</b><span>questions dans la banque</span></div></div>";
+    var examens = carteExamens();
     var hist = essais.slice(0, 5).map(function (x) {
       var sc = x.mode === "examen" && x.moyenne !== null ? fr(Number(x.moyenne)) + " / 20" : x.correct + " / " + x.total;
       return "<tr><td>" + dateFr(x.created_at) + "</td><td>" + (LIB[x.mode] || x.mode) + (x.ep && x.ep !== "all" ? " " + h(x.ep) : "") + '</td><td class="n">' + sc + "</td></tr>";
     }).join("");
     var opts = D.epreuves.map(function (e) { return '<option value="' + e.id + '">' + e.id + " · " + h(e.court) + "</option>"; }).join("") + '<option value="all">Toutes les épreuves mélangées</option>';
     root.innerHTML = titre("Ton espace d'entraînement") +
-      '<p class="note" style="margin:0 0 14px">Connecté : <b>' + h(s.email || "ton compte") + '</b> · <button type="button" class="lien" id="sortir">Se déconnecter</button></p>' + kpi +
-      '<div class="act"><button type="button" class="btn" id="b-exam">Examen blanc complet · ' + (10 * D.epreuves.length) + " questions, 70 min</button>" +
+      '<p class="note" style="margin:0 0 14px">Connecté : <b>' + h(s.email || "ton compte") + '</b> · <button type="button" class="lien" id="sortir">Se déconnecter</button></p>' + bandeauDate() + kpi + examens +
+      "<h3>S'entraîner</h3>" +
+      '<div class="act"><button type="button" class="btn ghost" id="b-exam">Examen aléatoire · ' + (10 * D.epreuves.length) + " questions, 70 min</button>" +
       '<button type="button" class="btn ghost" id="b-err"' + (rev.length ? "" : " disabled") + ">Revoir mes erreurs (" + rev.length + ")</button></div>" +
       '<div class="act"><label for="b-ep" style="flex:1 1 220px">Entraînement par épreuve<select id="b-ep">' + opts + '</select></label><button type="button" class="btn ghost" id="b-train">S\'entraîner</button></div>' +
       "<h3>Ta progression</h3>" + barres +
@@ -256,12 +300,27 @@
     focus();
     root.querySelector("#sortir").addEventListener("click", deconnecter);
     root.querySelector("#b-exam").addEventListener("click", function () { lancer("exam", null, { parEpreuve: 10, minutes: 70, attemptMode: "examen" }); });
+    Array.prototype.forEach.call(root.querySelectorAll("[data-set]"), function (b) {
+      b.addEventListener("click", function () {
+        var x = banque.sets.filter(function (z) { return String(z.id) === b.getAttribute("data-set"); })[0];
+        if (x) lancer("exam", null, { items: x.questions, minutes: x.minutes, attemptMode: "examen", setId: x.id });
+      });
+    });
+    root.querySelector("#d-save").addEventListener("click", function () {
+      var v = root.querySelector("#d-ex").value, m = root.querySelector("#d-msg");
+      if (v && v < aujourdhui()) return msg(m, "La date doit être aujourd'hui ou plus tard.", true);
+      if (!profil.uid) return msg(m, "Impossible d'enregistrer pour le moment.", true);
+      api("/rest/v1/exam_profiles?user_id=eq." + encodeURIComponent(profil.uid), { method: "PATCH", prefer: "return=minimal", body: { date_examen: v || null } }).then(function (r) {
+        if (r.ok) { profil.date = v || null; tableau(); } else msg(m, "Impossible d'enregistrer la date pour le moment.", true);
+      });
+    });
     root.querySelector("#b-train").addEventListener("click", function () { lancer("train", root.querySelector("#b-ep").value, { attemptMode: "entrainement" }); });
     root.querySelector("#b-err").addEventListener("click", function () { lancer("train", "all", { items: shuffle(aRevoir()).slice(0, 20), attemptMode: "erreurs" }); });
   }
   function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
   function lancer(mode, ep, opts) {
+    courant.setId = opts.setId || null;
     if (!moteur) {
       moteur = M.creer(root, { epreuves: D.epreuves, questions: banque.questions, parEpreuve: 10, minutes: 70, nbVrac: 20, onFinish: enregistrer, onRestart: tableau });
     }
