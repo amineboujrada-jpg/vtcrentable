@@ -27,7 +27,12 @@ write_landing("examen-blanc-vtc",
   <noscript><p>L'examen blanc a besoin de JavaScript pour fonctionner. Active-le dans ton navigateur puis recharge la page.</p></noscript>
 </div>
 <script src="/assets/examen-blanc-data.js" defer></script>
-<p class="note-pg" style="font-size:14.5px;color:var(--muted)">{_nb} questions originales au total, tirées au hasard à chaque essai. Rien n'est enregistré ni envoyé : ton score reste dans ton navigateur.</p>
+<script src="/assets/examen-blanc.js" defer></script>
+<p class="note-pg" style="font-size:14.5px;color:var(--muted)">Sans compte, rien n'est enregistré : ton score reste dans ton navigateur. Les questions sont tirées au hasard à chaque essai.</p>
+
+<section id="espace-section" aria-labelledby="espace-t" style="margin-top:34px">
+<div id="espace" class="calc"><noscript><p>L'espace d'entraînement a besoin de JavaScript pour fonctionner.</p></noscript></div>
+</section>
 
 <h2>Comment se passe l'examen VTC ?</h2>
 <p>L'accès à la profession de conducteur de VTC passe par un examen en deux temps : sept épreuves écrites d'admissibilité, puis une épreuve pratique d'admission. Cinq épreuves sont communes aux taxis, aux VTC et aux conducteurs de deux ou trois roues motorisés (A à E). Deux sont propres au VTC (F et G).</p>
@@ -53,5 +58,6 @@ write_landing("examen-blanc-vtc",
   [("Comment se passe l'examen VTC ?", "L'examen comprend sept épreuves écrites d'admissibilité (QCM et questions à réponses courtes) : réglementation du T3P, gestion, sécurité routière, français, anglais, développement commercial et réglementation nationale du VTC. Il se termine par une épreuve pratique d'admission."),
    ("Quelle note faut-il pour être admissible à l'examen VTC ?", "Il faut une moyenne pondérée d'au moins 10 sur 20 sur les sept épreuves, au moins 6 sur 20 aux épreuves A, B, C, D, F et G, et au moins 4 sur 20 en anglais. Une note éliminatoire écarte le candidat même si la moyenne est bonne."),
    ("Cet examen blanc reproduit-il les vraies questions de l'examen VTC ?", "Non. Les questions sont originales, uniquement à choix multiples, et suivent la structure de l'examen (épreuves, coefficients, seuils). Elles servent à t'entraîner, pas à prédire le sujet du jour J."),
+   ("L'examen blanc VTC est-il vraiment gratuit ?", "Oui. L'examen blanc complet est accessible sans inscription. Un compte gratuit (adresse e-mail et mot de passe) débloque en plus toute la banque de questions, des examens plus longs, le suivi de ta progression et la revue de tes erreurs."),
    ("Quelle note faut-il à l'épreuve pratique du VTC ?", "Il faut au moins 12 sur 20. L'épreuve comprend une phase de conduite d'au moins 20 minutes, et un candidat admissible peut s'y présenter trois fois dans l'année qui suit les résultats de l'admissibilité.")],
-  js="examen-blanc.js", css=CSS_CALC)
+  js="examen-compte.js", css=CSS_CALC)

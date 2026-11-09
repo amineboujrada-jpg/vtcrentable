@@ -34,3 +34,9 @@ Mettre dans chaque article des liens vers les calculateurs (`/calculateurs/...`)
 3. Lancer `python3 outils/articles.py` : la page, la liste du blog, les « À lire aussi » et le sitemap se mettent à jour.
 
 Les anciennes adresses `/articles/...` redirigent vers `/blog/...`.
+
+## Examen blanc VTC (quiz + comptes)
+
+- Page `/examen-blanc-vtc/` générée par `outils/page_examen_blanc.py`. Quiz gratuit : `content/examen-blanc/questions.json` (publiques, copiées dans `assets/examen-blanc-data.js`).
+- Espace avec compte (e-mail + mot de passe, confirmation par e-mail) : `assets/examen-compte.js`, authentification Supabase du projet `vtc-pro`. Les questions réservées (`content/examen-blanc/premium.json`) sont dans la table `exam_questions`, lisible seulement par les comptes examen confirmés. Pour en ajouter : insérer dans `exam_questions` (même format que `premium.json`) ; les doublons (épreuve + énoncé) sont ignorés.
+- Tables : `exam_profiles`, `exam_questions`, `exam_attempts`, `exam_answers` (règles RLS : chacun ne voit que ses propres résultats). Les inscrits se listent avec `select * from admin_exam_users()` (admin).
