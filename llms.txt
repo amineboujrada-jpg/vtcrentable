@@ -15,6 +15,7 @@ Tous les contenus sont en français et concernent la réglementation et la fisca
 
 ## Calculateurs gratuits
 
+- [Examen blanc VTC gratuit](https://vtcrentable.com/examen-blanc-vtc/): QCM chronométré sur les 7 épreuves d'admissibilité, correction détaillée et verdict avec coefficients
 - [Tous les calculateurs](https://vtcrentable.com/calculateurs/): liste des simulateurs pour chauffeurs VTC
 - [Revenu net VTC](https://vtcrentable.com/calculateurs/revenu-net-vtc/): revenu net 2026 selon le statut, avec ACRE et versement libératoire
 - [Prix minimum d'une course VTC](https://vtcrentable.com/calculateurs/prix-minimum-course-vtc/): seuil en dessous duquel une course n'est pas rentable

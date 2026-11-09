@@ -93,6 +93,7 @@ FOOT = f'''<footer>
       <a href="/calculateurs/">Calculateurs</a>
       <a href="/blog/">Blog</a>
       <a href="/modeles/">Modèles gratuits</a>
+      <a href="/examen-blanc-vtc/">Examen blanc VTC</a>
       <a href="/application-vtc/">Application VTC</a>
       <a href="/qui-sommes-nous/">Qui sommes-nous</a>
       <a href="{APP}">Ouvrir l'appli</a>
@@ -1093,12 +1094,14 @@ open(f"{ROOT}/modeles/index.html", "w", encoding="utf-8").write(page)
 
 # pages stratégiques et Qui sommes-nous
 exec(open(os.path.join(ROOT, "outils", "pages_landing.py"), encoding="utf-8").read())
+exec(open(os.path.join(ROOT, "outils", "page_examen_blanc.py"), encoding="utf-8").read())
 
 # sitemap
 urls = [(SITE + "/", "1.0"), (SITE + "/calculateurs/", "0.8")] + [(f"{SITE}/calculateurs/{c['slug']}/", "0.9") for c in CALCS] \
      + [(SITE + "/modeles/", "0.6"), (SITE + "/blog/", "0.7")] + [(f"{SITE}/blog/{a['slug']}/", "0.8") for a in ARTS] \
      + [(f"{SITE}/{p}/", "0.6" if p == "qui-sommes-nous" else "0.9") for p in LANDING]
+LASTMOD = {f"{SITE}/examen-blanc-vtc/": "2026-11-09"}   # date propre aux pages ajoutées après la dernière mise à jour générale
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
-    f"  <url><loc>{u}</loc><lastmod>{DATE}</lastmod><priority>{p}</priority></url>\n" for u, p in urls) + "</urlset>\n"
+    f"  <url><loc>{u}</loc><lastmod>{LASTMOD.get(u, DATE)}</lastmod><priority>{p}</priority></url>\n" for u, p in urls) + "</urlset>\n"
 open(f"{ROOT}/sitemap.xml", "w").write(sm)
 print("ok", [len(a["title"]) for a in ARTS], [len(a["desc"]) for a in ARTS])
