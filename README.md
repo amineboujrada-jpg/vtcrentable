@@ -40,3 +40,11 @@ Les anciennes adresses `/articles/...` redirigent vers `/blog/...`.
 - Page `/examen-blanc-vtc/` générée par `outils/page_examen_blanc.py`. Quiz gratuit : `content/examen-blanc/questions.json` (publiques, copiées dans `assets/examen-blanc-data.js`).
 - Espace avec compte (e-mail + mot de passe, confirmation par e-mail) : `assets/examen-compte.js`, authentification Supabase du projet `vtc-pro`. Les questions réservées (`content/examen-blanc/premium.json`) sont dans la table `exam_questions`, lisible seulement par les comptes examen confirmés. Pour en ajouter : insérer dans `exam_questions` (même format que `premium.json`) ; les doublons (épreuve + énoncé) sont ignorés.
 - Tables : `exam_profiles`, `exam_questions`, `exam_attempts`, `exam_answers` (règles RLS : chacun ne voit que ses propres résultats). Les inscrits se listent avec `select * from admin_exam_users()` (admin).
+
+### Ajouter des questions ou des examens blancs (sans toucher au code du site)
+
+L'espace charge tout depuis Supabase (projet `vtc-pro`), par pages de 1000 : la banque peut grandir librement.
+
+- **Nouvelles questions** : `insert into exam_questions (e, q, texte, o, a, why) values (...)` — `e` = épreuve (A à G), `o` = tableau JSON des choix, `a` = index de la bonne réponse (à partir de 0), `why` = explication. Les doublons (épreuve + énoncé) sont ignorés. Elles apparaissent aussitôt dans l'entraînement, l'examen aléatoire et « Revoir mes erreurs ».
+- **Nouvel examen blanc numéroté** : `insert into exam_sets (titre, description, duree_minutes, ordre)`, puis une ligne par question dans `exam_set_questions (set_id, question_id, position)`. Il s'affiche en carte « Examens blancs » avec la meilleure moyenne de l'élève ; chaque essai enregistre `exam_attempts.set_id`. L'examen n°1 contient 42 questions (6 par épreuve, 45 min).
+- **Date d'examen** : champ facultatif à l'inscription (`exam_profiles.date_examen`), modifiable par l'élève dans son espace (compte à rebours) et visible dans l'admin (colonne + filtre « moins de 30 jours »).
