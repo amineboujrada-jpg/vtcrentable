@@ -5,7 +5,7 @@ import re as _re
 _slug = "site-vitrine-chauffeur-vtc"
 _url = f"{SITE}/{_slug}/"
 _title = "Site chauffeur VTC avec réservation en ligne : 19,99 €/mois"
-_desc = "Un site vitrine à ton nom, avec réservation en ligne et bon de commande automatique, préparé pour le référencement local. 19,99 € par mois, sans engagement."
+_desc = "Un site vitrine à ton nom, avec réservation en ligne et bon de commande automatique, préparé pour le référencement local. 19,99 € HT par mois, sans engagement."
 assert len(_title) <= 60 and 70 <= len(_desc) <= 160
 
 _home = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
@@ -13,7 +13,7 @@ _css_home = _re.search(r"<style>(.*?)</style>", _home, _re.S).group(1)
 
 _faq = [
     ("Combien coûte un site internet pour chauffeur VTC ?",
-     "19,99 € par mois, sans frais de création et sans engagement. Tu peux arrêter à tout moment."),
+     "19,99 € HT par mois (TVA en sus), sans frais de création et sans engagement. Ton site est hébergé sur un sous-domaine de vtcrentable.com ; tu peux arrêter à tout moment, avec effet à la fin du mois en cours."),
     ("Est-ce que je paie une commission sur les réservations ?",
      "Non. Les réservations faites sur ton site sont des courses privées : tu fixes ton prix et tu gardes la totalité, sans commission de plateforme."),
     ("Le bon de commande est-il fait automatiquement ?",
@@ -146,7 +146,7 @@ _page = f'''<!doctype html>
           <a class="btn btn-amber" href="#demande">Demander mon site</a>
           <a class="btn btn-ghost" href="#exemple">Voir un exemple</a>
         </div>
-        <div class="offer-badge"><b>19,99 €</b><span>par mois · sans engagement · sans frais de création</span></div>
+        <div class="offer-badge"><b>19,99 €</b><span>HT par mois · sans engagement · sans frais de création</span></div>
       </div>
       <div class="phone real">
         <img src="/assets/captures/exemple-site-accueil.webp" width="780" height="1688" alt="Exemple fictif de site vitrine de chauffeur VTC sur téléphone : nom, ville, services et bouton Réserver" fetchpriority="high">
@@ -177,7 +177,7 @@ _page = f'''<!doctype html>
       <div class="sec-head">
         <p class="eyebrow">Pourquoi</p>
         <h2>Une course en direct, c'est tout pour toi.</h2>
-        <p>Sur une course privée, il n'y a pas de commission de plateforme. 19,99 € par mois, c'est moins qu'une seule course aéroport.</p>
+        <p>Sur une course privée, il n'y a pas de commission de plateforme. 19,99 € HT par mois, c'est moins qu'une seule course aéroport.</p>
       </div>
       <div class="compare">
         <div>
@@ -230,7 +230,7 @@ _page = f'''<!doctype html>
         <div class="step"><h3>Tu envoies ta demande</h3><p>Avec le formulaire en bas de page : une minute suffit.</p></div>
         <div class="step"><h3>On t'appelle</h3><p>Sous 48 h, pour récupérer ton nom, ton véhicule, tes zones et tes tarifs.</p></div>
         <div class="step"><h3>On crée ton site</h3><p>Tu le reçois pour validation et tu demandes les changements avant la mise en ligne.</p></div>
-        <div class="step"><h3>Tu reçois tes réservations</h3><p>19,99 € par mois, et tu arrêtes quand tu veux.</p></div>
+        <div class="step"><h3>Tu reçois tes réservations</h3><p>19,99 € HT par mois, et tu arrêtes quand tu veux.</p></div>
       </div>
     </div>
   </section>
@@ -242,7 +242,7 @@ _page = f'''<!doctype html>
         <h2>Un prix simple, sans engagement.</h2>
       </div>
       <div class="price">
-        <div class="big">19,99 €<small>par mois,<br>sans frais de création</small></div>
+        <div class="big">19,99 €<small>HT par mois (TVA en sus),<br>sans frais de création</small></div>
         <ul>
           <li>Un site d'une page à ton nom</li>
           <li>Réservation en ligne</li>
@@ -252,6 +252,16 @@ _page = f'''<!doctype html>
           <li>Sans engagement, arrêt à tout moment</li>
         </ul>
         <div class="cta-row"><a class="btn btn-amber" href="#demande">Demander mon site</a><span>L'appli VTC Rentable reste gratuite, avec ou sans site.</span></div>
+      </div>
+      <div class="conditions" style="margin-top:20px;padding:18px 20px;border:1px solid var(--line,#d9d9d9);border-radius:14px">
+        <p style="margin:0 0 8px;font-weight:700">Conditions de l'offre</p>
+        <ul style="margin:0;padding-left:20px;display:grid;gap:6px">
+          <li><b>Prix</b> : 19,99 € HT par mois, TVA en sus, sans frais de création.</li>
+          <li><b>Adresse du site</b> : sous-domaine de vtcrentable.com. Un nom de domaine à ton nom n'est pas inclus.</li>
+          <li><b>Résiliation</b> : à tout moment, par message. Elle prend effet à la fin du mois en cours, et le mois commencé n'est pas remboursé.</li>
+          <li><b>Si tu pars</b> : le site est mis hors ligne à la fin du mois. Les demandes de réservation reçues restent consultables par toi jusqu'à cette date.</li>
+          <li><b>Mise en ligne</b> : tu valides le site avant sa publication. Aucun classement sur Google n'est garanti.</li>
+        </ul>
       </div>
     </div>
   </section>
@@ -268,7 +278,7 @@ _page = f'''<!doctype html>
           <ul>
             <li>Aucun paiement à cette étape</li>
             <li>Tu valides le site avant sa mise en ligne</li>
-            <li>19,99 € par mois ensuite, sans engagement</li>
+            <li>19,99 € HT par mois ensuite, sans engagement</li>
           </ul>
         </div>
         <div>
@@ -309,7 +319,7 @@ _page = f'''<!doctype html>
   <section class="night final">
     <div class="wrap">
       <h2>Ton prochain client fidèle réserve chez toi.</h2>
-      <p>Ton site à ton nom, la réservation en ligne et le bon de commande automatique, pour 19,99 € par mois.</p>
+      <p>Ton site à ton nom, la réservation en ligne et le bon de commande automatique, pour 19,99 € HT par mois.</p>
       <a class="btn btn-amber" href="#demande">Demander mon site</a>
       <div class="support"><b>Une question ?</b><a href="mailto:contact@vtcrentable.com">contact@vtcrentable.com</a><span>Réponse sous 24 h, par un chauffeur qui connaît le métier.</span></div>
     </div>
