@@ -5,7 +5,7 @@ import re as _re
 _slug = "site-vitrine-chauffeur-vtc"
 _url = f"{SITE}/{_slug}/"
 _title = "Site chauffeur VTC avec réservation en ligne : 19,99 €/mois"
-_desc = "Un site vitrine à ton nom, avec réservation en ligne et bon de commande automatique, visible sur Google dans ta ville. 19,99 € par mois, sans engagement."
+_desc = "Un site vitrine à ton nom, avec réservation en ligne et bon de commande automatique, préparé pour le référencement local. 19,99 € par mois, sans engagement."
 assert len(_title) <= 60 and 70 <= len(_desc) <= 160
 
 _home = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
@@ -114,6 +114,7 @@ _page = f'''<!doctype html>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>{_css_home}{_css_page}</style>
 <script src="/assets/analytics.js" defer></script>
+<script src="/assets/nav.js" defer></script>
 </head>
 <body>
 <header class="night">
@@ -139,7 +140,7 @@ _page = f'''<!doctype html>
         <ul class="gains">
           <li><span><b>Un site à ton nom</b>, ton véhicule, tes zones et tes tarifs</span></li>
           <li><span><b>La réservation en ligne</b>, de jour comme de nuit</span></li>
-          <li><span><b>Visible sur Google</b> quand on cherche un VTC dans ta ville</span></li>
+          <li><span><b>Préparé pour Google</b> : référencement local, sans promesse de classement</span></li>
         </ul>
         <div class="ctas">
           <a class="btn btn-amber" href="#demande">Demander mon site</a>
@@ -212,7 +213,7 @@ _page = f'''<!doctype html>
         <div class="feat"><div class="ic c1" aria-hidden="true">1</div><h3>Un site à ton nom</h3><p>Une page claire : ta présentation, ton véhicule, tes zones de prise en charge, tes tarifs et forfaits, ton contact.</p></div>
         <div class="feat"><div class="ic c2" aria-hidden="true">2</div><h3>La réservation en ligne</h3><p>Le client choisit la date, l'heure, le départ et l'arrivée. Tu reçois la demande et tu la confirmes.</p></div>
         <div class="feat"><div class="ic c3" aria-hidden="true">3</div><h3>Le bon de commande automatique</h3><p>Chaque réservation crée le <a href="/blog/bon-de-commande-vtc/">bon de commande</a> PDF avec les mentions obligatoires et l'heure de la commande.</p></div>
-        <div class="feat"><div class="ic c4" aria-hidden="true">4</div><h3>Visible sur Google</h3><p>On t'aide à créer ou améliorer ta fiche Google et on prépare ton site pour ressortir sur « chauffeur VTC » dans ta ville.</p></div>
+        <div class="feat"><div class="ic c4" aria-hidden="true">4</div><h3>Préparé pour Google</h3><p>On t'aide à créer ou améliorer ta fiche Google et on prépare ton site pour le référencement local. Le classement dépend de Google et n'est pas garanti.</p></div>
         <div class="feat"><div class="ic c5" aria-hidden="true">5</div><h3>Pensé pour le téléphone</h3><p>Tes clients réservent depuis leur téléphone : le site est conçu d'abord pour un petit écran.</p></div>
         <div class="feat"><div class="ic c6" aria-hidden="true">6</div><h3>Mis en ligne pour toi</h3><p>Tu n'as rien de technique à faire : on crée le site, on le met en ligne, tu le valides.</p></div>
       </div>
@@ -246,7 +247,7 @@ _page = f'''<!doctype html>
           <li>Un site d'une page à ton nom</li>
           <li>Réservation en ligne</li>
           <li>Bon de commande PDF automatique</li>
-          <li>Référencement local et fiche Google</li>
+          <li>Aide pour la fiche Google et le référencement local (classement non garanti)</li>
           <li>Adapté au téléphone</li>
           <li>Sans engagement, arrêt à tout moment</li>
         </ul>

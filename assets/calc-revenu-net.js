@@ -17,6 +17,9 @@
   var fmt2 = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 });
   var periode = "semaine";
 
+  // vrai si le champ contient un nombre (0 compris) : un champ vide n'est pas un zéro saisi
+  function saisi(id) { var t = String($(id).value).replace(",", ".").trim(); return t !== "" && isFinite(parseFloat(t)) && parseFloat(t) >= 0; }
+
   function setPeriode(p) {
     periode = p;
     f.querySelectorAll(".seg button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.p === p)); });
@@ -45,8 +48,8 @@
     var commissions, estimee = false;
     if ($("saisie").value === "avant") {
       commissions = pf * tCom;                       // pf = prix payé par les clients
-    } else if (num("comeur") > 0) {
-      commissions = num("comeur");                   // pf = montant versé, commissions connues
+    } else if (saisi("comeur")) {
+      commissions = num("comeur");                   // pf = montant versé, commissions connues (0 € explicite compris)
     } else {
       commissions = pf * tCom / (1 - tCom);          // pf = montant versé, commissions estimées
       estimee = pf > 0 && tCom > 0;

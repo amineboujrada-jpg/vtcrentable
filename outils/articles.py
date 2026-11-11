@@ -69,6 +69,7 @@ def head(title, desc, url, extra_ld, cur="blog", og="article", css=""):
 <link rel="stylesheet" href="/assets/article.css">{css}
 <script type="application/ld+json">{json.dumps(extra_ld, ensure_ascii=False)}</script>
 <script src="/assets/analytics.js" defer></script>
+<script src="/assets/nav.js" defer></script>
 </head>
 <body>
 <nav class="top" aria-label="Navigation principale">
@@ -325,7 +326,7 @@ form = f'''
       <label for="saisie">Ce montant est
         <select id="saisie"><option value="avant">le prix payé par les clients (avant commission)</option><option value="apres">le montant versé par les plateformes (après commission)</option></select></label>
       {num_field("com", "Commission moyenne des plateformes (%)", "25", "Sert à calculer, ou à estimer, les commissions")}
-      <div id="opt-comeur" class="hide">{num_field("comeur", "Commissions retenues sur la période (€)", "", "Facultatif : relevé de la plateforme. Vide, le calculateur les estime avec le taux ci-dessus")}</div>
+      <div id="opt-comeur" class="hide">{num_field("comeur", "Commissions retenues sur la période (€)", "", "Facultatif : relevé de la plateforme (0 si aucune commission). Vide, le calculateur les estime avec le taux ci-dessus")}</div>
       {num_field("prive", 'Courses privées, cash et pourboires sur <span data-per>la semaine</span> (€)', "0", "Sans commission de plateforme")}
     </div>
   </fieldset>
@@ -1111,8 +1112,23 @@ exec(open(os.path.join(ROOT, "outils", "page_examen_blanc.py"), encoding="utf-8"
 urls = [(SITE + "/", "1.0"), (SITE + "/calculateurs/", "0.8")] + [(f"{SITE}/calculateurs/{c['slug']}/", "0.9") for c in CALCS] \
      + [(SITE + "/modeles/", "0.6"), (SITE + "/blog/", "0.7")] + [(f"{SITE}/blog/{a['slug']}/", "0.8") for a in ARTS] \
      + [(f"{SITE}/{p}/", "0.6" if p == "qui-sommes-nous" else "0.9") for p in LANDING]
-LASTMOD = {f"{SITE}/examen-blanc-vtc/": "2026-11-09"}   # date propre aux pages ajoutées après la dernière mise à jour générale
+# lastmod : date réelle de la dernière modification de la page. Si le fichier généré diffère de celui de la branche
+# principale (origin/main), la date du jour est utilisée ; sinon on reprend la date du sitemap publié.
+import subprocess, re as _rem, datetime as _dt
+def _git(*a):
+    r = subprocess.run(["git", "-C", ROOT] + list(a), capture_output=True, text=True)
+    return r.returncode, r.stdout
+_rc, _old_sm = _git("show", "origin/main:sitemap.xml")
+_prev = dict(_rem.findall(r"<loc>([^<]+)</loc><lastmod>([^<]+)</lastmod>", _old_sm)) if _rc == 0 else {}
+_today = _dt.date.today().isoformat()
+def _lastmod(u):
+    path = u[len(SITE):].lstrip("/") + "index.html"
+    rc, _ = _git("cat-file", "-e", "origin/main:" + path)
+    if rc != 0 or u not in _prev:
+        return _today                      # page nouvelle
+    changed = subprocess.run(["git", "-C", ROOT, "diff", "--quiet", "origin/main", "--", path]).returncode != 0
+    return _today if changed else _prev[u]
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
-    f"  <url><loc>{u}</loc><lastmod>{LASTMOD.get(u, DATE)}</lastmod><priority>{p}</priority></url>\n" for u, p in urls) + "</urlset>\n"
+    f"  <url><loc>{u}</loc><lastmod>{_lastmod(u)}</lastmod><priority>{p}</priority></url>\n" for u, p in urls) + "</urlset>\n"
 open(f"{ROOT}/sitemap.xml", "w").write(sm)
 print("ok", [len(a["title"]) for a in ARTS], [len(a["desc"]) for a in ARTS])
