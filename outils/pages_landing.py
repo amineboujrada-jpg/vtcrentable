@@ -94,7 +94,8 @@ form = f'''<form id="rent" class="calc" novalidate>
   <fieldset>
     <legend>Ta période (semaine ou mois)</legend>
     <div class="row">
-      {num_field("ca", "Ce que tu as encaissé (€)", "1150", "Plateformes après commission, courses privées, pourboires")}
+      {num_field("ca", "Chiffre d'affaires (€)", "1150", "Prix payé par les clients, avant commission, courses privées et pourboires compris")}
+      {num_field("comm", "Commissions des plateformes (€)", "287.5", "Montant retenu par Uber, Bolt, etc. : voir tes relevés (25 % d'exemple)")}
       {num_field("h", "Heures travaillées", "48", "Connecté, en attente compris")}
       {num_field("km", "Kilomètres parcourus", "1340", "À vide compris")}
     </div>
@@ -105,7 +106,7 @@ form = f'''<form id="rent" class="calc" novalidate>
       {num_field("carb", "Carburant ou recharge (€)", "105", "Souvent 8 à 10 % du CA")}
       {num_field("frais", "Autres frais : repas, péage, parking, lavage (€)", "81")}
       {num_field("fixes", "Charges fixes de la période : assurance, rattachement, location (€)", "37")}
-      {num_field("statut", "Cotisations ou provision (% du CA)", "21.3", "Auto-entrepreneur : 21,2 % URSSAF + 0,1 % formation = 21,3 % ; 0 si rattaché", "0.1")}
+      {num_field("statut", "Cotisations ou provision (% du CA)", "21.3", "Auto-entrepreneur : 21,2 % URSSAF + 0,1 % formation = 21,3 % du CA avant commission ; 0 si rattaché", "0.1")}
     </div>
   </fieldset>
   <div class="res" aria-live="polite">
@@ -128,11 +129,11 @@ write_landing("calculateur-rentabilite-vtc",
   "Ce que tu gagnes vraiment pour une heure de travail et pour un kilomètre roulé, avant et après tes frais.",
   form + '''
 <h2>Comment lire le résultat</h2>
-<p><strong>Le € / heure brut</strong> divise ce que tu as encaissé par tes heures. C'est le chiffre que tu compares d'une semaine à l'autre et entre plateformes. <strong>Le € / heure net</strong> fait la même division sur ce qu'il te reste après tes frais et tes charges : c'est ce que ton heure te rapporte vraiment.</p>
+<p><strong>Le € / heure brut</strong> divise ton chiffre d'affaires par tes heures. C'est le chiffre que tu compares d'une semaine à l'autre et entre plateformes. <strong>Le € / heure net</strong> fait la même division sur ce qu'il te reste après tes frais et tes charges : c'est ce que ton heure te rapporte vraiment.</p>
 <p><strong>Le € / km</strong> montre si tu roules pour rien. Une course bien payée qui te fait revenir à vide de loin fait chuter ce chiffre. Avant d'accepter une course, vérifie-la avec le <a href="/calculateurs/prix-minimum-course-vtc/">calculateur de prix minimum</a>.</p>
-<div class="box"><p><strong>Exemple :</strong> 1 150 € encaissés en 48 h et 1 340 km, 105 € de carburant (9 % du CA), 81 € d'autres frais, 37 € d'assurance et 245 € de cotisations (21,2 % URSSAF + 0,1 % formation). Il reste 682 € : 24 € de l'heure en brut, 14 € en net, et 0,51 € net par km.</p></div>
+<div class="box"><p><strong>Exemple :</strong> 1 150 € de chiffre d'affaires (prix payé par les clients) en 48 h et 1 340 km, 287,50 € de commissions (25 %), 105 € de carburant (9 % du CA), 81 € d'autres frais, 37 € d'assurance et 245 € de cotisations (21,2 % URSSAF + 0,1 % formation, calculées sur le CA avant commission). Il reste 395 € : 24 € de l'heure en brut, 8 € en net, et 0,29 € net par km.</p></div>
 <p>Pour le calcul complet selon ton statut (ACRE, versement libératoire, société, rattachement), utilise le <a href="/calculateurs/revenu-net-vtc/">calculateur de revenu net VTC</a>.</p>''' + "\n" + CTA,
-  [("Comment calculer son € / heure de chauffeur VTC ?", "Divise ce que tu as encaissé par tes heures travaillées pour le brut. Pour le net, retire d'abord ton carburant, tes frais, tes charges fixes et tes cotisations, puis divise par les mêmes heures."),
+  [("Comment calculer son € / heure de chauffeur VTC ?", "Divise ton chiffre d'affaires par tes heures travaillées pour le brut. Pour le net, retire d'abord les commissions des plateformes, ton carburant, tes frais, tes charges fixes et tes cotisations, puis divise par les mêmes heures."),
    ("Quelle part du chiffre d'affaires part dans le carburant ?", "Le plus souvent entre 8 et 10 % du chiffre d'affaires pour une hybride. Note tes pleins pendant quelques semaines pour connaître ta vraie part."),
    ("Faut-il compter les heures d'attente ?", "Oui. Une heure connecté sans course reste une heure de travail : la compter donne un € / heure réaliste.")],
   kind="WebApplication", js="calc-rentabilite.js", css=CSS_CALC)
@@ -187,9 +188,9 @@ write_landing("rentabilite-uber-bolt",
   <li><strong>Le prix payé par le client.</strong> La plateforme en garde une part : sa commission, qui varie selon la plateforme et le type de course.</li>
   <li><strong>Tes gains affichés</strong> = ce que la plateforme te verse. C'est le chiffre à noter chaque jour, plateforme par plateforme.</li>
   <li><strong>Tes frais :</strong> carburant (souvent 8 à 10 % de ce que tu encaisses), repas, péage, parking, entretien, et les charges de la voiture (assurance, loyer ou perte de valeur).</li>
-  <li><strong>Ton statut :</strong> commission de rattachement par semaine, cotisations URSSAF en pourcentage si tu es auto-entrepreneur, ou provision en société.</li>
+  <li><strong>Ton statut :</strong> commission de rattachement par semaine, cotisations URSSAF en pourcentage du prix payé par le client, commission comprise, si tu es auto-entrepreneur, ou provision en société.</li>
 </ol>
-<div class="box"><p><strong>Exemple sur une semaine :</strong> 1 150 € encaissés sur Uber, Bolt et des courses privées. Moins 105 € de carburant, 81 € de repas, péage et parking, 37 € d'assurance et 245 € de cotisations (21,2 % URSSAF + 0,1 % formation) : il reste 682 €, soit 59 % de ce qui était affiché.</p></div>
+<div class="box"><p><strong>Exemple sur une semaine :</strong> 1 150 € payés par les clients sur Uber, Bolt et des courses privées. Moins 287,50 € de commissions (25 %), 105 € de carburant, 81 € de repas, péage et parking, 37 € d'assurance et 245 € de cotisations (21,2 % URSSAF + 0,1 % formation) : il reste 395 €, soit 34 % du prix payé par les clients.</p></div>
 <h2>Uber ou Bolt : laquelle te rapporte le plus ?</h2>
 <p>La bonne comparaison n'est pas la course la mieux payée, mais <strong>ce qui te reste par heure et par kilomètre</strong> sur chaque plateforme. Une plateforme qui prend moins de commission mais t'envoie loin à vide peut te rapporter moins. Compare la même course sur chaque plateforme avec le <a href="/calculateurs/comparateur-plateformes-vtc/">comparateur des plateformes</a>, et ton € / heure avec le <a href="/calculateur-rentabilite-vtc/">calculateur de rentabilité VTC</a>.</p>
 <h2>Le suivre chaque semaine</h2>
@@ -200,7 +201,7 @@ write_landing("rentabilite-uber-bolt",
 </div>
 {NOTE_DEMO}
 {CTA}''',
-  [("Le montant affiché par Uber est-il mon revenu ?", "Non. C'est ton chiffre d'affaires après la commission d'Uber. Il faut encore retirer ton carburant, tes frais, tes charges de voiture et les charges de ton statut."),
+  [("Le montant affiché par Uber est-il mon revenu ?", "Non. C'est ce qu'Uber te verse après sa commission. En auto-entrepreneur, ton chiffre d'affaires à déclarer est le prix payé par les clients, commission comprise. Il faut ensuite retirer la commission, ton carburant, tes frais, tes charges de voiture et les charges de ton statut."),
    ("Comment comparer Uber et Bolt ?", "Compare ce qu'il te reste par heure et par kilomètre sur chaque plateforme, pas seulement le prix des courses. Les trajets à vide comptent."),
    ("Où trouver ce que la plateforme m'a versé ?", "Dans le relevé hebdomadaire de l'application chauffeur (gains de la semaine). Note aussi le cash encaissé à part pour vérifier ton virement.")])
 
@@ -230,7 +231,7 @@ write_landing("logiciel-vtc-gratuit",
 <tr><td>Rappel entretien et visite technique</td><td>Non</td><td>Oui</td></tr>
 </tbody></table></div>
 <h2>Gratuit, mais pas au prix de tes données</h2>
-<p>Pas de publicité, pas d'outil de suivi, aucune donnée revendue. Tes chiffres sont stockés en Europe et visibles par toi seul. Tu peux les exporter ou supprimer ton compte à tout moment.</p>
+<p>Dans l'appli : pas de publicité, pas d'outil de suivi, aucune donnée revendue. Sur ce site vitrine, la mesure d'audience (Google Analytics) ne démarre qu'avec ton accord, et tu peux la retirer à tout moment avec « Gérer mes cookies » en bas de page. Tes chiffres sont stockés en Europe et visibles par toi seul. Tu peux les exporter ou supprimer ton compte à tout moment.</p>
 <div class="figs">
 {fig("jour", "L'écran du jour.", "Écran Jour du logiciel VTC gratuit VTC Rentable")}
 {fig("reservation", "Une réservation et son bon de commande.", "Réservation et bon de commande dans VTC Rentable")}

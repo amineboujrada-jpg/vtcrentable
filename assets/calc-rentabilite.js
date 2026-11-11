@@ -9,7 +9,8 @@
   var fmt2 = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 });
   function calc() {
     var ca = num("ca"), h = num("h"), km = num("km");
-    var charges = num("carb") + num("frais") + num("fixes") + ca * num("statut") / 100;
+    // ca = chiffre d'affaires avant commission : les cotisations se calculent dessus, la commission s'ajoute aux charges.
+    var charges = num("comm") + num("carb") + num("frais") + num("fixes") + ca * num("statut") / 100;
     var net = ca - charges;
     $("r-net").textContent = fmt.format(net);
     $("r-net").classList.toggle("neg", net < 0);

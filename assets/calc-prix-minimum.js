@@ -1,7 +1,7 @@
 /* Calculateur du prix minimum d'une course VTC — tout se calcule dans le navigateur, rien n'est envoyé. */
 (function () {
   "use strict";
-  var KEY = "vtcr-calc-prixmin";
+  var KEY = "vtcr-calc-prixmin-v2";
   var f = document.getElementById("calc");
   if (!f) return;
   var $ = function (id) { return document.getElementById(id); };
@@ -18,7 +18,15 @@
     var heuresMois = num("heuresmois");
     var coutFixe = heuresMois ? num("fixes") / heuresMois * h : 0;
     var objectif = num("objh") * h;
-    var garde = 1 - tStat;
+    // Auto-entrepreneur : les charges se calculent sur le prix payé par le client, donc sur le montant versé / (1 − commission).
+    var garde = $("base").value === "verse" ? 1 - tStat : 1 - tStat / (1 - tCom);
+    if (garde <= 0) {
+      $("r-net").textContent = "—";
+      $("r-kpis").innerHTML = ""; $("r-tab").innerHTML = ""; $("r-verdict").className = "verdict";
+      $("r-verdict").innerHTML = "<b>Calcul impossible</b>Avec ces pourcentages, les charges et la commission dépassent le prix : baisse l'un des deux.";
+      $("r-msg").textContent = "";
+      return;
+    }
 
     var plancher = (coutRoute + coutFixe) / garde;          // montant versé pour ne rien perdre
     var verseMin = (coutRoute + coutFixe + objectif) / garde; // montant versé pour atteindre l'objectif
@@ -33,11 +41,11 @@
     if (kmCourse) kpis.push([eur.format(verseMin / kmCourse), "minimum par km de course"]);
     $("r-kpis").innerHTML = kpis.map(function (k) { return '<div class="kpi"><b>' + k[0] + "</b><span>" + k[1] + "</span></div>"; }).join("");
 
-    var statMontant = verseMin * tStat;
+    var statMontant = verseMin * (1 - garde);
     $("r-tab").innerHTML = [
       ["Carburant et entretien (" + (kmCourse + kmVide).toLocaleString("fr-FR") + " km, dont " + kmVide.toLocaleString("fr-FR") + " à vide)", coutRoute],
       ["Part des charges fixes (" + Math.round(h * 60) + " min)", coutFixe],
-      ["Charges de ton statut (" + String(Math.round(tStat * 1000) / 10).replace(".", ",") + " %)", statMontant],
+      ["Charges de ton statut (" + String(Math.round(tStat * 1000) / 10).replace(".", ",") + " %" + ($("base").value === "verse" ? "" : " du prix client") + ")", statMontant],
       ["Ton revenu net visé", objectif]
     ].map(function (r) { return "<tr><td>" + r[0] + '</td><td class="n">' + eur.format(r[1]) + "</td></tr>"; }).join("") +
       '<tr class="tot"><td>Minimum à accepter (montant versé)</td><td class="n">' + eur.format(verseMin) + "</td></tr>";
@@ -60,7 +68,7 @@
 
     try {
       var save = {};
-      f.querySelectorAll("input").forEach(function (el) { save[el.id] = el.value; });
+      f.querySelectorAll("input, select").forEach(function (el) { save[el.id] = el.value; });
       localStorage.setItem(KEY, JSON.stringify(save));
     } catch (e) { /* stockage indisponible : sans importance */ }
   }
@@ -71,6 +79,7 @@
   } catch (e) { /* ignore */ }
 
   f.addEventListener("input", calc);
+  f.addEventListener("change", calc);
   f.addEventListener("submit", function (ev) { ev.preventDefault(); calc(); });
   $("raz").addEventListener("click", function () {
     try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }

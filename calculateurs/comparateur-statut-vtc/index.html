@@ -57,7 +57,9 @@
   <fieldset>
     <legend>Ton activité</legend>
     <div class="row">
-      <label for="ca"><span>Chiffre d'affaires par semaine (€)</span><small>Ce que les plateformes te versent, plus tes courses privées</small><input id="ca" type="number" inputmode="decimal" min="0" step="1" value="1150"></label>
+      <label for="ca"><span>Recettes des plateformes par semaine (€)</span><small>Le prix payé par les clients, avant commission</small><input id="ca" type="number" inputmode="decimal" min="0" step="1" value="1150"></label>
+      <label for="com"><span>Commission moyenne des plateformes (%)</span><input id="com" type="number" inputmode="decimal" min="0" step="1" value="25"></label>
+      <label for="prive"><span>Courses privées, cash et pourboires par semaine (€)</span><small>Sans commission de plateforme</small><input id="prive" type="number" inputmode="decimal" min="0" step="1" value="0"></label>
       <label for="frais"><span>Frais par semaine (€)</span><small>Carburant, repas, péages, parking, lavage</small><input id="frais" type="number" inputmode="decimal" min="0" step="1" value="291"></label>
       <label for="charges"><span>Charges mensuelles de la voiture (€)</span><small>Assurance, location ou crédit, téléphone</small><input id="charges" type="number" inputmode="decimal" min="0" step="1" value="460"></label>
     </div>
@@ -102,10 +104,10 @@
 </form>
 
 <h2>Comment la comparaison est faite</h2>
-<p>Les trois statuts partent du même chiffre d'affaires, des mêmes frais et des mêmes charges de voiture, ramenés au mois (× 52 ÷ 12). Seules les charges du statut changent :</p>
+<p>Les trois statuts partent du même chiffre d'affaires (prix payé par les clients, avant commission), des mêmes commissions, des mêmes frais et des mêmes charges de voiture, ramenés au mois (× 52 ÷ 12). Seules les charges du statut changent :</p>
 <ul>
-  <li><strong>Auto-entrepreneur :</strong> 21,2 % du CA et la formation professionnelle, réduits par l'ACRE, plus 1,7 % avec le versement libératoire. Détails dans <a href="/blog/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>.</li>
-  <li><strong>Société :</strong> la part du CA mise de côté pour les charges et l'impôt, plus le comptable et la banque.</li>
+  <li><strong>Auto-entrepreneur :</strong> 21,2 % du CA avant commission (la commission ne se déduit pas) et la formation professionnelle, réduits par l'ACRE, plus 1,7 % avec le versement libératoire. Détails dans <a href="/blog/charges-chauffeur-vtc-auto-entrepreneur/">les charges d'un VTC auto-entrepreneur</a>.</li>
+  <li><strong>Société :</strong> la part de ce que tu encaisses (la commission est une charge déductible) mise de côté pour les charges et l'impôt, plus le comptable et la banque.</li>
   <li><strong>Rattachement :</strong> le prix payé chaque semaine, et les retenues éventuelles.</li>
 </ul>
 <p>Le comparateur signale aussi quand ton CA annuel dépasse la franchise de TVA (37 500 €) ou le plafond de la micro-entreprise (83 600 €).</p>
@@ -145,7 +147,7 @@
 <a class="card" href="/blog/erreurs-rentabilite-vtc/" data-cat="Rentabilité"><small class="cat">Rentabilité · 6 novembre 2026</small><b>Les 5 erreurs qui ruinent la rentabilité d&#x27;un chauffeur VTC</b><span>Dépenses oubliées, CA pris pour le net, prix au km : les pièges qui coûtent le plus cher.</span></a>
 <a class="card" href="/blog/tableur-ou-application-vtc/" data-cat="Rentabilité"><small class="cat">Rentabilité · 5 novembre 2026</small><b>Pourquoi un tableur ne suffit plus pour suivre ton activité VTC</b><span>Saisie, calculs, bon de commande, hors ligne : le tableur face à une appli de gestion VTC, point par point.</span></a>
 <a class="card" href="/blog/sasu-vtc-indemnites-kilometriques/" data-cat="Statut et charges"><small class="cat">Statut et charges · 5 novembre 2026</small><b>SASU VTC : voiture personnelle avec indemnités kilométriques ou voiture de société ?</b><span>Indemnités kilométriques sans impôt ou voiture au nom de la société : les règles et un exemple chiffré.</span></a>
-<a class="card" href="/blog/salaire-chauffeur-vtc/" data-cat="Rentabilité"><small class="cat">Rentabilité · 5 novembre 2026</small><b>Salaire d&#x27;un chauffeur VTC en 2026 : combien on gagne vraiment</b><span>Du chiffre d&#x27;affaires au net réel : trois exemples chiffrés, de 7 à 11 € nets de l&#x27;heure.</span></a>
+<a class="card" href="/blog/salaire-chauffeur-vtc/" data-cat="Rentabilité"><small class="cat">Rentabilité · 5 novembre 2026</small><b>Salaire d&#x27;un chauffeur VTC en 2026 : combien on gagne vraiment</b><span>Du chiffre d&#x27;affaires au net réel : trois exemples chiffrés, de 6 à 10 € nets de l&#x27;heure.</span></a>
 <a class="card" href="/blog/releve-kilometrique-vtc/" data-cat="Réglementation"><small class="cat">Réglementation · 5 novembre 2026</small><b>Relevé kilométrique VTC : comment justifier tes kilomètres en cas de contrôle</b><span>Ce qu&#x27;il faut noter, les preuves à garder et la durée de conservation pour justifier tes kilomètres.</span></a>
 <a class="card" href="/blog/indemnites-kilometriques-vtc/" data-cat="Statut et charges"><small class="cat">Statut et charges · 5 novembre 2026</small><b>Indemnités kilométriques VTC : qui y a droit, statut par statut</b><span>Rattachement, SASU, auto-entrepreneur : qui peut utiliser le barème kilométrique, et combien il rapporte.</span></a>
 <a class="card" href="/blog/frais-reels-chauffeur-vtc-rattachement/" data-cat="Statut et charges"><small class="cat">Statut et charges · 5 novembre 2026</small><b>Chauffeur VTC en rattachement : frais réels ou déduction de 10 % ?</b><span>Quand les frais réels battent la déduction de 10 %, et le piège des remboursements de la société de rattachement.</span></a>

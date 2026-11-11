@@ -8,7 +8,7 @@
     versementLib: 0.017,    // versement libératoire de l'impôt
     semParMois: 52 / 12
   };
-  var KEY = "vtcr-calc-net";
+  var KEY = "vtcr-calc-net-v2";
   var f = document.getElementById("calc");
   if (!f) return;
   var $ = function (id) { return document.getElementById(id); };
@@ -29,7 +29,7 @@
     $("opt-ae").classList.toggle("hide", s !== "ae");
     $("opt-soc").classList.toggle("hide", s !== "societe");
     $("opt-ratt").classList.toggle("hide", s !== "ratt");
-    $("opt-com").classList.toggle("hide", $("saisie").value !== "avant");
+    $("opt-comeur").classList.toggle("hide", $("saisie").value !== "apres");
   }
 
   function calc() {
@@ -38,19 +38,32 @@
     var moisVersPeriode = parSem ? 12 / 52 : 1;   // charges mensuelles ramenées à la période
     var semVersPeriode = parSem ? 1 : TAUX.semParMois;
 
-    var ca = num("ca");
-    var commissions = $("saisie").value === "avant" ? ca * num("com") / 100 : 0;
-    var encaisse = ca - commissions;
+    // Recettes des plateformes, courses privées et pourboires sont séparés :
+    // la commission ne s'applique qu'aux plateformes.
+    var pf = num("ca"), prive = num("prive");
+    var tCom = Math.min(num("com"), 95) / 100;
+    var commissions, estimee = false;
+    if ($("saisie").value === "avant") {
+      commissions = pf * tCom;                       // pf = prix payé par les clients
+    } else if (num("comeur") > 0) {
+      commissions = num("comeur");                   // pf = montant versé, commissions connues
+    } else {
+      commissions = pf * tCom / (1 - tCom);          // pf = montant versé, commissions estimées
+      estimee = pf > 0 && tCom > 0;
+    }
+    var caPf = $("saisie").value === "avant" ? pf : pf + commissions;   // prix payé par les clients
+    var ca = caPf + prive;                           // chiffre d'affaires : base des cotisations en micro-entreprise
+    var encaisse = ca - commissions;                 // ce qui arrive sur le compte
 
     var s = $("statut").value, statutLib, statutMontant;
     if (s === "ae") {
       var acre = parseFloat($("acre").value) || 0;
       var taux = TAUX.urssaf * (1 - acre) + TAUX.formation + ($("vl").checked ? TAUX.versementLib : 0);
-      statutMontant = encaisse * taux;
-      statutLib = "Cotisations URSSAF" + ($("vl").checked ? " et impôt" : "") + " (" + (taux * 100).toFixed(1).replace(".", ",") + " %)";
+      statutMontant = ca * taux;                     // sur le CA avant commission
+      statutLib = "Cotisations URSSAF" + ($("vl").checked ? " et impôt" : "") + " (" + (taux * 100).toFixed(1).replace(".", ",") + " % du CA)";
     } else if (s === "societe") {
-      statutMontant = encaisse * num("soc") / 100;
-      statutLib = "Charges et impôt de la société (" + num("soc") + " %)";
+      statutMontant = encaisse * num("soc") / 100;   // en société, la commission est une charge déductible
+      statutLib = "Charges et impôt de la société (" + num("soc") + " % de ce que tu encaisses)";
     } else {
       statutMontant = num("ratt") * semVersPeriode;
       statutLib = "Société de rattachement";
@@ -84,8 +97,8 @@
       '<i style="width:' + part(frais) + '%;background:#f7b267"></i>' +
       '<i style="width:' + part(net) + '%;background:#3ccf7d"></i>';
 
-    var rows = [["Chiffre d'affaires saisi", ca, ""]];
-    if (commissions) rows.push(["Commissions des plateformes", -commissions, "minus"]);
+    var rows = [["Chiffre d'affaires (prix payé par les clients" + (prive ? ", privées et pourboires compris" : "") + ")", ca, ""]];
+    if (commissions) rows.push(["Commissions des plateformes" + (estimee ? " (estimées à " + Math.round(tCom * 100) + " %)" : ""), -commissions, "minus"]);
     rows.push([statutLib, -statutMontant, "minus"]);
     if (fixes) rows.push(["Voiture, assurance et abonnements" + (parSem ? " (ramenés à la semaine)" : ""), -fixes, "minus"]);
     if (variables) rows.push(["Carburant, entretien, péages, repas", -variables, "minus"]);
@@ -94,10 +107,12 @@
     }).join("") + '<tr class="tot"><td>Revenu net</td><td class="n">' + fmt.format(net) + "</td></tr>";
 
     var msg = "";
-    if (!ca) msg = "Saisis ton chiffre d'affaires pour voir le résultat.";
+    if (!ca) msg = "Saisis tes recettes pour voir le résultat.";
     else if (net < 0) msg = "Sur cette période, tes charges dépassent ce que tu encaisses : tu travailles à perte.";
-    else if (net / ca < 0.35) msg = "Il te reste moins d'un tiers de ce que tu encaisses. Regarde en priorité ton plus gros poste de dépense.";
+    else if (net / ca < 0.35) msg = "Il te reste moins de 35 % du chiffre d'affaires. Regarde en priorité ton plus gros poste de dépense.";
     else msg = "Pense à l'impôt sur le revenu s'il n'est pas déjà compris, et à refaire le calcul chaque semaine : le net change beaucoup d'une semaine à l'autre.";
+    if (estimee) msg += " Les commissions sont estimées : saisis leur montant réel (relevé de la plateforme) pour un calcul exact.";
+    if (s === "ae" && commissions) msg += " En micro-entreprise, les cotisations se calculent sur le chiffre d'affaires avant commission : la commission ne les réduit pas.";
     $("r-msg").textContent = msg;
 
     try {
