@@ -137,7 +137,7 @@
      "name": "Combien gagne vraiment un chauffeur VTC ?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ça dépend de tes heures, de ta voiture et de ton statut, et le montant affiché par les plateformes n'est pas ce qu'il te reste. Dans l'exemple plus haut, 1 150 € encaissés donnent 682 € une fois les frais retirés, pour 48 h de travail. Le plus fiable reste de noter tes propres chiffres pour connaître ton net réel."
+      "text": "Ça dépend de tes heures, de ta voiture et de ton statut, et le montant affiché par les plateformes n'est pas ce qu'il te reste. Dans l'exemple plus haut, 1 150 € de courses donnent 395 € une fois les commissions, les cotisations et les frais retirés, pour 48 h de travail. Le plus fiable reste de noter tes propres chiffres pour connaître ton net réel."
      }
     },
     {
@@ -342,6 +342,7 @@ a.feat.guide:hover { border-color: var(--accent); }
 .seg { display: grid; grid-template-columns: repeat(3, auto); background: var(--night-3); border-radius: 10px; padding: 3px; margin-top: 16px; max-width: 100%; width: max-content; }
 .seg button { font: 600 13px/1 var(--f-body); background: transparent; color: var(--night-muted); border: 0; padding: 10px 12px; border-radius: 8px; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--night-2); color: var(--night-fg); }
+[hidden] { display: none !important; }
 .field { display: grid; gap: 6px; margin-top: 14px; font-size: 14px; color: var(--night-muted); }
 .field input { font: 600 18px/1 var(--f-num); background: var(--night-2); color: var(--night-fg); border: 1px solid var(--night-line); border-radius: 10px; padding: 12px; width: 100%; color-scheme: dark; }
 .result { background: var(--night-2); border: 1px solid var(--night-line); border-radius: 14px; padding: 20px; display: grid; gap: 10px; align-content: start; }
@@ -439,20 +440,21 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
     <div class="wrap ex">
       <div class="ex-text">
         <p class="eyebrow">Calcul du revenu net VTC</p>
-        <h2 style="font-size:clamp(28px,4vw,44px);line-height:1.06;font-weight:800">Une semaine type : 1 150 € encaissés, 682 € gagnés.</h2>
+        <h2 style="font-size:clamp(28px,4vw,44px);line-height:1.06;font-weight:800">Une semaine type : 1 150 € de courses, 395 € gagnés.</h2>
         <p>Les plateformes montrent ce qu'elles te versent. Elles ne parlent jamais du plein, des cotisations URSSAF ou de l'assurance qui tombe chaque mois. C'est pour ça que beaucoup de chauffeurs pensent gagner plus que la réalité.</p>
         <p>VTC Rentable fait le calcul à ta place, semaine après semaine, avec tes vrais chiffres.</p>
       </div>
       <div class="bill" aria-label="Exemple de semaine">
         <div class="cap">Exemple · auto-entrepreneur</div>
-        <div class="row"><span>Uber, Bolt, Heetch et privées</span><span class="num">1 150 €</span></div>
+        <div class="row"><span>Courses Uber, Bolt, Heetch et privées (prix payé par les clients)</span><span class="num">1 150 €</span></div>
+        <div class="row minus"><span>Commissions des plateformes (25 %)</span><span class="num">− 287,50 €</span></div>
         <div class="row minus"><span>Carburant (9 % du CA)</span><span class="num">− 105 €</span></div>
         <div class="row minus"><span>Repas et cafés</span><span class="num">− 45 €</span></div>
-        <div class="row minus"><span>URSSAF 21,2 % + formation 0,1 %</span><span class="num">− 245 €</span></div>
+        <div class="row minus"><span>URSSAF 21,2 % + formation 0,1 % (sur 1 150 €)</span><span class="num">− 245 €</span></div>
         <div class="row minus"><span>Assurance (160 € par mois)</span><span class="num">− 37 €</span></div>
         <div class="row minus"><span>Péage, parking, lavage</span><span class="num">− 36 €</span></div>
-        <div class="row tot"><span>Il te reste</span><span class="num">682 €</span></div>
-        <p class="hint">Pour 48 h de travail, soit 14 € net de l'heure, et 0,51 € net par km sur 1 340 km.</p>
+        <div class="row tot"><span>Il te reste</span><span class="num">395 €</span></div>
+        <p class="hint">Pour 48 h de travail, soit 8 € net de l'heure, et 0,29 € net par km sur 1 340 km.</p>
       </div>
     </div>
   </section>
@@ -502,7 +504,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
       <div class="trust">
         <div><span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><h3>Toi seul y as accès</h3><p>Chaque compte ne lit que ses propres données : la règle est appliquée par le serveur, pas seulement par l'appli.</p></div>
         <div><span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.5 5.4 3.5 8.5s-1 5.9-3.5 8.5c-2.5-2.6-3.5-5.4-3.5-8.5s1-5.9 3.5-8.5z"/></svg></span><h3>Hébergées en Europe</h3><p>Stockage dans l'Union européenne (Irlande), conforme au RGPD.</p></div>
-        <div><span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M9.5 5.5h9a1.5 1.5 0 0 1 1.5 1.5v9M17 19.5H6A1.5 1.5 0 0 1 4.5 18V7"/></svg></span><h3>Ni pub, ni revente</h3><p>Aucune publicité, aucun outil de suivi, aucune donnée vendue ou partagée.</p></div>
+        <div><span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M9.5 5.5h9a1.5 1.5 0 0 1 1.5 1.5v9M17 19.5H6A1.5 1.5 0 0 1 4.5 18V7"/></svg></span><h3>Ni pub, ni revente</h3><p>Aucune publicité, aucun outil de suivi dans l'appli, aucune donnée vendue ou partagée. Sur ce site, la mesure d'audience (Google Analytics) ne démarre qu'avec ton accord.</p></div>
         <div><span class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19.5h14"/></svg></span><h3>Tu repars quand tu veux</h3><p>Export de tes données en un fichier, et suppression complète du compte sur simple demande.</p></div>
       </div>
       <p class="avis-cta">Le détail est dans la <a href="https://app.vtcrentable.com/confidentialite.html">politique de confidentialité</a>.</p>
@@ -614,8 +616,11 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
             <button type="button" id="sAe" aria-pressed="false">Auto-entrepreneur</button>
             <button type="button" id="sRat" aria-pressed="false">Salarié</button>
           </div>
-          <label class="field" for="ca">Chiffre d'affaires de la semaine (€)
+          <label class="field" for="ca">Chiffre d'affaires de la semaine : prix payé par les clients, avant commission (€)
             <input id="ca" type="number" inputmode="decimal" min="0" step="10" value="1150">
+          </label>
+          <label class="field" for="pfc">Commissions des plateformes (€)
+            <input id="pfc" type="number" inputmode="decimal" min="0" step="0.5" value="287.5">
           </label>
           <label class="field" for="frais">Carburant, repas et autres frais (€)
             <input id="frais" type="number" inputmode="decimal" min="0" step="1" value="186">
@@ -632,6 +637,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
         </div>
         <div class="result" aria-live="polite">
           <div class="line"><span>Chiffre d'affaires</span><span class="num" id="rCa"></span></div>
+          <div class="line minus"><span>Commissions</span><span class="num" id="rPf"></span></div>
           <div class="line minus"><span>Frais</span><span class="num" id="rFr"></span></div>
           <div class="line minus"><span id="rLbl">Mise de côté</span><span class="num" id="rCh"></span></div>
           <div class="line total"><span>Il te reste</span><span class="num" id="rNet"></span></div>
@@ -705,7 +711,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
         <details><summary>Le bon de commande suffit en cas de contrôle ?</summary><p>Il reprend les informations demandées pour une réservation préalable : client, date et heure de la commande, lieu de prise en charge, exploitant et chauffeur. L'heure de commande est enregistrée automatiquement et ne peut pas être modifiée. L'appli ne crée jamais de réservation sans vraie commande.</p></details>
         <details><summary>Qui voit mes chiffres ?</summary><p>Toi seul. Chaque compte est protégé par email et mot de passe, les données sont hébergées en Europe (Irlande), et la base n'autorise chaque chauffeur qu'à lire les siennes.</p></details>
         <details><summary>Comment calculer son revenu net de chauffeur VTC ?</summary><p>Pars de ton chiffre d'affaires sur toutes les plateformes, courses privées comprises. Retire tes frais (carburant, repas, péage, parking, lavage, assurance), puis les charges de ton statut : la part mise de côté en société, les cotisations URSSAF en auto-entrepreneur, la commission du rattachement en salarié. Divise ce qu'il reste par tes heures et tes km pour avoir ton € / heure et ton € / km. L'appli fait ce calcul chaque semaine avec tes saisies.</p></details>
-        <details><summary>Combien gagne vraiment un chauffeur VTC ?</summary><p>Ça dépend de tes heures, de ta voiture et de ton statut, et le montant affiché par les plateformes n'est pas ce qu'il te reste. Dans l'exemple plus haut, 1 150 € encaissés donnent 682 € une fois les frais retirés, pour 48 h de travail. Le plus fiable reste de noter tes propres chiffres pour connaître ton net réel.</p></details>
+        <details><summary>Combien gagne vraiment un chauffeur VTC ?</summary><p>Ça dépend de tes heures, de ta voiture et de ton statut, et le montant affiché par les plateformes n'est pas ce qu'il te reste. Dans l'exemple plus haut, 1 150 € de courses donnent 395 € une fois les commissions, les cotisations et les frais retirés, pour 48 h de travail. Le plus fiable reste de noter tes propres chiffres pour connaître ton net réel.</p></details>
         <details><summary>Quelles charges pour un chauffeur VTC auto-entrepreneur ?</summary><p>Les cotisations URSSAF sur ton chiffre d'affaires (21,2 % en 2026), réduites de 50 % ou 25 % si tu as l'ACRE, plus 1,7 % si tu as choisi le versement libératoire. S'y ajoutent tes frais de tous les jours : carburant, assurance, entretien, péage, parking. L'appli retire tout ça chaque semaine.</p></details>
         <details><summary>Les montants remplacent mon comptable ?</summary><p>Non. Ce sont des estimations à partir de tes saisies, pour piloter ton activité au jour le jour. Pour tes déclarations, ton comptable ou ton espace URSSAF font foi.</p></details>
       </div>
@@ -751,13 +757,15 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
   let mode = "soc";
   const val = id => Math.max(0, +$(id).value || 0);
   function calc() {
-    const ca = val("ca"), fr = val("frais");
-    const charge = mode === "rat" ? val("com") : ca * (mode === "ae" ? val("taux") : val("prov")) / 100;
+    const ca = val("ca"), fr = val("frais"), pf = val("pfc");
+    // Auto-entrepreneur : cotisations sur le CA avant commission. Société : part de ce qui est encaissé.
+    const charge = mode === "rat" ? val("com") : mode === "ae" ? ca * val("taux") / 100 : Math.max(ca - pf, 0) * val("prov") / 100;
+    $("rPf").textContent = "− " + eur(pf);
     $("rCa").textContent = eur(ca);
     $("rFr").textContent = "− " + eur(fr);
     $("rCh").textContent = "− " + eur(charge);
     $("rLbl").textContent = { soc: "Mise de côté impôt et charges", ae: "Cotisations URSSAF", rat: "Commission du rattachement" }[mode];
-    const net = ca - fr - charge;
+    const net = ca - pf - fr - charge;
     $("rNet").textContent = eur(net);
     $("rNet").style.color = net < 0 ? "#ff6b6b" : "";
   }
@@ -770,7 +778,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
   $("sSoc").onclick = () => setMode("soc");
   $("sAe").onclick = () => setMode("ae");
   $("sRat").onclick = () => setMode("rat");
-  ["ca", "frais", "prov", "com", "taux"].forEach(id => $(id).addEventListener("input", calc));
+  ["ca", "pfc", "frais", "prov", "com", "taux"].forEach(id => $(id).addEventListener("input", calc));
   calc();
 })();
 </script>

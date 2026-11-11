@@ -3,7 +3,7 @@
   "use strict";
   // Taux et seuils 2026, mêmes valeurs que l'article sur les charges auto-entrepreneur.
   var T = { urssaf: 0.212, formation: 0.001, vl: 0.017, plafondMicro: 83600, franchiseTVA: 37500, semParMois: 52 / 12 };
-  var KEY = "vtcr-calc-statuts";
+  var KEY = "vtcr-calc-statuts-v2";
   var f = document.getElementById("calc");
   if (!f) return;
   var $ = function (id) { return document.getElementById(id); };
@@ -11,19 +11,23 @@
   var eur = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
   function calc() {
-    var caM = num("ca") * T.semParMois;
+    // CA = prix payé par les clients (avant commission) : c'est la base des cotisations en micro-entreprise.
+    var caPf = num("ca") * T.semParMois, prive = num("prive") * T.semParMois;
+    var commM = caPf * Math.min(num("com"), 95) / 100;
+    var caM = caPf + prive;
+    var encM = caM - commM;   // ce qui arrive sur le compte
     var fraisM = num("frais") * T.semParMois + num("charges");
-    var base = caM - fraisM;
+    var base = encM - fraisM;
 
     var acre = parseFloat($("acre").value) || 0;
     var tauxAE = T.urssaf * (1 - acre) + T.formation + ($("vl").checked ? T.vl : 0);
     var ae = caM * tauxAE;
-    var soc = caM * num("soc") / 100 + num("compta");
-    var ratt = num("ratt") * T.semParMois + caM * num("rattpct") / 100;
+    var soc = encM * num("soc") / 100 + num("compta");   // en société, la commission est déductible
+    var ratt = num("ratt") * T.semParMois + encM * num("rattpct") / 100;
 
     var res = [
-      { nom: "Auto-entrepreneur", charge: ae, detail: "Cotisations URSSAF" + ($("vl").checked ? " et impôt" : "") + " (" + (tauxAE * 100).toFixed(1).replace(".", ",") + " % du CA)" },
-      { nom: "Société", charge: soc, detail: "Charges et impôt (" + num("soc") + " % du CA) et comptable" },
+      { nom: "Auto-entrepreneur", charge: ae, detail: "Cotisations URSSAF" + ($("vl").checked ? " et impôt" : "") + " (" + (tauxAE * 100).toFixed(1).replace(".", ",") + " % du CA avant commission)" },
+      { nom: "Société", charge: soc, detail: "Charges et impôt (" + num("soc") + " % de ce que tu encaisses) et comptable" },
       { nom: "Rattachement", charge: ratt, detail: "Prix du rattachement" + (num("rattpct") ? " et retenues (" + num("rattpct") + " %)" : "") }
     ];
     res.forEach(function (r) { r.net = base - r.charge; });
@@ -36,7 +40,7 @@
       return '<div class="kpi"' + (r === tri[0] ? ' style="border-color:#3ccf7d"' : "") + "><b>" + eur.format(r.net) + "</b><span>par mois en " + r.nom.toLowerCase() + "</span></div>";
     }).join("");
 
-    $("r-base").textContent = "Pour " + eur.format(caM) + " de chiffre d'affaires et " + eur.format(fraisM) + " de frais et charges de voiture par mois :";
+    $("r-base").textContent = "Pour " + eur.format(caM) + " de chiffre d'affaires, " + eur.format(commM) + " de commissions et " + eur.format(fraisM) + " de frais et charges de voiture par mois :";
     $("r-tab").innerHTML = res.map(function (r) {
       return '<tr' + (r === tri[0] ? ' class="tot"' : "") + '><td>' + r.nom + '<small style="color:var(--night-muted)">' + r.detail + '</small></td><td class="n">− ' + eur.format(r.charge) + '</td><td class="n">' + eur.format(r.net) + "</td></tr>";
     }).join("");

@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   var T = { urssaf: 0.212, formation: 0.001, vl: 0.017, plafondMicro: 83600, franchiseTVA: 37500 };
-  var KEY = "vtcr-calc-objectif";
+  var KEY = "vtcr-calc-objectif-v2";
   var f = document.getElementById("calc");
   if (!f) return;
   var $ = function (id) { return document.getElementById(id); };
@@ -16,10 +16,14 @@
     $("opt-soc").classList.toggle("hide", s !== "societe");
     $("opt-ratt").classList.toggle("hide", s !== "ratt");
 
+    // Le résultat est le montant à encaisser (versé par les plateformes + courses privées).
+    // En micro-entreprise, les cotisations portent sur le CA avant commission : montant versé / (1 − commission moyenne).
+    var cEff = Math.min(num("part"), 100) / 100 * Math.min(num("com"), 95) / 100;
     var tStat = 0, fixesStatut = 0, lib;
     if (s === "ae") {
-      tStat = T.urssaf * (1 - (parseFloat($("acre").value) || 0)) + T.formation + ($("vl").checked ? T.vl : 0);
-      lib = "Cotisations URSSAF (" + (tStat * 100).toFixed(1).replace(".", ",") + " %)";
+      var tAE = T.urssaf * (1 - (parseFloat($("acre").value) || 0)) + T.formation + ($("vl").checked ? T.vl : 0);
+      tStat = tAE / (1 - cEff);
+      lib = "Cotisations URSSAF (" + (tAE * 100).toFixed(1).replace(".", ",") + " % du CA avant commission)";
     } else if (s === "societe") {
       tStat = num("soc") / 100; fixesStatut = num("compta");
       lib = "Charges et impôt de la société (" + num("soc") + " %) et comptable";
@@ -39,20 +43,23 @@
       $("r-kpis").innerHTML = ""; $("r-tab").innerHTML = ""; $("r-msg").textContent = "";
       return;
     }
-    var caMois = (net + fixes + fixesStatut) / garde;
-    var caAn = caMois * 12;
-    var caSem = semAn ? caAn / semAn : 0;
+    var caMois = (net + fixes + fixesStatut) / garde;   // montant encaissé
+    var caDecl = caMois / (1 - cEff);                    // chiffre d'affaires avant commission
+    var caAn = caDecl * 12;
+    var caSem = semAn ? caMois * 12 / semAn : 0;   // montant à encaisser par semaine travaillée
     var caJour = jours ? caSem / jours : 0;
     var caHeure = heures ? caJour / heures : 0;
 
     $("r-net").textContent = semAn ? eur.format(caSem) : "—";
-    $("r-sub").textContent = "à encaisser par semaine travaillée, pour " + eur.format(net) + " nets par mois";
-    var kpis = [[eur.format(caMois), "par mois en moyenne"], [eur.format(caAn), "par an"]];
+    $("r-sub").textContent = "à encaisser par semaine travaillée (montant versé), pour " + eur.format(net) + " nets par mois";
+    var kpis = [[eur.format(caMois), "à encaisser par mois en moyenne"], [eur.format(caDecl), "de chiffre d'affaires avant commission par mois"], [eur.format(caAn), "de chiffre d'affaires par an"]];
     if (caJour) kpis.push([eur.format(caJour), "par jour travaillé"]);
     if (caHeure) kpis.push([eur2.format(caHeure), "par heure de travail"]);
     $("r-kpis").innerHTML = kpis.map(function (k) { return '<div class="kpi"><b>' + k[0] + "</b><span>" + k[1] + "</span></div>"; }).join("");
 
-    var rows = [["Chiffre d'affaires nécessaire", caMois, ""],
+    var rows = [["Chiffre d'affaires avant commission", caDecl, ""],
+                ["Commissions des plateformes", -(caDecl - caMois), "minus"],
+                ["Montant à encaisser", caMois, ""],
                 ["Frais variables (" + num("var") + " %)", -caMois * tVar, "minus"],
                 [lib, -(caMois * tStat + fixesStatut), "minus"],
                 ["Charges fixes", -fixes, "minus"]];

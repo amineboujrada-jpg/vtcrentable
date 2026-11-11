@@ -1,7 +1,7 @@
 /* Comparateur des plateformes VTC — tout se calcule dans le navigateur, rien n'est envoyé. */
 (function () {
   "use strict";
-  var KEY = "vtcr-calc-plateformes";
+  var KEY = "vtcr-calc-plateformes-v2";
   var f = document.getElementById("calc");
   if (!f) return;
   var $ = function (id) { return document.getElementById(id); };
@@ -21,7 +21,9 @@
     var res = PF.map(function (p) {
       var com = Math.min(num("c-" + p[0]), 95) / 100;
       var verse = prix * (1 - com);
-      var reste = verse * (1 - tStat) - cout;
+      // Auto-entrepreneur : les charges se calculent sur le prix payé par le client (commission comprise).
+      var charges = ($("base").value === "verse" ? verse : prix) * tStat;
+      var reste = verse - charges - cout;
       return { nom: p[0] === "autre" ? nomAutre : p[1], com: com, verse: verse, reste: reste };
     }).filter(function (r) { return r.nom; });
 
@@ -40,11 +42,11 @@
     var ecartMois = (best.reste - worst.reste) * courses;
     $("r-kpis").innerHTML = courses && prix ? '<div class="kpi"><b>' + eur0.format(ecartMois) + "</b><span>d'écart par mois entre " + esc(best.nom) + " et " + esc(worst.nom) + ", pour " + Math.round(num("courses")) + " courses par semaine à ce prix</span></div>" : "";
 
-    $("r-msg").textContent = "La commission ne dit pas tout : le nombre de courses, les majorations et les bonus changent d'une plateforme à l'autre. Mets tes propres taux, relevés sur tes relevés de paiement : ils varient selon la ville et, chez Uber, selon la course.";
+    $("r-msg").textContent = ($("base").value === "prix" ? "En auto-entrepreneur, tes cotisations se calculent sur le prix payé par le client : la commission ne les réduit pas. " : "") + "La commission ne dit pas tout : le nombre de courses, les majorations et les bonus changent d'une plateforme à l'autre. Mets tes propres taux, relevés sur tes relevés de paiement : ils varient selon la ville et, chez Uber, selon la course.";
 
     try {
       var save = {};
-      f.querySelectorAll("input").forEach(function (el) { save[el.id] = el.value; });
+      f.querySelectorAll("input, select").forEach(function (el) { save[el.id] = el.value; });
       localStorage.setItem(KEY, JSON.stringify(save));
     } catch (e) { /* stockage indisponible : sans importance */ }
   }
@@ -55,6 +57,7 @@
   } catch (e) { /* ignore */ }
 
   f.addEventListener("input", calc);
+  f.addEventListener("change", calc);
   f.addEventListener("submit", function (ev) { ev.preventDefault(); calc(); });
   $("raz").addEventListener("click", function () {
     try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
