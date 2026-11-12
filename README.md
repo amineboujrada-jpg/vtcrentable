@@ -48,3 +48,10 @@ L'espace charge tout depuis Supabase (projet `vtc-pro`), par pages de 1000 : la 
 - **Nouvelles questions** : `insert into exam_questions (e, q, texte, o, a, why) values (...)` — `e` = épreuve (A à G), `o` = tableau JSON des choix, `a` = index de la bonne réponse (à partir de 0), `why` = explication. Les doublons (épreuve + énoncé) sont ignorés. Elles apparaissent aussitôt dans l'entraînement, l'examen aléatoire et « Revoir mes erreurs ».
 - **Nouvel examen blanc numéroté** : `insert into exam_sets (titre, description, duree_minutes, ordre)`, puis une ligne par question dans `exam_set_questions (set_id, question_id, position)`. Il s'affiche en carte « Examens blancs » avec la meilleure moyenne de l'élève ; chaque essai enregistre `exam_attempts.set_id`. L'examen n°1 contient 42 questions (6 par épreuve, 45 min).
 - **Date d'examen** : champ facultatif à l'inscription (`exam_profiles.date_examen`), modifiable par l'élève dans son espace (compte à rebours) et visible dans l'admin (colonne + filtre « moins de 30 jours »).
+
+## Sites vitrines des chauffeurs (`<adresse>.vtcrentable.fr`)
+
+- Les chauffeurs créent leur site dans l'appli (Réglages › Site vitrine). Les données sont dans la table `sites` du projet Supabase `vtc-pro` (`supabase/sites.sql` du dépôt `vtc-pro`).
+- Les pages sont servies par un programme Cloudflare (Worker) : `cloudflare/sites-chauffeurs.js`. Il reçoit toutes les adresses `*.vtcrentable.fr`, lit le site en ligne dans Supabase et renvoie la page complète (titre, description, données structurées, réservation). `apercu.vtcrentable.fr` affiche l'aperçu envoyé par l'appli ; `vtcrentable.fr` renvoie vers `/site-vitrine-chauffeur-vtc/`.
+- Ce fichier n'est pas publié automatiquement : après une modification, coller son contenu dans le Worker `sites-chauffeurs` du compte Cloudflare (route `*.vtcrentable.fr/*`), puis « Déployer ».
+- Les 3 modèles (Nuit, Clair, Prestige) sont en haut du fichier (`MODELES`) : couleurs et caractères seulement, les rubriques sont communes.
