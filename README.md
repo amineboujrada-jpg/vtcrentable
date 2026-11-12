@@ -53,5 +53,5 @@ L'espace charge tout depuis Supabase (projet `vtc-pro`), par pages de 1000 : la 
 
 - Les chauffeurs créent leur site dans l'appli (Réglages › Site vitrine). Les données sont dans la table `sites` du projet Supabase `vtc-pro` (`supabase/sites.sql` du dépôt `vtc-pro`).
 - Les pages sont servies par un programme Cloudflare (Worker) : `cloudflare/sites-chauffeurs.js`. Il reçoit toutes les adresses `*.vtcrentable.fr`, lit le site en ligne dans Supabase et renvoie la page complète (titre, description, données structurées, réservation). `apercu.vtcrentable.fr` affiche l'aperçu envoyé par l'appli ; `vtcrentable.fr` renvoie vers `/site-vitrine-chauffeur-vtc/`.
-- Ce fichier n'est pas publié automatiquement : après une modification, coller son contenu dans le Worker `sites-chauffeurs` du compte Cloudflare (route `*.vtcrentable.fr/*`), puis « Déployer ».
+- Publication automatique : le Worker `sites-chauffeurs` du compte Cloudflare est relié à ce dépôt (dossier `cloudflare/`, réglages dans `cloudflare/wrangler.jsonc`). Chaque fusion sur `main` publie la nouvelle version. Le domaine a un enregistrement DNS `*` (AAAA `100::`, proxy activé) pour que toutes les adresses arrivent au programme.
 - Les 3 modèles (Nuit, Clair, Prestige) sont en haut du fichier (`MODELES`) : couleurs et caractères seulement, les rubriques sont communes.
