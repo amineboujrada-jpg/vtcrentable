@@ -1,0 +1,12 @@
+// Réglages du programme Cloudflare des sites chauffeurs. Cloudflare lit ce fichier à chaque fusion sur main
+// (dossier racine du projet : cloudflare/) et publie tout seul la nouvelle version.
+{
+  "name": "sites-chauffeurs",
+  "main": "sites-chauffeurs.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "*.vtcrentable.fr/*", "zone_name": "vtcrentable.fr" },
+    { "pattern": "vtcrentable.fr/*", "zone_name": "vtcrentable.fr" }
+  ]
+}
