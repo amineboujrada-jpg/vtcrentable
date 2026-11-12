@@ -13,7 +13,7 @@ _css_home = _re.search(r"<style>(.*?)</style>", _home, _re.S).group(1)
 
 _faq = [
     ("Combien coûte un site internet pour chauffeur VTC ?",
-     "19,99 € HT par mois (TVA en sus), sans frais de création et sans engagement. Ton site est hébergé sur un sous-domaine de vtcrentable.com ; tu peux arrêter à tout moment, avec effet à la fin du mois en cours."),
+     "19,99 € HT par mois (TVA en sus), sans frais de création et sans engagement. Ton site a une adresse à ton nom, du type ton-nom.vtcrentable.fr ; tu peux arrêter à tout moment, avec effet à la fin du mois en cours."),
     ("Est-ce que je paie une commission sur les réservations ?",
      "Non. Les réservations faites sur ton site sont des courses privées : tu fixes ton prix et tu gardes la totalité, sans commission de plateforme."),
     ("Le bon de commande est-il fait automatiquement ?",
@@ -227,10 +227,10 @@ _page = f'''<!doctype html>
         <h2>Ton site en quatre étapes.</h2>
       </div>
       <div class="steps four">
-        <div class="step"><h3>Tu envoies ta demande</h3><p>Avec le formulaire en bas de page : une minute suffit.</p></div>
-        <div class="step"><h3>On t'appelle</h3><p>Sous 48 h, pour récupérer ton nom, ton véhicule, tes zones et tes tarifs.</p></div>
-        <div class="step"><h3>On crée ton site</h3><p>Tu le reçois pour validation et tu demandes les changements avant la mise en ligne.</p></div>
-        <div class="step"><h3>Tu reçois tes réservations</h3><p>19,99 € HT par mois, et tu arrêtes quand tu veux.</p></div>
+        <div class="step"><h3>Tu actives l'option</h3><p>Dans l'appli gratuite, Réglages › Site vitrine. Ou laisse ta demande en bas de page et on le fait avec toi.</p></div>
+        <div class="step"><h3>Tu choisis ton adresse et ton modèle</h3><p>L'appli te dit tout de suite si ton-nom.vtcrentable.fr est libre. Trois modèles au choix.</p></div>
+        <div class="step"><h3>Tu remplis ta ville et tes textes</h3><p>Zones, véhicule, services, tarifs : tu vois l'aperçu avant de demander la mise en ligne.</p></div>
+        <div class="step"><h3>On valide, tu reçois tes réservations</h3><p>Elles arrivent dans l'appli. 19,99 € HT par mois, et tu arrêtes quand tu veux.</p></div>
       </div>
     </div>
   </section>
@@ -257,7 +257,7 @@ _page = f'''<!doctype html>
         <p style="margin:0 0 8px;font-weight:700">Conditions de l'offre</p>
         <ul style="margin:0;padding-left:20px;display:grid;gap:6px">
           <li><b>Prix</b> : 19,99 € HT par mois, TVA en sus, sans frais de création.</li>
-          <li><b>Adresse du site</b> : sous-domaine de vtcrentable.com. Un nom de domaine à ton nom n'est pas inclus.</li>
+          <li><b>Adresse du site</b> : ton-nom.vtcrentable.fr, que tu choisis toi-même si elle est libre. Un nom de domaine séparé n'est pas inclus.</li>
           <li><b>Résiliation</b> : à tout moment, par message. Elle prend effet à la fin du mois en cours, et le mois commencé n'est pas remboursé.</li>
           <li><b>Si tu pars</b> : le site est mis hors ligne à la fin du mois. Les demandes de réservation reçues restent consultables par toi jusqu'à cette date.</li>
           <li><b>Mise en ligne</b> : tu valides le site avant sa publication. Aucun classement sur Google n'est garanti.</li>
