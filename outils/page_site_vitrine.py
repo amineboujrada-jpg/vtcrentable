@@ -249,6 +249,7 @@ _page = f'''<!doctype html>
         <p class="promo-t">Offre de lancement : gratuit à vie pour les 100 premiers</p>
         <p>Les 100 premiers chauffeurs inscrits à l'appli VTC Rentable ont leur site vitrine gratuit à vie, tant qu'il reste actif. Crée ton compte, l'appli est gratuite : elle t'indique si tu fais partie des 100 premiers.</p>
         <a class="btn btn-amber" href="{APP}">Créer mon compte gratuit</a>
+        <p><a href="/site-vtc-gratuit/">Voir les étapes pour avoir ton site gratuit</a></p>
       </div>
       <div class="price">
         <div class="big">19,99 €<small>HT par mois (TVA en sus),<br>après les 100 premiers</small></div>

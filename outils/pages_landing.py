@@ -245,6 +245,56 @@ write_landing("logiciel-vtc-gratuit",
    ("Puis-je l'utiliser sur ordinateur ?", "Oui. Le même compte fonctionne sur le téléphone et sur l'ordinateur, avec tes données synchronisées.")],
   kind="SoftwareApplication")
 
+# ---------- /site-vtc-gratuit : offre de lancement, site gratuit à vie pour les 100 premiers inscrits à l'appli ----------
+write_landing("site-vtc-gratuit",
+  "Site internet VTC gratuit à vie pour les 100 premiers",
+  "Ton site internet de chauffeur VTC gratuit à vie, avec réservation en ligne, pour les 100 premiers inscrits à l'appli VTC Rentable. Les étapes, une par une.",
+  "Ton site internet VTC gratuit à vie", "Site VTC gratuit",
+  "Offre de lancement : les 100 premiers chauffeurs inscrits à l'appli VTC Rentable ont leur site vitrine avec réservation en ligne, gratuit à vie.",
+  f'''<p><strong>Les 100 premiers chauffeurs inscrits à l'appli VTC Rentable ont leur site internet gratuit à vie</strong>, tant que le site reste actif. Pas de frais de création, pas d'abonnement, pas de carte bancaire. Pour les inscrits suivants, le site reste une option à 19,99 € HT par mois.</p>
+<div class="cta">
+  <strong>Prends ta place parmi les 100 premiers.</strong>
+  <p>Crée ton compte, l'appli est gratuite : elle t'indique tout de suite si ton site est gratuit à vie.</p>
+  <a class="btn" href="{APP}">Créer mon compte gratuit</a>
+</div>
+<h2>Comment avoir ton site gratuit, étape par étape</h2>
+<ol>
+  <li><strong>Crée ton compte dans l'appli.</strong> Sur <a href="{APP}">app.vtcrentable.com</a>, avec ton e-mail et un mot de passe. Les places sont données dans l'ordre de création des comptes.</li>
+  <li><strong>Ouvre Réglages, puis Site vitrine.</strong> L'appli t'indique si tu fais partie des 100 premiers inscrits.</li>
+  <li><strong>Active l'option et choisis ton adresse.</strong> Elle est du type ton-nom.vtcrentable.fr, et l'appli vérifie pendant la saisie qu'elle est libre.</li>
+  <li><strong>Choisis un modèle et remplis tes informations.</strong> Trois modèles au choix, puis ton nom, ta ville, ton téléphone, tes zones, tes services et tes tarifs.</li>
+  <li><strong>Regarde l'aperçu, puis demande la mise en ligne.</strong> Tu vois ta page avant qu'elle soit publiée.</li>
+  <li><strong>On valide et ton site est en ligne.</strong> Tes clients réservent sur ton site, et chaque demande arrive dans la page Réservations de l'appli.</li>
+</ol>
+<h2>Ce que contient ton site</h2>
+<ul>
+  <li>Une page à ton nom, avec ton véhicule, tes zones, tes services et tes tarifs</li>
+  <li>La réservation en ligne, sans commission de plateforme</li>
+  <li>Un bouton d'appel, et WhatsApp si tu le veux</li>
+  <li>Une page adaptée au téléphone et préparée pour le référencement local, sans promesse de classement sur Google</li>
+</ul>
+<div class="figs">
+{fig("exemple-site-accueil", "Exemple fictif de site de chauffeur.", "Exemple fictif de site internet VTC gratuit sur téléphone, avec nom, ville, services et bouton Réserver")}
+</div>
+<h2>Les conditions de l'offre</h2>
+<ul>
+  <li><strong>Pour qui</strong> : les 100 premiers chauffeurs inscrits à l'appli VTC Rentable, dans l'ordre de création des comptes. Une place par chauffeur, non cessible.</li>
+  <li><strong>Gratuit tant que le site reste actif</strong> : la place est perdue si tu supprimes ton site ou ton compte, ou si ton compte reste 12 mois sans connexion.</li>
+  <li><strong>Adresse</strong> : ton-nom.vtcrentable.fr. Un nom de domaine séparé n'est pas inclus.</li>
+  <li><strong>Après les 100 premiers</strong> : 19,99 € HT par mois, sans engagement.</li>
+</ul>
+<p>Le détail complet du site, avec un exemple et toutes les questions : <a href="/site-vitrine-chauffeur-vtc/">le site vitrine pour chauffeur VTC</a>.</p>
+<div class="cta">
+  <strong>Ton site à ton nom, gratuit à vie.</strong>
+  <p>Crée ton compte gratuit, puis ouvre Réglages, Site vitrine.</p>
+  <a class="btn" href="{APP}">Créer mon compte gratuit</a>
+</div>
+{SUPPORT}''',
+  [("Le site est-il vraiment gratuit à vie ?", "Oui pour les 100 premiers chauffeurs inscrits à l'appli VTC Rentable, tant que le site reste actif : pas de frais de création ni d'abonnement. La place est perdue si tu supprimes ton site ou ton compte, ou après 12 mois sans connexion."),
+   ("Comment savoir si je fais partie des 100 premiers ?", "Crée ton compte dans l'appli, puis ouvre Réglages, Site vitrine : l'appli t'indique si ton site est gratuit à vie ou si l'option est à 19,99 € HT par mois."),
+   ("Faut-il savoir créer un site internet ?", "Non. Tu choisis une adresse et un modèle, tu remplis quelques champs dans l'appli, et ta page est prête. Tu peux la modifier ensuite quand tu veux."),
+   ("Est-ce que je paie une commission sur les réservations ?", "Non. Les réservations faites sur ton site sont des courses privées : tu fixes ton prix et tu gardes la totalité.")])
+
 # ---------- /site-vitrine-chauffeur-vtc : landing de vente, voir outils/page_site_vitrine.py ----------
 exec(open(os.path.join(ROOT, "outils", "page_site_vitrine.py"), encoding="utf-8").read())
 
