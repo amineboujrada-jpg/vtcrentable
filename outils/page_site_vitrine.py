@@ -4,8 +4,8 @@ import re as _re
 
 _slug = "site-vitrine-chauffeur-vtc"
 _url = f"{SITE}/{_slug}/"
-_title = "Site chauffeur VTC avec réservation en ligne : 19,99 €/mois"
-_desc = "Un site vitrine à ton nom, avec réservation en ligne et bon de commande automatique, préparé pour le référencement local. 19,99 € HT par mois, sans engagement."
+_title = "Site chauffeur VTC : gratuit à vie pour les 100 premiers"
+_desc = "Un site à ton nom avec réservation en ligne et bon de commande automatique. Gratuit à vie pour les 100 premiers inscrits, puis 19,99 € HT par mois."
 assert len(_title) <= 60 and 70 <= len(_desc) <= 160
 
 _home = open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
@@ -13,7 +13,9 @@ _css_home = _re.search(r"<style>(.*?)</style>", _home, _re.S).group(1)
 
 _faq = [
     ("Combien coûte un site internet pour chauffeur VTC ?",
-     "19,99 € HT par mois (TVA en sus), sans frais de création et sans engagement. Ton site a une adresse à ton nom, du type ton-nom.vtcrentable.fr ; tu peux arrêter à tout moment, avec effet à la fin du mois en cours."),
+     "Offre de lancement : le site est gratuit à vie pour les 100 premiers chauffeurs inscrits à l'appli VTC Rentable, tant que le site reste actif. Pour les suivants : 19,99 € HT par mois (TVA en sus), sans frais de création et sans engagement. Ton site a une adresse à ton nom, du type ton-nom.vtcrentable.fr ; tu peux arrêter à tout moment, avec effet à la fin du mois en cours."),
+    ("Comment avoir mon site gratuit à vie ?",
+     "Crée ton compte dans l'appli VTC Rentable, elle est gratuite. Si ton compte fait partie des 100 premiers inscrits, l'appli te l'indique dans Réglages, Site vitrine, et ton site reste gratuit tant qu'il est actif. La place est perdue si tu supprimes ton site ou ton compte, ou après 12 mois sans connexion."),
     ("Est-ce que je paie une commission sur les réservations ?",
      "Non. Les réservations faites sur ton site sont des courses privées : tu fixes ton prix et tu gardes la totalité, sans commission de plateforme."),
     ("Le bon de commande est-il fait automatiquement ?",
@@ -23,7 +25,7 @@ _faq = [
     ("Je peux arrêter quand je veux ?",
      "Oui. L'abonnement est sans engagement : tu l'arrêtes quand tu veux, sans frais."),
     ("Il faut que j'utilise l'appli VTC Rentable ?",
-     "Non, le site vitrine est une option à part. L'appli reste gratuite, et tu peux utiliser l'une sans l'autre."),
+     "Pour l'offre gratuite à vie, oui : il faut un compte dans l'appli, parmi les 100 premiers inscrits. Pour l'offre à 19,99 € HT par mois, non : le site vitrine est une option à part. Dans les deux cas, l'appli reste gratuite."),
 ]
 
 _ld = {"@context": "https://schema.org", "@graph": [
@@ -49,6 +51,8 @@ _css_page = """
 [hidden] { display: none !important; }
 .hero .phone.real img { aspect-ratio: 780 / 1688; }
 .offer-badge { display: inline-flex; align-items: baseline; gap: 8px; margin-top: 22px; padding: 10px 14px; border: 1px solid var(--night-line); border-radius: 12px; }
+.promo { margin-bottom: 20px; padding: 22px 24px; border: 2px solid var(--amber); border-radius: 18px; background: var(--surface); display: grid; gap: 12px; justify-items: start; }
+.promo p { margin: 0; color: var(--muted); } .promo .promo-t { font-weight: 800; font-size: 21px; color: var(--fg); }
 .offer-badge b { font: 600 26px/1 var(--f-num); color: var(--night-fg); white-space: nowrap; }
 @media (max-width: 860px) { .hero .offer-badge { order: 5; margin-top: 18px; } }
 .offer-badge span { color: var(--night-muted); font-size: 14px; }
@@ -104,7 +108,7 @@ _page = f'''<!doctype html>
 <meta property="og:site_name" content="VTC Rentable">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="{_url}">
-<meta property="og:title" content="Ton site de chauffeur VTC avec réservation en ligne · 19,99 €/mois">
+<meta property="og:title" content="Ton site de chauffeur VTC avec réservation en ligne · gratuit à vie pour les 100 premiers">
 <meta property="og:description" content="{e(_desc)}">
 <meta property="og:image" content="https://app.vtcrentable.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -146,7 +150,7 @@ _page = f'''<!doctype html>
           <a class="btn btn-amber" href="#demande">Demander mon site</a>
           <a class="btn btn-ghost" href="#exemple">Voir un exemple</a>
         </div>
-        <div class="offer-badge"><b>19,99 €</b><span>HT par mois · sans engagement · sans frais de création</span></div>
+        <div class="offer-badge"><b>Gratuit à vie</b><span>pour les 100 premiers chauffeurs inscrits à l'appli · ensuite 19,99 € HT par mois</span></div>
       </div>
       <div class="phone real">
         <img src="/assets/captures/exemple-site-accueil.webp" width="780" height="1688" alt="Exemple fictif de site vitrine de chauffeur VTC sur téléphone : nom, ville, services et bouton Réserver" fetchpriority="high">
@@ -230,7 +234,7 @@ _page = f'''<!doctype html>
         <div class="step"><h3>Tu actives l'option</h3><p>Dans l'appli gratuite, Réglages › Site vitrine. Ou laisse ta demande en bas de page et on le fait avec toi.</p></div>
         <div class="step"><h3>Tu choisis ton adresse et ton modèle</h3><p>L'appli te dit tout de suite si ton-nom.vtcrentable.fr est libre. Trois modèles au choix.</p></div>
         <div class="step"><h3>Tu remplis ta ville et tes textes</h3><p>Zones, véhicule, services, tarifs : tu vois l'aperçu avant de demander la mise en ligne.</p></div>
-        <div class="step"><h3>On valide, tu reçois tes réservations</h3><p>Elles arrivent dans l'appli. 19,99 € HT par mois, et tu arrêtes quand tu veux.</p></div>
+        <div class="step"><h3>On valide, tu reçois tes réservations</h3><p>Elles arrivent dans l'appli. Gratuit à vie pour les 100 premiers inscrits, 19,99 € HT par mois pour les suivants.</p></div>
       </div>
     </div>
   </section>
@@ -241,8 +245,14 @@ _page = f'''<!doctype html>
         <p class="eyebrow">Prix</p>
         <h2>Un prix simple, sans engagement.</h2>
       </div>
+      <div class="promo">
+        <p class="promo-t">Offre de lancement : gratuit à vie pour les 100 premiers</p>
+        <p>Les 100 premiers chauffeurs inscrits à l'appli VTC Rentable ont leur site vitrine gratuit à vie, tant qu'il reste actif. Crée ton compte, l'appli est gratuite : elle t'indique si tu fais partie des 100 premiers.</p>
+        <a class="btn btn-amber" href="{APP}">Créer mon compte gratuit</a>
+        <p><a href="/site-vtc-gratuit/">Voir les étapes pour avoir ton site gratuit</a></p>
+      </div>
       <div class="price">
-        <div class="big">19,99 €<small>HT par mois (TVA en sus),<br>sans frais de création</small></div>
+        <div class="big">19,99 €<small>HT par mois (TVA en sus),<br>après les 100 premiers</small></div>
         <ul>
           <li>Un site d'une page à ton nom</li>
           <li>Réservation en ligne</li>
@@ -256,7 +266,9 @@ _page = f'''<!doctype html>
       <div class="conditions" style="margin-top:20px;padding:18px 20px;border:1px solid var(--line,#d9d9d9);border-radius:14px">
         <p style="margin:0 0 8px;font-weight:700">Conditions de l'offre</p>
         <ul style="margin:0;padding-left:20px;display:grid;gap:6px">
-          <li><b>Prix</b> : 19,99 € HT par mois, TVA en sus, sans frais de création.</li>
+          <li><b>Offre de lancement</b> : site gratuit à vie pour les 100 premiers chauffeurs inscrits à l'appli VTC Rentable, dans l'ordre de création des comptes. Une place par chauffeur, non cessible.</li>
+          <li><b>Gratuit tant que le site reste actif</b> : la place est perdue si tu supprimes ton site ou ton compte, ou si ton compte reste 12 mois sans connexion.</li>
+          <li><b>Prix après les 100 premiers</b> : 19,99 € HT par mois, TVA en sus, sans frais de création.</li>
           <li><b>Adresse du site</b> : ton-nom.vtcrentable.fr, que tu choisis toi-même si elle est libre. Un nom de domaine séparé n'est pas inclus.</li>
           <li><b>Résiliation</b> : à tout moment, par message. Elle prend effet à la fin du mois en cours, et le mois commencé n'est pas remboursé.</li>
           <li><b>Si tu pars</b> : le site est mis hors ligne à la fin du mois. Les demandes de réservation reçues restent consultables par toi jusqu'à cette date.</li>
@@ -278,7 +290,7 @@ _page = f'''<!doctype html>
           <ul>
             <li>Aucun paiement à cette étape</li>
             <li>Tu valides le site avant sa mise en ligne</li>
-            <li>19,99 € HT par mois ensuite, sans engagement</li>
+            <li>Gratuit à vie pour les 100 premiers inscrits à l'appli, 19,99 € HT par mois pour les suivants</li>
           </ul>
         </div>
         <div>
@@ -319,7 +331,7 @@ _page = f'''<!doctype html>
   <section class="night final">
     <div class="wrap">
       <h2>Ton prochain client fidèle réserve chez toi.</h2>
-      <p>Ton site à ton nom, la réservation en ligne et le bon de commande automatique, pour 19,99 € HT par mois.</p>
+      <p>Ton site à ton nom, la réservation en ligne et le bon de commande automatique : gratuit à vie pour les 100 premiers inscrits à l'appli.</p>
       <a class="btn btn-amber" href="#demande">Demander mon site</a>
       <div class="support"><b>Une question ?</b><a href="mailto:contact@vtcrentable.com">contact@vtcrentable.com</a><span>Réponse sous 24 h, par un chauffeur qui connaît le métier.</span></div>
     </div>
