@@ -5,6 +5,8 @@
   "main": "sites-chauffeurs.js",
   "compatibility_date": "2026-11-01",
   "workers_dev": false,
+  // Traduction automatique des textes des chauffeurs pour la version anglaise (Workers AI, inclus dans l'offre gratuite)
+  "ai": { "binding": "AI" },
   "routes": [
     { "pattern": "*.vtcrentable.fr/*", "zone_name": "vtcrentable.fr" },
     { "pattern": "vtcrentable.fr/*", "zone_name": "vtcrentable.fr" }
