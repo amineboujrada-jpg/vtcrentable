@@ -64,7 +64,9 @@
    "url": "https://app.vtcrentable.com/",
    "applicationCategory": "BusinessApplication",
    "applicationSubCategory": "FinanceApplication",
-   "operatingSystem": "iOS, Android, Windows, macOS (navigateur web)",
+   "operatingSystem": "Android, iOS, Windows, macOS (navigateur web)",
+   "downloadUrl": "https://play.google.com/store/apps/details?id=com.vtcrentable.android",
+   "installUrl": "https://play.google.com/store/apps/details?id=com.vtcrentable.android",
    "inLanguage": "fr-FR",
    "description": "Application de gestion gratuite pour chauffeurs VTC en France : revenu net, € / heure et € / km, plateformes Uber, Bolt, Heetch, FreeNow, LeCab et Allocab, bon de commande PDF, virements, entretien et visite technique.",
    "image": "https://app.vtcrentable.com/og-image.png",
@@ -78,7 +80,8 @@
    },
    "publisher": {
     "@id": "https://vtcrentable.com/#organization"
-   }
+   },
+   "sameAs": ["https://play.google.com/store/apps/details?id=com.vtcrentable.android"]
   },
   {
    "@type": "FAQPage",
@@ -89,7 +92,7 @@
      "name": "Il faut la télécharger sur l'App Store ?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Non. Tu ouvres app.vtcrentable.com dans Safari ou Chrome, puis « Partager » et « Sur l'écran d'accueil ». L'icône apparaît avec tes autres applis et s'ouvre en plein écran, sur iPhone comme sur Android."
+      "text": "Sur Android, tu l'installes depuis Google Play. Sur iPhone, pas besoin de l'App Store : tu ouvres app.vtcrentable.com dans Safari, puis « Partager » et « Sur l'écran d'accueil ». L'icône apparaît avec tes autres applis et s'ouvre en plein écran."
      }
     },
     {
@@ -280,9 +283,25 @@ nav.top .btn { padding: 10px 14px; font-size: 14px; }
   .hero-text { padding-bottom: 30px; }
   /* sur téléphone, l'écran de l'appli monte juste sous le texte d'accroche */
   .hero-text { display: contents; }
-  .hero h1 { order: 1; } .hero .lead { order: 2; } .hero .gains { order: 3; } .hero .ctas { order: 4; } .hero .small { order: 5; }
+  .hero h1 { order: 1; } .hero .lead { order: 2; } .hero .gains { order: 3; } .hero .ctas { order: 4; } .hero .store { order: 4; } .hero .small { order: 5; }
   .phone.real { order: 6; width: min(280px, 82%); margin: 26px auto 6px; } .hero .plates { order: 7; margin-bottom: 36px; }
 }
+
+.hero .store { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 16px; }
+.hero .store .ios { font-size: 13.5px; color: var(--night-muted); }
+.gplay { display: inline-flex; align-items: center; gap: 10px; background: #000; color: #fff; border: 1px solid #586072; border-radius: 10px; padding: 7px 14px 7px 11px; text-decoration: none; font: 700 17px/1.05 var(--f-body); transition: transform .15s ease; }
+.gplay:hover { transform: translateY(-1px); }
+.gplay small { display: block; font: 500 11px/1.2 var(--f-body); color: #c9ced8; letter-spacing: .02em; }
+.getapp { background: var(--night-2); color: var(--night-fg); border: 1px solid var(--night-line); border-radius: 20px; padding: 28px; display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; }
+.getapp .ga-logo { width: 72px; height: 72px; border-radius: 18px; display: block; }
+.getapp .eyebrow { color: var(--amber); margin: 0 0 4px; }
+.getapp h2 { font: 800 clamp(22px,3vw,30px)/1.1 var(--f-display); margin: 0; }
+.getapp p.ga-sub { margin: 8px 0 0; color: var(--night-muted); font-size: 15px; }
+.getapp .ga-links { display: grid; gap: 10px; justify-items: start; }
+.getapp .ga-links p { margin: 0; font-size: 13.5px; color: var(--night-muted); max-width: 22em; }
+.getapp .ga-links a.txt { color: var(--amber); font-weight: 700; }
+#appli-mobile { padding-block: 40px 0; }
+@media (max-width: 820px) { .getapp { grid-template-columns: auto 1fr; padding: 22px; } .getapp .ga-links { grid-column: 1 / -1; } .getapp .ga-logo { width: 56px; height: 56px; border-radius: 14px; } }
 
 /* ---------- Sections ---------- */
 section.block { padding-block: 84px; }
@@ -422,6 +441,10 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
           <a class="btn btn-amber" href="https://app.vtcrentable.com/">Créer mon compte gratuit</a>
           <a class="btn btn-ghost" href="#demo">Voir l'appli en vrai</a>
         </div>
+        <div class="store">
+          <a class="gplay" href="https://play.google.com/store/apps/details?id=com.vtcrentable.android" target="_blank" rel="noopener"><svg class="gp" width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path fill="#00d7fe" d="M.6.4C.2.8 0 1.4 0 2.2v19.6c0 .8.2 1.4.6 1.8l.1.1L11.7 12.7v-.3L.7.3z"/><path fill="#ffce00" d="m15.3 16.4-3.6-3.7v-.3l3.6-3.7.1.1 4.4 2.5c1.2.7 1.2 1.9 0 2.6l-4.4 2.5z"/><path fill="#ff3a44" d="M15.4 16.3 11.7 12.6.6 23.7c.4.4 1.1.5 1.8.1l13-7.5"/><path fill="#00f076" d="M15.4 8.9 2.4 1.5C1.7 1.1 1 1.1.6 1.5l11.1 11.1z"/></svg><span><small>Disponible sur</small>Google Play</span></a>
+          <span class="ios">iPhone : depuis Safari, <a href="#appli-mobile" style="color:inherit">voir comment</a></span>
+        </div>
         <p class="small">Gratuit · sur iPhone, Android et ordinateur · marche sans réseau</p>
         <p class="small offer-link">Offre de lancement : ton site vitrine avec réservation, gratuit à vie pour les 100 premiers inscrits · <a href="/site-vtc-gratuit/">Voir les étapes</a></p>
         <div class="plates" aria-label="Plateformes prises en charge">
@@ -437,6 +460,24 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
 </header>
 
 <main>
+  <section class="block" id="appli-mobile" aria-labelledby="ga-title">
+    <div class="wrap">
+      <div class="getapp">
+        <img class="ga-logo" src="/icon-192.png" width="72" height="72" alt="Logo VTC Rentable" loading="lazy">
+        <div>
+          <p class="eyebrow">Nouveau · disponible sur Google Play</p>
+          <h2 id="ga-title">Installe VTC Rentable sur ton téléphone</h2>
+          <p class="ga-sub">Gratuite, sans pub, marche sans réseau. Tes données restent à toi.</p>
+        </div>
+        <div class="ga-links">
+          <a class="gplay" href="https://play.google.com/store/apps/details?id=com.vtcrentable.android" target="_blank" rel="noopener"><svg class="gp" width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path fill="#00d7fe" d="M.6.4C.2.8 0 1.4 0 2.2v19.6c0 .8.2 1.4.6 1.8l.1.1L11.7 12.7v-.3L.7.3z"/><path fill="#ffce00" d="m15.3 16.4-3.6-3.7v-.3l3.6-3.7.1.1 4.4 2.5c1.2.7 1.2 1.9 0 2.6l-4.4 2.5z"/><path fill="#ff3a44" d="M15.4 16.3 11.7 12.6.6 23.7c.4.4 1.1.5 1.8.1l13-7.5"/><path fill="#00f076" d="M15.4 8.9 2.4 1.5C1.7 1.1 1 1.1.6 1.5l11.1 11.1z"/></svg><span><small>Disponible sur</small>Google Play</span></a>
+          <p><b>Sur iPhone :</b> ouvre <a class="txt" href="https://app.vtcrentable.com/">app.vtcrentable.com</a> dans Safari, puis « Partager » et « Sur l'écran d'accueil ».</p>
+          <p><b>Sur ordinateur :</b> <a class="txt" href="https://app.vtcrentable.com/">app.vtcrentable.com</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="block" id="exemple">
     <div class="wrap ex">
       <div class="ex-text">
@@ -707,7 +748,7 @@ footer a { text-decoration: none; } footer a:hover { color: var(--night-fg); }
         <h2>Questions fréquentes des chauffeurs VTC</h2>
       </div>
       <div class="faq">
-        <details><summary>Il faut la télécharger sur l'App Store ?</summary><p>Non. Tu ouvres app.vtcrentable.com dans Safari ou Chrome, puis « Partager » et « Sur l'écran d'accueil ». L'icône apparaît avec tes autres applis et s'ouvre en plein écran, sur iPhone comme sur Android.</p></details>
+        <details><summary>Il faut la télécharger sur l'App Store ?</summary><p>Sur Android, tu l'installes depuis <a href="https://play.google.com/store/apps/details?id=com.vtcrentable.android" target="_blank" rel="noopener">Google Play</a>. Sur iPhone, pas besoin de l'App Store : tu ouvres app.vtcrentable.com dans Safari, puis « Partager » et « Sur l'écran d'accueil ». L'icône apparaît avec tes autres applis et s'ouvre en plein écran.</p></details>
         <details><summary>Et quand je n'ai pas de réseau ?</summary><p>Tu saisis comme d'habitude, et même le bon de commande PDF se fait hors ligne. Tout part sur ton compte dès que le réseau revient.</p></details>
         <details><summary>L'appli lit mes comptes Uber ou Bolt ?</summary><p>Non, elle ne se connecte à aucune plateforme. Tu tapes toi-même les montants de la journée. Tu n'as donc aucun identifiant à donner.</p></details>
         <details><summary>Le bon de commande suffit en cas de contrôle ?</summary><p>Il reprend les informations demandées pour une réservation préalable : client, date et heure de la commande, lieu de prise en charge, exploitant et chauffeur. L'heure de commande est enregistrée automatiquement et ne peut pas être modifiée. L'appli ne crée jamais de réservation sans vraie commande.</p></details>
