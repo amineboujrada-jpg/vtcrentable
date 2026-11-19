@@ -139,9 +139,25 @@ nav.top .btn { padding: 10px 14px; font-size: 14px; }
   .hero-text { padding-bottom: 30px; }
   /* sur téléphone, l'écran de l'appli monte juste sous le texte d'accroche */
   .hero-text { display: contents; }
-  .hero h1 { order: 1; } .hero .lead { order: 2; } .hero .gains { order: 3; } .hero .ctas { order: 4; } .hero .small { order: 5; }
+  .hero h1 { order: 1; } .hero .lead { order: 2; } .hero .gains { order: 3; } .hero .ctas { order: 4; } .hero .store { order: 4; } .hero .small { order: 5; }
   .phone.real { order: 6; width: min(280px, 82%); margin: 26px auto 6px; } .hero .plates { order: 7; margin-bottom: 36px; }
 }
+
+.hero .store { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 16px; }
+.hero .store .ios { font-size: 13.5px; color: var(--night-muted); }
+.gplay { display: inline-flex; align-items: center; gap: 10px; background: #000; color: #fff; border: 1px solid #586072; border-radius: 10px; padding: 7px 14px 7px 11px; text-decoration: none; font: 700 17px/1.05 var(--f-body); transition: transform .15s ease; }
+.gplay:hover { transform: translateY(-1px); }
+.gplay small { display: block; font: 500 11px/1.2 var(--f-body); color: #c9ced8; letter-spacing: .02em; }
+.getapp { background: var(--night-2); color: var(--night-fg); border: 1px solid var(--night-line); border-radius: 20px; padding: 28px; display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; }
+.getapp .ga-logo { width: 72px; height: 72px; border-radius: 18px; display: block; }
+.getapp .eyebrow { color: var(--amber); margin: 0 0 4px; }
+.getapp h2 { font: 800 clamp(22px,3vw,30px)/1.1 var(--f-display); margin: 0; }
+.getapp p.ga-sub { margin: 8px 0 0; color: var(--night-muted); font-size: 15px; }
+.getapp .ga-links { display: grid; gap: 10px; justify-items: start; }
+.getapp .ga-links p { margin: 0; font-size: 13.5px; color: var(--night-muted); max-width: 22em; }
+.getapp .ga-links a.txt { color: var(--amber); font-weight: 700; }
+#appli-mobile { padding-block: 40px 0; }
+@media (max-width: 820px) { .getapp { grid-template-columns: auto 1fr; padding: 22px; } .getapp .ga-links { grid-column: 1 / -1; } .getapp .ga-logo { width: 56px; height: 56px; border-radius: 14px; } }
 
 /* ---------- Sections ---------- */
 section.block { padding-block: 84px; }
